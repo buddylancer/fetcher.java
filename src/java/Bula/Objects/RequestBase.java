@@ -25,9 +25,7 @@ public class RequestBase extends Meta {
     /** Enum value (type) for getting SERVER parameters */
     public static final int INPUT_SERVER = 5;
 
-    private static javax.servlet.http.HttpServletRequest CurrentRequest() {
-        return null;
-    }
+    public static javax.servlet.http.HttpServletRequest CurrentRequest = null;
 
     /**
      * Get all variables of given type.
@@ -46,16 +44,16 @@ public class RequestBase extends Meta {
     }
     */
     public static Hashtable getVars(Integer $type) {
-        String $method = CurrentRequest().getMethod();
+        String $method = CurrentRequest.getMethod();
         switch ($type) {
             case INPUT_GET:
-                if (EQ($method, "GET")) return createHashtable(CurrentRequest(), "getParameterNames", "getParameter");
+                if (EQ($method, "GET")) return createHashtable(CurrentRequest, "getParameterNames", "getParameter");
                 break;
             case INPUT_POST:
-                if (EQ($method, "POST")) return createHashtable(CurrentRequest(), "getParameterNames", "getParameter");
+                if (EQ($method, "POST")) return createHashtable(CurrentRequest, "getParameterNames", "getParameter");
                 break;
             case INPUT_SERVER:
-                return createHashtable(CurrentRequest(), "getHeaderNames", "getHeader");
+                return createHashtable(CurrentRequest, "getHeaderNames", "getHeader");
             default:
                 break;
         }
@@ -66,11 +64,11 @@ public class RequestBase extends Meta {
         Hashtable $hash = new Hashtable();
         try {
             Method $getNamesMethod = $from.getClass().getMethod($getNames, new Class[] {});
-            Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] {});
+            Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] { String.class});
             Enumerator $names = new Enumerator((Enumeration)$getNamesMethod.invoke($from, (Object[])null));
             while ($names.hasMoreElements()) {
                 String $postName = (String)$names.nextElement();
-                String $parameter = (String)$getValueMethod.invoke($postName, new Object[] {});
+                String $parameter = (String)$getValueMethod.invoke($from, new Object[] { $postName });
                 $hash.put($postName, $parameter);
             }
         }

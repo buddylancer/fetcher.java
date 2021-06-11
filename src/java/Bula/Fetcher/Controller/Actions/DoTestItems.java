@@ -54,7 +54,7 @@ public class DoTestItems extends Page {
 
         DataSet $dsTimes = $doTime.getById(1);
         int $timeShift = 240; // 4 min
-        int $currentTime = DateTimes.getTime();
+        long $currentTime = DateTimes.getTime();
         if ($dsTimes.getSize() > 0) {
             Hashtable $oTime = $dsTimes.getRow(0);
             if ($currentTime > DateTimes.getTime(STR($oTime.get("d_Time"))) + $timeShift)

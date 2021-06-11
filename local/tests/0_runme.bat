@@ -13,7 +13,7 @@ set website=http://www.ff.com:8000
 set mobile=http://m.ff.com:8000
 set site=%website%
 
-set ext=.aspx
+set ext=.jsp
 set index_page=index%ext%
 set action_page=action%ext%
 

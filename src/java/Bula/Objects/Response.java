@@ -6,12 +6,15 @@ import Bula.Meta;
  * Helper class for processing server response.
  */
 public class Response extends Meta {
+    public static javax.servlet.http.HttpServletResponse CurrentResponse = null;
 
     /**
      * Write text to current response.
      * @param $input Text to write.
      */
     public static void write(String $input) {
+		try { CurrentResponse.getWriter().append($input); } catch (Exception ex) {}
+
     }
 
     /**
@@ -20,6 +23,8 @@ public class Response extends Meta {
      * @param $value Header value.
      */
     public static void writeHeader(String $name, String $value) {
+		CurrentResponse.addHeader($name, $value);
+
     }
 
     /**
@@ -28,6 +33,7 @@ public class Response extends Meta {
      */
     public static void end(String $input) {
         write($input);
+		 try { CurrentResponse.flushBuffer(); } catch (Exception ex) {}
     }
 }
 

@@ -18,8 +18,8 @@ public class DateTimes extends Meta {
      * Get current time as Unix timestamp.
      * @return Integer Resulting time (Unix timestamp).
      */
-    public static int getTime() {
-        return (int)(new Date()).getTime();
+    public static long getTime() {
+        return (long)(new Date()).getTime();
     }
 
     /**
@@ -27,8 +27,8 @@ public class DateTimes extends Meta {
      * @param $timeString Input string.
      * @return Integer Resulting time (Unix timestamp).
      */
-    public static int getTime(String $timeString/* = null*/) {
-        return (int)Date.parse($timeString);
+    public static long getTime(String $timeString/* = null*/) {
+        return (long)Date.parse($timeString);
     }
 
     /**
@@ -36,7 +36,7 @@ public class DateTimes extends Meta {
      * @param $timeString Input string.
      * @return Integer Resulting timestamp.
      */
-    public static int fromRss(String $timeString) {
+    public static long fromRss(String $timeString) {
         return getTime($timeString);
     }
 
@@ -55,7 +55,7 @@ public class DateTimes extends Meta {
      * @param $timeValue Input time value (Unix timestamp).
      * @return String Resulting string.
      */
-    public static String format(String $formatString, int $timeValue /*= 0*/) {
+    public static String format(String $formatString, long $timeValue /*= 0*/) {
         return (new SimpleDateFormat($formatString)).format($timeValue == 0 ? new Date() : new Date($timeValue));
     }
 
@@ -74,7 +74,7 @@ public class DateTimes extends Meta {
      * @param $timeValue Input time value (Unix timestamp).
      * @return String Resulting string.
      */
-    public static String gmtFormat(String $formatString, int $timeValue /*= 0*/) {
+    public static String gmtFormat(String $formatString, long $timeValue /*= 0*/) {
         SimpleDateFormat df = new SimpleDateFormat($formatString);
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         return df.format($timeValue == 0 ? new Date() : new Date($timeValue));

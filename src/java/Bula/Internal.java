@@ -150,13 +150,14 @@ public class Internal extends Bula.Meta {
         }
         catch (Exception ex) {
             //TODO -- do nothing for now
+            int x=1;
         }
         return null;
     }
     
     private static Object callMethodPrivate(String class_name, ArrayList args0, String method_name, ArrayList args) throws Exception
     {
-        Class type = Class.forName(class_name.replace('/', '.'));
+        Class type = Class.forName(class_name.replace("src/java/", "").replace('/', '.'));
 
         Class[] types0 = getTypes(args0);
         Constructor constructorInfo = type.getConstructor(types0);

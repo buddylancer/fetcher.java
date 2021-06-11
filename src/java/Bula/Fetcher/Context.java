@@ -3,6 +3,7 @@ package Bula.Fetcher;
 import Bula.Meta;
 
 import Bula.Objects.Request;
+import Bula.Objects.Response;
 import Bula.Objects.Arrays;
 import Bula.Objects.Strings;
 
@@ -17,6 +18,12 @@ import Bula.Fetcher.Controller.Engine;
 public class Context extends Config {
     /** Default constructor. */
     public Context () throws Exception {
+        this.initialize();
+    }
+
+    public Context (Object $request, Object $response) throws Exception {
+		Request.CurrentRequest = (javax.servlet.http.HttpServletRequest) $request;
+		Response.CurrentResponse = (javax.servlet.http.HttpServletResponse) $response;
         this.initialize();
     }
 
@@ -121,7 +128,7 @@ public class Context extends Config {
     public void initialize() throws Exception {
         //------------------------------------------------------------------------------
         // You can change something below this line if you know what are you doing :)
-        String $rootDir = Request.getVar(Request.INPUT_SERVER, "APPL_PHYSICAL_PATH"); //TODO!!!
+        String $rootDir = Request.CurrentRequest.getRealPath("/"); //TODO!!!
         $rootDir = $rootDir.replace("\\", "/"); // Fix for IIS
         // Regarding that we have the ordinary local website (not virtual directory)
         for (int $n = 0; $n <= 2; $n++) {
@@ -130,7 +137,7 @@ public class Context extends Config {
         }
         this.$LocalRoot = $rootDir.concat("/");
 
-        this.$Host = Request.getVar(Request.INPUT_SERVER, "HTTP_HOST");
+        this.$Host = Request.getVar(Request.INPUT_SERVER, "host");
         this.$Site = Strings.concat("http://", this.$Host);
         this.$IsMobile = this.$Host.indexOf("m.") == 0;
         this.$Lang = this.$Host.lastIndexOf(".ru") != -1 ? "ru" : "en";
@@ -165,15 +172,16 @@ public class Context extends Config {
         //    this.$GlobalConstants.put("[#Is_Mobile]", "1");
         this.$GlobalConstants.put("[#Lang]", this.$Lang);
 
-        java.lang.reflect.Field fieldInfo = Config.class.getField("NAME_CATEGORY");
+        java.lang.reflect.Field fieldInfo = null;
+		try { fieldInfo = Config.class.getField("NAME_CATEGORY"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Category", fieldInfo.get(null));
-        fieldInfo = Config.class.getField("NAME_CATEGORIES");
+		try { fieldInfo = Config.class.getField("NAME_CATEGORIES"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Categories", fieldInfo.get(null));
-        fieldInfo = Config.class.getField("NAME_CREATOR");
+		try { fieldInfo = Config.class.getField("NAME_CREATOR"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Creator", fieldInfo.get(null));
-        fieldInfo = Config.class.getField("NAME_CUSTOM1");
+		try { fieldInfo = Config.class.getField("NAME_CUSTOM1"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Custom1", fieldInfo.get(null));
-        fieldInfo = Config.class.getField("NAME_CUSTOM2");
+		try { fieldInfo = Config.class.getField("NAME_CUSTOM2"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Custom2", fieldInfo.get(null));
 
         // Map custom names

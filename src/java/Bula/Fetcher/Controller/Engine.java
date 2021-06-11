@@ -89,7 +89,7 @@ public class Engine extends Meta {
      */
     public String includeTemplate(String $className, String $defaultMethod/* = "execute"*/) {
         Engine $engine = this.$context.pushEngine(false);
-        String $prefix = "Bula/Fetcher/Controller/";
+        String $prefix = "src/java/Bula/Fetcher/Controller/";
         String $fileName =
             CAT($prefix, $className, ".java");
 
