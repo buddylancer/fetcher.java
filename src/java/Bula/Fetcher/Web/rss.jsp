@@ -1,0 +1,1 @@
+<% (new Bula.Fetcher.Controller.Rss(new Bula.Fetcher.Context()).execute(); %>

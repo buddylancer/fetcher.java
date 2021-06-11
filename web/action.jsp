@@ -1,0 +1,1 @@
+<% (new Bula.Fetcher.Controller.Action(new Bula.Fetcher.Context()).execute(); %>

@@ -1,0 +1,1 @@
+<% (new Bula.Fetcher.Controller.Testing.GetFeed(new Bula.Fetcher.Context()).execute(); %>
