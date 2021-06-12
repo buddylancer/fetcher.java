@@ -89,7 +89,7 @@ public class Engine extends Meta {
      */
     public String includeTemplate(String $className, String $defaultMethod/* = "execute"*/) {
         Engine $engine = this.$context.pushEngine(false);
-        String $prefix = "src/java/Bula/Fetcher/Controller/";
+        String $prefix = CAT(Config.FILE_PREFIX, "Bula/Fetcher/Controller/");
         String $fileName =
             CAT($prefix, $className, ".java");
 
@@ -121,17 +121,19 @@ public class Engine extends Meta {
      */
     public String showTemplate(String $id, Hashtable $hash /*= null*/) {
         String $ext = BLANK(this.$context.$Api) ? ".html" : (Config.API_FORMAT == "Xml"? ".xml" : ".txt");
+        String $prefix = CAT(Config.FILE_PREFIX, "Bula/Fetcher/View/");
+
         String $filename = 
-                CAT("Bula/Fetcher/View/", (BLANK(this.$context.$Api) ? "Html/" : (Config.API_FORMAT == "Xml"? "Xml/" : "Rest/")), $id, $ext);
+                CAT($prefix, (BLANK(this.$context.$Api) ? "Html/" : (Config.API_FORMAT == "Xml"? "Xml/" : "Rest/")), $id, $ext);
         ArrayList $template = this.getTemplate($filename);
 
         String $content = new String();
         if (BLANK(this.$context.$Api))
-            $content.concat(CAT(EOL, "<!-- BEGIN ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -.", EOL));
+            $content += CAT(EOL, "<!-- BEGIN ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -->", EOL);
         if (!BLANK($template))
-            $content.concat(this.processTemplate($template, $hash));
+            $content += this.processTemplate($template, $hash);
         if (BLANK(this.$context.$Api))
-            $content.concat(CAT("<!-- END ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -.", EOL));
+            $content += CAT("<!-- END ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -->", EOL);
         return $content;
     }
 
@@ -179,7 +181,7 @@ public class Engine extends Meta {
         Boolean $trimmed = false;
         if ($line.indexOf("<!--#") != -1) {
             $line = $line.replace("<!--", "");
-            $line = $line.replace("-.", "");
+            $line = $line.replace("-->", "");
             $trimmed = true;
         }
         else if ($line.indexOf("//#") != -1) {
@@ -250,7 +252,7 @@ public class Engine extends Meta {
                         }
 
                         if ($processFlag)
-                            $content.concat(processTemplate($ifBuf, $hash));
+                            $content += processTemplate($ifBuf, $hash);
                         $ifBuf = new ArrayList();
                     }
                     else
@@ -268,7 +270,7 @@ public class Engine extends Meta {
                         if ($hash.containsKey($repeatWhat)) {
                             ArrayList $rows = (ArrayList)$hash.get($repeatWhat);
                             for (int $r = 0; $r < $rows.size(); $r++)
-                                $content.concat(processTemplate($repeatBuf, (Hashtable)$rows.get($r)));
+                                $content += processTemplate($repeatBuf, (Hashtable)$rows.get($r));
                             $hash.remove($repeatWhat);
                         }
                         $repeatBuf = new ArrayList();
@@ -293,9 +295,9 @@ public class Engine extends Meta {
                 else {
                     if ($trimLine) {
                         $line = $line.trim();
-                        $line.concat($trimEnd);
+                        $line += $trimEnd;
                     }
-                    $content.concat($line);
+                    $content += $line;
                 }
             }
         }

@@ -9,9 +9,14 @@ import java.text.*;
  * Helper class to manipulate with Date and Times.
  */
 public class DateTimes extends Meta {
-    /**
-     * Format of date/time in RSS-feeds.
-     */
+    /** Date/time format for processing GMT date/times */
+    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm";
+    /** Date/time format for RSS operations */
+    public static final String XML_DTS = "ddd, dd MMM yyyy HH:mm:ss";
+    /** Date/time format for DB operations */
+    public static final String SQL_DTS = "yyyy-MM-dd HH:mm:ss";
+    public static final String LOG_DTS = "yyyy-MM-dd_HH-mm-ss";
+    /** Format of date/time in RSS-feeds. */
     public static final String RSS_DTS = "ddd, dd MMM yyyy HH:mm:ss zzz";
 
     /**

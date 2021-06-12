@@ -101,8 +101,8 @@ public class PreparedStatement extends Meta {
             String $value = (String)this.$pars.get($n);
             String $before = $str.substring(0, $questionIndex);
             String $after = $str.substring($questionIndex + 1);
-            $str = $before; $str.concat($value); $startFrom = $str.length();
-            $str.concat($after);
+            $str = $before; $str += $value; $startFrom = $str.length();
+            $str += $after;
             $n++;
         }
         this.$query = $str;
@@ -141,7 +141,7 @@ public class PreparedStatement extends Meta {
      * @param $val Parameter value.
      */
     public void setDate(int $n, String $val) {
-        setValue($n, CAT("'", DateTimes.format(DBConfig.SQL_DTS, DateTimes.getTime($val)), "'"));
+        setValue($n, CAT("'", DateTimes.format(DateTimes.SQL_DTS, DateTimes.getTime($val)), "'"));
     }
 
     /**

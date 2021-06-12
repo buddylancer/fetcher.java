@@ -313,8 +313,7 @@ public class BOItem extends Meta {
         $title = Regex.replace($title, " \\. ", ".");
         $title = Regex.replace($title, "[ ]+", "-");
         $title = Regex.replace($title, "\\-+", "-");
-        //$title = $title.trim("-").toLowerCase();
-        $title = $title.trim().toLowerCase();
+        $title = Strings.trim($title, "-").toLowerCase();
         return $title;
     }
 }

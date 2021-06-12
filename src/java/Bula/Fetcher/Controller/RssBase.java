@@ -51,13 +51,13 @@ abstract class RssBase extends Page {
         String $source = Request.get("source");
         if (!NUL($source)) {
             if (BLANK($source))
-                $errorMessage.concat("Empty source!");
+                $errorMessage += "Empty source!";
             else {
                 DOSource $doSource = new DOSource();
                 Hashtable[] $oSource =
                     {new Hashtable()};
                 if (!$doSource.checkSourceName($source, $oSource))
-                    $errorMessage.concat(CAT("Incorrect source '", $source, "'!"));
+                    $errorMessage += CAT("Incorrect source '", $source, "'!");
             }
         }
 
@@ -77,8 +77,8 @@ abstract class RssBase extends Page {
             if (!NUL($filterName)) {
                 if (BLANK($filterName)) {
                     if ($errorMessage.length() > 0)
-                        $errorMessage.concat(" ");
-                    $errorMessage.concat("Empty filter!");
+                        $errorMessage += " ";
+                    $errorMessage += "Empty filter!";
                 }
                 else {
                     Hashtable[] $oCategory =
@@ -90,8 +90,8 @@ abstract class RssBase extends Page {
                             $filter = $filterName;
                         else {
                             if ($errorMessage.length() > 0)
-                                $errorMessage.concat(" ");
-                            $errorMessage.concat(CAT("Incorrect filter '", $filterName, "'!"));
+                                $errorMessage += " ";
+                            $errorMessage += CAT("Incorrect filter '", $filterName, "'!");
                         }
                     }
                 }
@@ -104,8 +104,8 @@ abstract class RssBase extends Page {
             String $key = (String)$keys.nextElement();
             if ($key != "source" && $key != "filter" && $key != "code" && $key != "count") {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat(" ");
-                $errorMessage.concat(CAT("Incorrect parameter '", $key, "'!"));
+                    $errorMessage += " ";
+                $errorMessage += CAT("Incorrect parameter '", $key, "'!");
             }
         }
 
@@ -158,9 +158,9 @@ abstract class RssBase extends Page {
         // 5 - description
         // 6 - category
 
-        String $pubDate = DateTimes.format(Config.XML_DTS);
-        int $nowTime = DateTimes.getTime($pubDate);
-        String $fromDate = DateTimes.gmtFormat(Config.XML_DTS, $nowTime - 6*60*60);
+        String $pubDate = DateTimes.format(DateTimes.XML_DTS);
+        long $nowTime = DateTimes.getTime($pubDate);
+        String $fromDate = DateTimes.gmtFormat(DateTimes.XML_DTS, $nowTime - 6*60*60);
         DataSet $dsItems = $doItem.enumItemsFromSource($fromDate, $source, $filter, $count);
         int $current = 0;
 
@@ -176,7 +176,7 @@ abstract class RssBase extends Page {
 
             if ($current == 0) {
                 // Get puDate from the first item and write starting block
-                $pubDate = DateTimes.format(Config.XML_DTS, DateTimes.getTime($date));
+                $pubDate = DateTimes.format(DateTimes.XML_DTS, DateTimes.getTime($date));
                 $contentToCache = this.writeStart($source, $filterName, $pubDate);
             }
 
@@ -222,7 +222,7 @@ abstract class RssBase extends Page {
             $args[1] = $itemTitle;
             $args[2] = this.getAbsoluteLink(Config.ACTION_PAGE, "?p=do_redirect_source&amp;source=", "redirect/source/", $sourceName);
             $args[3] = $sourceName;
-            $args[4] = DateTimes.format(Config.XML_DTS, DateTimes.getTime($date));
+            $args[4] = DateTimes.format(DateTimes.XML_DTS, DateTimes.getTime($date));
             String $additional = CAT(
                 (BLANK($creator) ? null : CAT(this.$context.get("Name_Creator"), ": ", $creator, "<br/>")),
                 (BLANK($category) ? null : CAT(this.$context.get("Name_Categories"), ": ", $category, "<br/>")),
@@ -243,19 +243,19 @@ abstract class RssBase extends Page {
 
             String $itemContent = this.writeItem($args);
             if (!BLANK($itemContent))
-                $contentToCache.concat($itemContent);
+                $contentToCache += $itemContent;
 
             $current++;
         }
 
         String $endContent = this.writeEnd();
         if (!BLANK($endContent))
-            $contentToCache.concat($endContent);
+            $contentToCache += $endContent;
 
         // Save content to cache (if applicable)
         if (Config.CACHE_RSS && !$countSet) {
             Helper.testFileFolder($cachedFile);
-            //Helper.writeText($cachedFile, Strings.concat("\xEF\xBB\xBF", $xmlContent));
+            //Helper.writeText($cachedFile, Strings.concat("\\xEF\\xBB\\xBF", $xmlContent));
             Helper.writeText($cachedFile, $contentToCache);
         }
 

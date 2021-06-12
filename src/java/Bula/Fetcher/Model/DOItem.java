@@ -79,12 +79,12 @@ public class DOItem extends DOBase {
         String $includeFilter = new String();
         for (int $n = 0; $n < SIZE($includeChunks); $n++) {
             if (!$includeFilter.isEmpty())
-                $includeFilter.concat(" OR ");
-            $includeFilter.concat("(_this.s_Title LIKE '%");
-                $includeFilter.concat($includeChunks[$n]);
-            $includeFilter.concat("%' OR _this.t_FullDescription LIKE '%");
-                $includeFilter.concat($includeChunks[$n]);
-            $includeFilter.concat("%')");
+                $includeFilter += " OR ";
+            $includeFilter += "(_this.s_Title LIKE '%";
+                $includeFilter += $includeChunks[$n];
+            $includeFilter += "%' OR _this.t_FullDescription LIKE '%";
+                $includeFilter += $includeChunks[$n];
+            $includeFilter += "%')";
         }
         if (!$includeFilter.isEmpty())
             $includeFilter = Strings.concat(" (", $includeFilter, ") ");
@@ -134,9 +134,9 @@ public class DOItem extends DOBase {
         for (int $n = 0; $n < $ds1.getSize(); $n++) {
             Hashtable $o = $ds1.getRow($n);
             if ($n != 0)
-                $inList.concat(", ");
+                $inList += ", ";
             Object $id = $o.get(this.$idField);
-            $inList.concat(STR($id));
+            $inList += STR($id);
         }
 
         String $query2 = Strings.concat(

@@ -40,8 +40,8 @@ public class Strings extends Meta {
         int $count = 0;
         for (String $string1 : $strings) {
             if ($count > 0)
-                $output.concat($divider);
-            $output.concat($string1);
+                $output += $divider;
+            $output += $string1;
             $count++;
         }
         return $output;
@@ -108,7 +108,7 @@ public class Strings extends Meta {
             for (Object $arg: $args) {
                 if ($arg == null)
                     continue;
-                $output = $output.concat((String)$arg);
+                $output += (String)$arg;
             }
         }
         return $output;
@@ -188,4 +188,14 @@ public class Strings extends Meta {
         }
         return $template;
     }
+
+	public static String trim(String $str, String $what) {
+        while ($str.indexOf($what) == 0) {
+            $str = $str.replaceFirst($what, "");
+        }
+        while ($str.lastIndexOf($what) == $str.length() - $what.length()) {
+            $str = $str.substring(0, $str.length() - $what.length());
+        }
+        return $str;
+	}
 }

@@ -38,22 +38,22 @@ public class Items extends ItemsBase {
         String $list = Request.get("list");
         if (!NUL($list)) {
             if (BLANK($list))
-                $errorMessage.concat("Empty list number!");
+                $errorMessage += "Empty list number!";
             else if (!Request.isInteger($list))
-                $errorMessage.concat("Incorrect list number!");
+                $errorMessage += "Incorrect list number!";
         }
 
         String $sourceName = Request.get("source");
         if (!NUL($sourceName)) {
             if (BLANK($sourceName)) {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat("<br/>");
-                $errorMessage.concat("Empty source name!");
+                    $errorMessage += "<br/>";
+                $errorMessage += "Empty source name!";
             }
             else if (!Request.isDomainName($sourceName)) {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat("<br/>");
-                $errorMessage.concat("Incorrect source name!");
+                    $errorMessage += "<br/>";
+                $errorMessage += "Incorrect source name!";
             }
         }
 
@@ -61,13 +61,13 @@ public class Items extends ItemsBase {
         if (!NUL($filterName)) {
             if (BLANK($filterName)) {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat("<br/>");
-                $errorMessage.concat("Empty filter name!");
+                    $errorMessage += "<br/>";
+                $errorMessage += "Empty filter name!";
             }
             else if (!Request.isName($filterName)) {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat("<br/>");
-                $errorMessage.concat("Incorrect filter name!");
+                    $errorMessage += "<br/>";
+                $errorMessage += "Incorrect filter name!";
             }
         }
 
@@ -107,7 +107,7 @@ public class Items extends ItemsBase {
             Hashtable[] $oCategory =
                 {new Hashtable()};
             if (!$doCategory.checkFilterName($filterName, $oCategory))
-                $errorMessage.concat("Non-existing filter name!");
+                $errorMessage += "Non-existing filter name!";
             else
                 $filter = STR($oCategory[0].get("s_Filter"));
         }
@@ -118,8 +118,8 @@ public class Items extends ItemsBase {
                 {new Hashtable()};
             if (!$doSource.checkSourceName($sourceName, $oSource)) {
                 if ($errorMessage.length() > 0)
-                    $errorMessage.concat("<br/>");
-                $errorMessage.concat("Non-existing source name!");
+                    $errorMessage += "<br/>";
+                $errorMessage += "Non-existing source name!";
             }
         }
 

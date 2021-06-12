@@ -49,7 +49,7 @@ public class Util extends Meta {
      * @return String Resulting date/time.
      */
     public static String showTime(String $input) {
-        return DateTimes.format(Config.GMT_DTS, DateTimes.getTime($input));
+        return DateTimes.format(DateTimes.GMT_DTS, DateTimes.getTime($input));
     }
 
     /**

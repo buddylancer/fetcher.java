@@ -48,7 +48,7 @@ public class BOFetcher extends Meta {
         int $log = Request.getOptionalInteger("log");
         if (!NUL($log) && $log != -99999) { //TODO
             String $filenameTemplate = new String(CAT(this.$context.$LocalRoot, "local/logs/{0}_{1}.html"));
-            String $filename = Util.formatString($filenameTemplate, ARR("fetch_items", DateTimes.format(Config.LOG_DTS)));
+            String $filename = Util.formatString($filenameTemplate, ARR("fetch_items", DateTimes.format(DateTimes.LOG_DTS)));
             this.$oLogger.init($filename);
         }
     }
@@ -109,7 +109,7 @@ public class BOFetcher extends Meta {
         int $sourceId = INT($oSource.get("i_SourceId"));
         BOItem $boItem = new BOItem($sourceName, $item);
         String $pubdate = STR($item.get("pubdate"));
-        String $date = DateTimes.format(Config.SQL_DTS, DateTimes.fromRss($pubdate));
+        String $date = DateTimes.format(DateTimes.SQL_DTS, DateTimes.fromRss($pubdate));
 
         // Check whether item with the same link exists already
         DOItem $doItem = new DOItem();

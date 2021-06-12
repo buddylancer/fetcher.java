@@ -50,9 +50,9 @@ abstract class ItemsBase extends Page {
         if (Request.contains("source")) {
             String $source = Request.get("source");
             if (BLANK($source))
-                $errMessage.concat("Empty source name!<br/>");
+                $errMessage += "Empty source name!<br/>";
             else if (!Request.isDomainName("source"))
-                $errMessage.concat("Incorrect source name!<br/>");
+                $errMessage += "Incorrect source name!<br/>";
         }
         if ($errMessage.isEmpty())
             return true;

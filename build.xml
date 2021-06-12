@@ -7,8 +7,8 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="fetcher.java.new" default="default" basedir=".">
-    <description>Builds, tests, and runs the project fetcher.java.new.</description>
+<project name="fetcher.java" default="default" basedir=".">
+    <description>Builds, tests, and runs the project fetcher.java.</description>
     <import file="nbproject/build-impl.xml"/>
     <!--
 

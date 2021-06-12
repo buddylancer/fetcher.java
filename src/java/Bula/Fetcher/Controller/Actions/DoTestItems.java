@@ -72,7 +72,7 @@ public class DoTestItems extends Page {
 
             $doTime = new DOTime(); // Need for DB reopen
             Hashtable $fields = new Hashtable();
-            $fields.put("d_Time", DateTimes.format(Config.SQL_DTS, DateTimes.getTime()));
+            $fields.put("d_Time", DateTimes.format(DateTimes.SQL_DTS, DateTimes.getTime()));
             if ($insertRequired) {
                 $fields.put("i_Id", 1);
                 $doTime.insert($fields);

@@ -135,7 +135,7 @@ public class Context extends Config {
             int $lastSlashIndex = $rootDir.lastIndexOf("/");
             $rootDir = $rootDir.substring(0, $lastSlashIndex);
         }
-        this.$LocalRoot = $rootDir.concat("/");
+        this.$LocalRoot = $rootDir += "/";
 
         this.$Host = Request.getVar(Request.INPUT_SERVER, "host");
         this.$Site = Strings.concat("http://", this.$Host);

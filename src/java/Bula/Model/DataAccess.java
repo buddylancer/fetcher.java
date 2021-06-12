@@ -86,10 +86,10 @@ public class DataAccess extends Meta {
      */
     public static Object selectQuery(Object $link, String $input) {
         java.sql.Connection $oConn = (java.sql.Connection)$link;
-		Statement $oStmt = null;
         ResultSet $oRs = null;
         ResultSetMetaData $md = null; //Java
         try {
+    		Statement $oStmt = $oConn.createStatement();
             $oRs = $oStmt.executeQuery($input);
             if ($oRs == null)
                 return null;
@@ -105,8 +105,8 @@ public class DataAccess extends Meta {
     public static Object updateQuery(Object $link, String $input) {
         //return mysqli_query($link, $input);
         java.sql.Connection $oConn = (java.sql.Connection)$link;
-		Statement $oStmt = null;
         try {
+    		Statement $oStmt = $oConn.createStatement();
             $affected_rows = $oStmt.executeUpdate($input);
             ResultSet $oRs = $oStmt.getGeneratedKeys();
             $generated_id = $oRs.next() ? $oRs.getInt(1) : 0;
@@ -120,14 +120,14 @@ public class DataAccess extends Meta {
     public static Object nonQuery(Object $link, String $input) {
         //return mysqli_query($link, $input);
         java.sql.Connection $oConn = (java.sql.Connection)$link;
-		Statement $oStmt = null;
         try {
+    		Statement $oStmt = $oConn.createStatement();
             return $oStmt.execute($input);
         }
         catch (Exception ex) {
             //TODO
+            return false;
         }
-        return false;
      }
 
     /**
@@ -202,7 +202,7 @@ public class DataAccess extends Meta {
             $oRs.close();
         }
         catch (Exception ex) {
-            //TODO
+            return; //TODO
         }
     }
 
@@ -236,7 +236,7 @@ public class DataAccess extends Meta {
             method.invoke(null, new Object[] { $input });
         }
         catch (Exception ex) {
-            //TODO
+            return; //TODO
         }
     }
 
@@ -254,7 +254,7 @@ public class DataAccess extends Meta {
             method.invoke(null, new Object[] { $input });
         }
         catch (Exception ex) {
-            //TODO
+            return; //TODO
         }
     }
 }

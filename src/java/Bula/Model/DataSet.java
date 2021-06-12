@@ -81,7 +81,7 @@ public class DataSet extends Meta {
     private String addSpaces(int $level) {
         String $spaces = new String();
         for (int $n = 0; $n < $level; $n++)
-            $spaces.concat("    ");
+            $spaces += "    ";
         return $spaces;
     }
 
@@ -93,25 +93,25 @@ public class DataSet extends Meta {
         int $level = 0;
         String $spaces = null;
         String $output = new String();
-        $output.concat(CAT("<DataSet Rows=\"", this.$rows.size(), "\">\n"));
+        $output += CAT("<DataSet Rows=\"", this.$rows.size(), "\">\n");
         for (int $n = 0; $n < this.getSize(); $n++) {
             Hashtable $row = this.getRow($n);
             $level++; $spaces = this.addSpaces($level);
-            $output.concat(CAT($spaces, "<Row>\n"));
+            $output += CAT($spaces, "<Row>\n");
             Enumerator $keys = 
                     new Enumerator($row.keys());
             while ($keys.hasMoreElements()) {
                 $level++; $spaces = this.addSpaces($level);
                 String $key = (String)$keys.nextElement();
-                $output.concat(CAT($spaces, "<Item Name=\"", $key, "\">"));
-                $output.concat(STR($row.get($key)));
-                $output.concat("</Item>\n");
+                $output += CAT($spaces, "<Item Name=\"", $key, "\">");
+                $output += STR($row.get($key));
+                $output += "</Item>\n";
                 $level--; $spaces = this.addSpaces($level);
             }
-            $output.concat(CAT($spaces, "</Row>\n"));
+            $output += CAT($spaces, "</Row>\n");
             $level--; $spaces = this.addSpaces($level);
         }
-        $output.concat("</DataSet>\n");
+        $output += "</DataSet>\n";
         return $output;
     }
 }

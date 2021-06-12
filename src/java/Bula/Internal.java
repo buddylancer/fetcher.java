@@ -11,6 +11,7 @@ package Bula;
 //using System.Xml;
 
 //using System.Collections;
+import Bula.Fetcher.Config;
 import java.util.*;
 import java.lang.reflect.*;
 //using System.Text.RegularExpressions;
@@ -111,7 +112,7 @@ public class Internal extends Bula.Meta {
         if (args != null && args.size() > 0)
             return methodInfo.invoke(null, args.toArray());
         else
-            return methodInfo.invoke(null, null);
+            return methodInfo.invoke(null, new Object[] {});
     }
 
     private static Class[] getTypes(ArrayList args) {
@@ -157,7 +158,8 @@ public class Internal extends Bula.Meta {
     
     private static Object callMethodPrivate(String class_name, ArrayList args0, String method_name, ArrayList args) throws Exception
     {
-        Class type = Class.forName(class_name.replace("src/java/", "").replace('/', '.'));
+        String class_name_fixed = Config.FILE_PREFIX.isEmpty() ? class_name : class_name.replace(Config.FILE_PREFIX, "");
+        Class type = Class.forName(class_name_fixed.replace('/', '.'));
 
         Class[] types0 = getTypes(args0);
         Constructor constructorInfo = type.getConstructor(types0);
@@ -170,7 +172,7 @@ public class Internal extends Bula.Meta {
             if (args != null && args.size() > 0)
                 return methodInfo.invoke(doObject, args.toArray());
             else
-                return methodInfo.invoke(doObject, new Object[] {});
+                return methodInfo.invoke(doObject, null);
         }
         else
             return null;

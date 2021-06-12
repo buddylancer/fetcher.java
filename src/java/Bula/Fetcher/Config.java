@@ -18,6 +18,8 @@ public class Config extends Meta {
     public static final String API_FORMAT = "Json";
     /** Current API output content type (can be "application/json" or "text/xml" for now) */
     public static final String API_CONTENT = "application/json";
+	/** File prefix for constructing real path */
+	public static final String FILE_PREFIX = "src/java/";
 
     /** Security code */
     public static final String SECURITY_CODE = "1234";
@@ -46,13 +48,6 @@ public class Config extends Meta {
     public static final int DB_HOME_ROWS = 15;
     /** Default number of rows on "Items" page */
     public static final int DB_ITEMS_ROWS = 25;
-    /** Date/time format for processing GMT date/times */
-    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm \\G\\M\\T";
-    /** Date/time format for RSS operations */
-    public static final String XML_DTS = "ddd, dd MMM yyyy HH:mm:ss \\G\\M\\T";
-    /** Date/time format for DB operations */
-    public static final String SQL_DTS = "yyyy-MM-dd HH:mm:ss";
-    public static final String LOG_DTS = "yyyy-MM-dd_HH-mm-ss";
 
     // Fill these fields by your site data
     /** Site name */

@@ -421,10 +421,10 @@ public class DOBase extends Meta {
         int $n = 0;
         while ($keys.hasMoreElements()) {
             String $key = (String)$keys.nextElement();
-            if ($n != 0) $fieldNames.concat(", ");
-            if ($n != 0) $fieldValues.concat(", ");
-            $fieldNames.concat($key);
-            $fieldValues.concat("?");
+            if ($n != 0) $fieldNames += ", ";
+            if ($n != 0) $fieldValues += ", ";
+            $fieldNames += $key;
+            $fieldValues += "?";
             $pars = ADD($pars, this.setFunction($key), $fields.get($key));
             $n++;
         }
@@ -452,8 +452,8 @@ public class DOBase extends Meta {
             if ($key == this.$idField) //TODO PHP
                 continue;
             if ($n != 0)
-                $setValues.concat(", ");
-            $setValues.concat(CAT($key, " = ?"));
+                $setValues += ", ";
+            $setValues += CAT($key, " = ?");
             $pars = ADD($pars, this.setFunction($key), $fields.get($key));
             $n++;
         }

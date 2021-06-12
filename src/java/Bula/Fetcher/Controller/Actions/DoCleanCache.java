@@ -30,7 +30,7 @@ public class DoCleanCache extends Page {
         int $log = Request.getOptionalInteger("log");
         if (!NUL($log) && $log != -99999) {
             String $filenameTemplate = new String("C:/Temp/Log_{0}_{1}.html");
-            String $filename = Util.formatString($filenameTemplate, ARR("do_clean_cache", DateTimes.format(Config.SQL_DTS)));
+            String $filename = Util.formatString($filenameTemplate, ARR("do_clean_cache", DateTimes.format(DateTimes.SQL_DTS)));
             $oLogger.init($filename);
         }
         this.cleanCache($oLogger);
