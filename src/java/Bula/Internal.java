@@ -158,7 +158,8 @@ public class Internal extends Bula.Meta {
     
     private static Object callMethodPrivate(String class_name, ArrayList args0, String method_name, ArrayList args) throws Exception
     {
-        String class_name_fixed = Config.FILE_PREFIX.isEmpty() ? class_name : class_name.replace(Config.FILE_PREFIX, "");
+        String class_name_fixed = 
+                Config.FILE_PREFIX.isEmpty() ? class_name : class_name.replaceFirst(Config.FILE_PREFIX, "");
         Class type = Class.forName(class_name_fixed.replace('/', '.'));
 
         Class[] types0 = getTypes(args0);
@@ -252,10 +253,13 @@ public class Internal extends Bula.Meta {
             Hashtable hash = new Hashtable();
             hash.put("title", item.getTitle());
             hash.put("link", item.getLink());
-            hash.put("description", item.getDescription());
+            if (!NUL(item.getDescription()))
+                hash.put("description", item.getDescription());
             hash.put("pubDate", item.getPubDate());
             items.add(hash);
         }
+        itemsStream.close();
         return items.toArray();
+        
     }    
 }

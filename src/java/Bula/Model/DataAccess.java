@@ -107,7 +107,7 @@ public class DataAccess extends Meta {
         java.sql.Connection $oConn = (java.sql.Connection)$link;
         try {
     		Statement $oStmt = $oConn.createStatement();
-            $affected_rows = $oStmt.executeUpdate($input);
+            $affected_rows = $oStmt.executeUpdate($input, Statement.RETURN_GENERATED_KEYS);
             ResultSet $oRs = $oStmt.getGeneratedKeys();
             $generated_id = $oRs.next() ? $oRs.getInt(1) : 0;
         }
@@ -183,7 +183,8 @@ public class DataAccess extends Meta {
                 return null;
             for (Integer $n = 0; $n < $md.getColumnCount(); $n++) {
                 Object $obj = $oRs.getObject($n + 1);
-                $row.put($md.getColumnLabel($n + 1), $obj);
+                if (!NUL($obj))
+                    $row.put($md.getColumnLabel($n + 1), $obj);
             }
         }
         catch (Exception ex) {

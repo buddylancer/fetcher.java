@@ -163,8 +163,9 @@ public class Engine extends Meta {
     public String formatTemplate(String $template, Hashtable $hash) {
         if ($hash == null)
             $hash = new Hashtable();
-        String $content = Strings.replaceInTemplate($template, $hash);
-        return Strings.replaceInTemplate($content, this.$context.$GlobalConstants);
+        String $content1 = Strings.replaceInTemplate($template, $hash);
+		String $content2 = Strings.replaceInTemplate($content1, this.$context.$GlobalConstants);
+        return $content2;
     }
 
     private static String trimComments(String $str) {

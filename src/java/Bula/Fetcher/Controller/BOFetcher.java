@@ -108,8 +108,8 @@ public class BOFetcher extends Meta {
         String $sourceName = STR($oSource.get("s_SourceName"));
         int $sourceId = INT($oSource.get("i_SourceId"));
         BOItem $boItem = new BOItem($sourceName, $item);
-        String $pubdate = STR($item.get("pubdate"));
-        String $date = DateTimes.format(DateTimes.SQL_DTS, DateTimes.fromRss($pubdate));
+        String $pubDate = STR($item.get("pubDate"));
+        String $date = DateTimes.format(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
 
         // Check whether item with the same link exists already
         DOItem $doItem = new DOItem();
@@ -191,10 +191,10 @@ public class BOFetcher extends Meta {
             }
 
             // Release connection after each source
-            if (DBConfig.$Connection != null) {
-                DBConfig.$Connection.close();
-                DBConfig.$Connection = null;
-            }
+            //if (DBConfig.$Connection != null) {
+            //    DBConfig.$Connection.close();
+            //    DBConfig.$Connection = null;
+            //}
 
             this.$oLogger.output(CAT(" (", $itemsCounter, " items) end<br/>", EOL));
         }

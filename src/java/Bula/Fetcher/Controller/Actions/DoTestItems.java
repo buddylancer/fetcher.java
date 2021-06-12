@@ -83,5 +83,6 @@ public class DoTestItems extends Page {
         else
             Response.write(CAT("<hr/>Fetch is not required<br/>", EOL));
         Response.write($BOTTOM);
+        Response.end("");
     }
 }

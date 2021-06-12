@@ -102,7 +102,7 @@ abstract class RssBase extends Page {
         Enumerator $keys = Request.getKeys();
         while ($keys.hasMoreElements()) {
             String $key = (String)$keys.nextElement();
-            if ($key != "source" && $key != "filter" && $key != "code" && $key != "count") {
+            if (!EQ($key, "source") && !EQ($key, "filter") && !EQ($key, "code") && !EQ($key, "count")) {
                 if ($errorMessage.length() > 0)
                     $errorMessage += " ";
                 $errorMessage += CAT("Incorrect parameter '", $key, "'!");
@@ -159,8 +159,9 @@ abstract class RssBase extends Page {
         // 6 - category
 
         String $pubDate = DateTimes.format(DateTimes.XML_DTS);
-        long $nowTime = DateTimes.getTime($pubDate);
-        String $fromDate = DateTimes.gmtFormat(DateTimes.XML_DTS, $nowTime - 6*60*60);
+        String $nowDate = DateTimes.format(DateTimes.SQL_DTS);
+        long $nowTime = DateTimes.getTime($nowDate);
+        String $fromDate = DateTimes.gmtFormat(DateTimes.SQL_DTS, $nowTime - 6*60*60);
         DataSet $dsItems = $doItem.enumItemsFromSource($fromDate, $source, $filter, $count);
         int $current = 0;
 
@@ -259,10 +260,10 @@ abstract class RssBase extends Page {
             Helper.writeText($cachedFile, $contentToCache);
         }
 
-        if (DBConfig.$Connection != null) {
-            DBConfig.$Connection.close();
-            DBConfig.$Connection = null;
-        }
+        //if (DBConfig.$Connection != null) {
+        //    DBConfig.$Connection.close();
+        //    DBConfig.$Connection = null;
+        //}
     }
 
     /**

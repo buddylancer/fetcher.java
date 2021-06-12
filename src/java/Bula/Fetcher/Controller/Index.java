@@ -118,9 +118,9 @@ public class Index extends Page {
         Response.write($engine.getPrintString());
         Response.end("");
 
-        if (DBConfig.$Connection != null) {
-            DBConfig.$Connection.close();
-            DBConfig.$Connection = null;
-        }
+        //if (DBConfig.$Connection != null) {
+        //    DBConfig.$Connection.close();
+        //    DBConfig.$Connection = null;
+        //}
     }
 }

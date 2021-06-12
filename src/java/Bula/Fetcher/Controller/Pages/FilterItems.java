@@ -33,7 +33,7 @@ public class FilterItems extends Page {
         Hashtable $prepare = new Hashtable();
         if (this.$context.$FineUrls)
             $prepare.put("[#Fine_Urls]", 1);
-        $prepare.put("[#Selected]", BLANK($source) ? " selected=\"selected\" " : null);
+        $prepare.put("[#Selected]", BLANK($source) ? " selected=\"selected\" " : " ");
         DataSet $dsSources = null;
         //TODO -- This can be too long on big databases... Switch off counters for now.
         Boolean $useCounters = true;

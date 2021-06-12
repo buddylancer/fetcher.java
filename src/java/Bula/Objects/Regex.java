@@ -22,7 +22,7 @@ public class Regex extends Meta {
      * @return Boolean True - matches, False - not matches.
      */
     public static Boolean isMatch(String $input, String $pattern, int $options /* = 0 */) {
-        return Pattern.matches($input, $pattern); //TODO
+        return Pattern.matches($pattern, $input); //TODO
     }
 
     public static String replace(String $input, String $pattern, String $replacement) {

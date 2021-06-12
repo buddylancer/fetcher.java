@@ -74,7 +74,7 @@ public class Meta {
     public static String STR(Object value)
     {
         if (NUL(value))
-            return null;
+            return ""; //null; //TODO
         if (value instanceof String)
             return (String)value;
         return value.toString();
@@ -89,7 +89,7 @@ public class Meta {
     public static boolean EQ(Object value1, Object value2) {
         if (value1 == null || value2 == null)
             return false;
-        return value1.toString() == value2.toString();
+        return value1.toString().equals(value2.toString());
     }
 
     // String functions
@@ -104,7 +104,7 @@ public class Meta {
             return true;
         if (arg instanceof String)
             return ((String)arg).length() == 0;
-        return (arg.toString() == "");
+        return arg.toString().isEmpty();
     }
 
     /// <summary>
@@ -123,8 +123,11 @@ public class Meta {
     /// <returns>Resulting string</returns>
     public static String CAT(Object... args) {
         String result = "";
-        for (Object arg : args)
+        for (Object arg : args) {
+            if (BLANK(arg))
+                continue;
             result += STR(arg);
+        }
         return result;
     }
 
@@ -195,10 +198,17 @@ public class Meta {
     /// <param name="method">Method to call</param>
     /// <param name="args">Arguments</param>
     /// <returns>Result of method calling</returns>
-    public Object CALL(Object obj, String method, Object[] args) {
+    public Object CALL(Object $obj, String $method, Object[] $args) {
         try {
-            java.lang.reflect.Method methodInfo = obj.getClass().getMethod(method);
-            return methodInfo.invoke(obj, args);
+            Class[] $types = new Class[$args.length];
+            for (int $n = 0; $n < $args.length; $n++) {
+                if ($args[$n] instanceof Integer)
+                    $types[$n] = int.class;
+                else
+                    $types[$n] = $args[$n].getClass();
+            }
+            java.lang.reflect.Method methodInfo = $obj.getClass().getMethod($method, $types);
+            return methodInfo.invoke($obj, $args);
         }
         catch (Exception ex) {
             //TODO 

@@ -93,6 +93,7 @@ public class RecordSet extends Meta {
         Object $arr = DataAccess.fetchArray(this.$result);
 
         if ($arr != null) {
+            this.$record = (Hashtable)$arr;
             return 1;
         }
         else
