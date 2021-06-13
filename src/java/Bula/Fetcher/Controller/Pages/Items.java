@@ -35,7 +35,7 @@ public class Items extends ItemsBase {
     public Hashtable check() {
         String $errorMessage = new String();
 
-        String $list = Request.get("list");
+        String $list = this.$context.$Request.get("list");
         if (!NUL($list)) {
             if (BLANK($list))
                 $errorMessage += "Empty list number!";
@@ -43,7 +43,7 @@ public class Items extends ItemsBase {
                 $errorMessage += "Incorrect list number!";
         }
 
-        String $sourceName = Request.get("source");
+        String $sourceName = this.$context.$Request.get("source");
         if (!NUL($sourceName)) {
             if (BLANK($sourceName)) {
                 if ($errorMessage.length() > 0)
@@ -57,7 +57,7 @@ public class Items extends ItemsBase {
             }
         }
 
-        String $filterName = Request.get("filter");
+        String $filterName = this.$context.$Request.get("filter");
         if (!NUL($filterName)) {
             if (BLANK($filterName)) {
                 if ($errorMessage.length() > 0)

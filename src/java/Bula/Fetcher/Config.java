@@ -18,8 +18,8 @@ public class Config extends Meta {
     public static final String API_FORMAT = "Json";
     /** Current API output content type (can be "application/json" or "text/xml" for now) */
     public static final String API_CONTENT = "application/json";
-	/** File prefix for constructing real path */
-	public static final String FILE_PREFIX = "src/java/";
+    /** File prefix for constructing real path */
+    public static final String FILE_PREFIX = "src/java/";
 
     /** Security code */
     public static final String SECURITY_CODE = "1234";

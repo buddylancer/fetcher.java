@@ -42,22 +42,22 @@ public class Index extends Page {
         if ($pagesArray == null)
             initialize();
 
-        Hashtable $pageInfo = Request.testPage($pagesArray, "home");
+        Hashtable $pageInfo = this.$context.$Request.testPage($pagesArray, "home");
 
         // Test action name
         if (!$pageInfo.containsKey("page")) {
-            Response.end("Error in parameters -- no page");
+            this.$context.$Response.end("Error in parameters -- no page");
             return;
         }
 
         String $pageName = (String)$pageInfo.get("page");
         String $className = (String)$pageInfo.get("class");
 
-        Request.initialize();
+        //this.$context.$Request.initialize();
         if (INT($pageInfo.get("post_required")) == 1)
-            Request.extractPostVars();
+            this.$context.$Request.extractPostVars();
         else
-            Request.extractAllVars();
+            this.$context.$Request.extractAllVars();
         //echo "In Index -- " + print_r(this, true);
         this.$context.set("Page", $pageName);
 
@@ -68,8 +68,8 @@ public class Index extends Page {
 
         Hashtable $prepare = new Hashtable();
         $prepare.put("[#Site_Name]", Config.SITE_NAME);
-        String $pFromVars = Request.contains("p") ? Request.get("p") : "home";
-        String $idFromVars = Request.contains("id") ? Request.get("id") : null;
+        String $pFromVars = this.$context.$Request.contains("p") ? this.$context.$Request.get("p") : "home";
+        String $idFromVars = this.$context.$Request.contains("id") ? this.$context.$Request.get("id") : null;
         String $title = Config.SITE_NAME;
         if ($pFromVars != "home")
             $title = CAT($title, " + ", $pFromVars, (!NUL($idFromVars) ? CAT(" + ", $idFromVars) : null));
@@ -104,7 +104,7 @@ public class Index extends Page {
                 $prepare.put("[#Bottom]", $engine.includeTemplate("Bottom"));
         }
 
-        Response.writeHeader("Content-type", CAT(
+        this.$context.$Response.writeHeader("Content-type", CAT(
             (BLANK($apiName) ? "text/html" : Config.API_CONTENT), "; charset=UTF-8")
         );
         this.write("index", $prepare);
@@ -115,12 +115,12 @@ public class Index extends Page {
         //if (!BLANK($newTitle))
         //    $content = Regex.replace($content, "<title>(.*?)</title>", CAT("<title>", Config.SITE_NAME, " -- ", $newTitle, "</title>"), RegexOptions.IgnoreCase);
 
-        Response.write($engine.getPrintString());
-        Response.end("");
+        this.$context.$Response.write($engine.getPrintString());
+        this.$context.$Response.end();
 
-        //if (DBConfig.$Connection != null) {
-        //    DBConfig.$Connection.close();
-        //    DBConfig.$Connection = null;
-        //}
+        if (DBConfig.$Connection != null) {
+            DBConfig.$Connection.close();
+            DBConfig.$Connection = null;
+        }
     }
 }

@@ -24,10 +24,10 @@ public class DoRedirectSource extends DoRedirect {
     public void execute() {
         String $errorMessage = null;
         String $linkToRedirect = null;
-        if (!Request.contains("source"))
+        if (!this.$context.$Request.contains("source"))
             $errorMessage = "Source name is required!";
         else {
-            String $sourceName = Request.get("source");
+            String $sourceName = this.$context.$Request.get("source");
             if (!Request.isDomainName($sourceName))
                 $errorMessage = "Incorrect source name!";
             else {

@@ -37,8 +37,8 @@ public class Bottom extends Page {
             ArrayList $rows = new ArrayList();
             for (int $n = INT($nn[$td]); $n < INT($nn[$td+1]); $n++) {
                 Hashtable $oCategory = $dsCategory.getRow($n);
-				if (NUL($oCategory))
-					continue;
+                if (NUL($oCategory))
+                    continue;
                 int $counter = INT($oCategory.get("i_Counter"));
                 if (INT($counter) == 0)
                     continue;
@@ -69,8 +69,8 @@ public class Bottom extends Page {
                 ArrayList $rows = new ArrayList();
                 for (int $n = INT($nn[$td]); $n < INT($nn[$td+1]); $n++) {
                     Hashtable $oCategory = $dsCategory.getRow($n);
-					if (NUL($oCategory))
-						continue;
+                    if (NUL($oCategory))
+                        continue;
                     String $key = STR($oCategory.get("s_CatId"));
                     String $name = STR($oCategory.get("s_Name"));
                     //$counter = INT($oCategory.get("i_Counter"));

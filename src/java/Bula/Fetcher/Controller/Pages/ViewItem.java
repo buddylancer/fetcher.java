@@ -28,12 +28,12 @@ public class ViewItem extends Page {
      */
     public Hashtable check() {
         Hashtable $prepare = new Hashtable();
-        if (!Request.contains("id")) {
+        if (!this.$context.$Request.contains("id")) {
             $prepare.put("[#ErrMessage]", "Item ID is required!");
             this.write("error", $prepare);
             return null;
         }
-        String $id = Request.get("id");
+        String $id = this.$context.$Request.get("id");
         if (!Request.isInteger($id)) {
             $prepare.put("[#ErrMessage]", "Item ID must be positive integer!");
             this.write("error", $prepare);

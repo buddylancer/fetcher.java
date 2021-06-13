@@ -22,22 +22,22 @@ public class GetFeed extends Page {
 
     /** Get test feed using parameters from request. */
     public void execute() {
-        Request.initialize();
-        Request.extractAllVars();
+        //this.$context.$Request.initialize();
+        this.$context.$Request.extractAllVars();
 
         // Check source
-        if (!Request.contains("source")) {
-            Response.end("Source is required!");
+        if (!this.$context.$Request.contains("source")) {
+            this.$context.$Response.end("Source is required!");
             return;
         }
-        String $source = Request.get("source");
+        String $source = this.$context.$Request.get("source");
         if (BLANK($source)) {
-            Response.end("Empty source!");
+            this.$context.$Response.end("Empty source!");
             return;
         }
 
-        Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
-        Response.write(Helper.readAllText(CAT(this.$context.$LocalRoot, "local/tests/input/U.S. News - ", $source, ".xml")));
-        Response.end("");
+        this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
+        this.$context.$Response.write(Helper.readAllText(CAT(this.$context.$LocalRoot, "local/tests/input/U.S. News - ", $source, ".xml")));
+        this.$context.$Response.end();
     }
 }

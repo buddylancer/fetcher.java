@@ -42,13 +42,13 @@ abstract class RssBase extends Page {
      * Execute main logic for generating RSS-feeds.
      */
     public void execute() {
-        Request.initialize();
-        Request.extractAllVars();
+        //this.$context.$Request.initialize();
+        this.$context.$Request.extractAllVars();
 
         String $errorMessage = new String();
 
         // Check source
-        String $source = Request.get("source");
+        String $source = this.$context.$Request.get("source");
         if (!NUL($source)) {
             if (BLANK($source))
                 $errorMessage += "Empty source!";
@@ -62,8 +62,8 @@ abstract class RssBase extends Page {
         }
 
         Boolean $anyFilter = false;
-        if (Request.contains("code")) {
-            if (EQ(Request.get("code"), Config.SECURITY_CODE))
+        if (this.$context.$Request.contains("code")) {
+            if (EQ(this.$context.$Request.get("code"), Config.SECURITY_CODE))
                 $anyFilter = true;
         }
 
@@ -73,7 +73,7 @@ abstract class RssBase extends Page {
         DOCategory $doCategory = new DOCategory();
         DataSet $dsCategories = $doCategory.enumCategories();
         if ($dsCategories.getSize() > 0) {
-            $filterName = Request.get("filter");
+            $filterName = this.$context.$Request.get("filter");
             if (!NUL($filterName)) {
                 if (BLANK($filterName)) {
                     if ($errorMessage.length() > 0)
@@ -99,10 +99,14 @@ abstract class RssBase extends Page {
         }
 
         // Check that parameters contain only 'source' or/and 'filter'
-        Enumerator $keys = Request.getKeys();
+        Enumerator $keys = this.$context.$Request.getKeys();
         while ($keys.hasMoreElements()) {
             String $key = (String)$keys.nextElement();
-            if (!EQ($key, "source") && !EQ($key, "filter") && !EQ($key, "code") && !EQ($key, "count")) {
+            if (EQ($key, "source") || EQ($key, "filter") || EQ($key, "code") || EQ($key, "count")) {
+                //OK
+            }
+            else {
+                //Not OK
                 if ($errorMessage.length() > 0)
                     $errorMessage += " ";
                 $errorMessage += CAT("Incorrect parameter '", $key, "'!");
@@ -115,14 +119,14 @@ abstract class RssBase extends Page {
         }
 
         Boolean $fullTitle = false;
-        if (Request.contains("title") && STR(Request.get("title")) == "full")
+        if (this.$context.$Request.contains("title") && STR(this.$context.$Request.get("title")) == "full")
             $fullTitle = true;
 
         int $count = Config.MAX_RSS_ITEMS;
         Boolean $countSet = false;
-        if (Request.contains("count")) {
-            if (INT(Request.get("count")) > 0) {
-                $count = INT(Request.get("count"));
+        if (this.$context.$Request.contains("count")) {
+            if (INT(this.$context.$Request.get("count")) > 0) {
+                $count = INT(this.$context.$Request.get("count"));
                 if ($count < Config.MIN_RSS_ITEMS)
                     $count = Config.MIN_RSS_ITEMS;
                 if ($count > Config.MAX_RSS_ITEMS)
@@ -140,10 +144,10 @@ abstract class RssBase extends Page {
                 (BLANK($filterName) ? null : CAT("-f=", $filterName)),
                 ($fullTitle ? "-full" : null), ".xml");
             if (Helper.fileExists($cachedFile)) {
-                Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
+                this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
                 String $tempContent = Helper.readAllText($cachedFile);
-                //Response.write($tempContent.substring(3)); //TODO -- BOM?
-                Response.write($tempContent); //TODO -- BOM?
+                //this.$context.$Response.write($tempContent.substring(3)); //TODO -- BOM?
+                this.$context.$Response.write($tempContent); //TODO -- BOM?
                 return;
             }
         }
@@ -260,10 +264,10 @@ abstract class RssBase extends Page {
             Helper.writeText($cachedFile, $contentToCache);
         }
 
-        //if (DBConfig.$Connection != null) {
-        //    DBConfig.$Connection.close();
-        //    DBConfig.$Connection = null;
-        //}
+        if (DBConfig.$Connection != null) {
+            DBConfig.$Connection.close();
+            DBConfig.$Connection = null;
+        }
     }
 
     /**

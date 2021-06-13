@@ -89,29 +89,29 @@ public class DataSet extends Meta {
      * Get serialized (XML) representation of the DataSet.
      * @return String Resulting representation.
      */
-    public String toXml() {
+    public String toXml(String $EOL) {
         int $level = 0;
         String $spaces = null;
         String $output = new String();
-        $output += CAT("<DataSet Rows=\"", this.$rows.size(), "\">\n");
+        $output += CAT("<DataSet Rows=\"", this.$rows.size(), "\">", $EOL);
         for (int $n = 0; $n < this.getSize(); $n++) {
             Hashtable $row = this.getRow($n);
             $level++; $spaces = this.addSpaces($level);
-            $output += CAT($spaces, "<Row>\n");
-            Enumerator $keys = 
+            $output += CAT($spaces, "<Row>", $EOL);
+            Enumerator $keys =
                     new Enumerator($row.keys());
             while ($keys.hasMoreElements()) {
                 $level++; $spaces = this.addSpaces($level);
                 String $key = (String)$keys.nextElement();
                 $output += CAT($spaces, "<Item Name=\"", $key, "\">");
                 $output += STR($row.get($key));
-                $output += "</Item>\n";
+                $output += CAT("</Item>", $EOL);
                 $level--; $spaces = this.addSpaces($level);
             }
-            $output += CAT($spaces, "</Row>\n");
+            $output += CAT($spaces, "</Row>", $EOL);
             $level--; $spaces = this.addSpaces($level);
         }
-        $output += "</DataSet>\n";
+        $output += CAT("</DataSet>", $EOL);
         return $output;
     }
 }

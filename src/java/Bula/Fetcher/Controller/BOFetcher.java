@@ -45,12 +45,14 @@ public class BOFetcher extends Meta {
     private void initializeLog() {
         this.$oLogger = new Logger();
         this.$context.set("Log_Object", this.$oLogger);
-        int $log = Request.getOptionalInteger("log");
+        int $log = this.$context.$Request.getOptionalInteger("log");
         if (!NUL($log) && $log != -99999) { //TODO
             String $filenameTemplate = new String(CAT(this.$context.$LocalRoot, "local/logs/{0}_{1}.html"));
             String $filename = Util.formatString($filenameTemplate, ARR("fetch_items", DateTimes.format(DateTimes.LOG_DTS)));
-            this.$oLogger.init($filename);
+            this.$oLogger.initFile($filename);
         }
+        else
+            this.$oLogger.initResponse(this.$context.$Response);
     }
 
     /**
@@ -72,7 +74,7 @@ public class BOFetcher extends Meta {
             return null;
 
         String $source = STR($oSource.get("s_SourceName"));
-        if (Request.contains("m") && !$source.equals(Request.get("m")))
+        if (this.$context.$Request.contains("m") && !$source.equals(this.$context.$Request.get("m")))
             return null;
 
         this.$oLogger.output(CAT("<br/>", EOL, "Started "));
@@ -191,10 +193,10 @@ public class BOFetcher extends Meta {
             }
 
             // Release connection after each source
-            //if (DBConfig.$Connection != null) {
-            //    DBConfig.$Connection.close();
-            //    DBConfig.$Connection = null;
-            //}
+            if (DBConfig.$Connection != null) {
+                DBConfig.$Connection.close();
+                DBConfig.$Connection = null;
+            }
 
             this.$oLogger.output(CAT(" (", $itemsCounter, " items) end<br/>", EOL));
         }

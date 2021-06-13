@@ -24,8 +24,8 @@ public class Meta {
     /// </summary>
     /// <param name="str">Error message</param>
     public static void STOP(Object str) {
-        Response.write(str.toString());
-        //System.Web.HttpContext.Current.Response.End();
+    //    Response.write(str.toString());
+    //    //System.Web.HttpContext.Current.Response.End();
     }
 
     // Common functions

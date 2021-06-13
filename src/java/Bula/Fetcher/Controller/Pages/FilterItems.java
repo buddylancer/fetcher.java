@@ -27,13 +27,13 @@ public class FilterItems extends Page {
         DOSource $doSource = new DOSource();
 
         String $source = null;
-        if (Request.contains("source"))
-            $source = Request.get("source");
+        if (this.$context.$Request.contains("source"))
+            $source = this.$context.$Request.get("source");
 
         Hashtable $prepare = new Hashtable();
         if (this.$context.$FineUrls)
             $prepare.put("[#Fine_Urls]", 1);
-        $prepare.put("[#Selected]", BLANK($source) ? " selected=\"selected\" " : " ");
+        $prepare.put("[#Selected]", BLANK($source) ? " selected=\"selected\" " : "");
         DataSet $dsSources = null;
         //TODO -- This can be too long on big databases... Switch off counters for now.
         Boolean $useCounters = true;

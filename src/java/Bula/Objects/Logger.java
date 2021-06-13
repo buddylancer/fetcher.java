@@ -11,12 +11,14 @@ import Bula.Objects.Helper;
  */
 public class Logger extends Meta {
     private String $fileName = null;
+    private Response $response = null;
 
     /**
      * Initialize logging into file.
      * @param $filename Log file name.
      */
-    public void init(String $filename) {
+    public void initFile(String $filename) {
+        this.$response = null;
         this.$fileName = $filename;
         if (!$filename.isEmpty()) {
             if (Helper.fileExists($filename))
@@ -25,12 +27,22 @@ public class Logger extends Meta {
     }
 
     /**
+     * Initialize logging into file.
+     * @param $filename Log file name.
+     */
+    public void initResponse(Response $response) {
+        this.$fileName = null;
+        if (!NUL($response))
+            this.$response = $response;
+    }
+
+    /**
      * Log text string.
      * @param $text Content to log.
      */
     public void output(String $text) {
         if (this.$fileName == null) {
-            Response.write($text);
+            this.$response.write($text);
             return;
         }
         if (Helper.fileExists(this.$fileName))

@@ -18,12 +18,23 @@ public class Rss extends RssBase {
      */
     public Rss(Context $context) { super($context); }
 
+    /**
+     * Write error message.
+     * @param $errorMessage Error message.
+     */
     public  void writeErrorMessage(String $errorMessage) {
-        Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
-        Response.write(CAT("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL));
-        Response.write(CAT("<data>", $errorMessage, "</data>"));
+        this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
+        this.$context.$Response.write(CAT("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL));
+        this.$context.$Response.write(CAT("<data>", $errorMessage, "</data>"));
     }
 
+    /**
+     * Write starting block of RSS-feed.
+     * @param $source RSS-feed source name.
+     * @param $filterName RSS-feed 'filtered by' value.
+     * @param $pubDate Publication date.
+     * @return String Resulting XML-content of starting block.
+     */
     public  String writeStart(String $source, String $filterName, String $pubDate) {
         String $rssTitle = CAT(
             "Items for ", (BLANK($source) ? "ALL sources" : CAT("'", $source, "'")),
@@ -41,21 +52,29 @@ public class Rss extends RssBase {
             "<lastBuildDate>", $pubDate, "</lastBuildDate>", EOL,
             "<generator>", Config.SITE_NAME, "</generator>", EOL
         );
-        Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
-        Response.write(CAT("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL));
-        Response.write($xmlContent);
+        this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
+        this.$context.$Response.write(CAT("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL));
+        this.$context.$Response.write($xmlContent);
         return $xmlContent;
     }
 
+    /**
+     * Write ending block of RSS-feed.
+     */
     public  String writeEnd() {
         String $xmlContent = Strings.concat(
             "</channel>", EOL,
             "</rss>", EOL);
-        Response.write($xmlContent);
-        Response.end("");
+        this.$context.$Response.write($xmlContent);
+        this.$context.$Response.end();
         return $xmlContent;
     }
 
+    /**
+     * Write an item of RSS-feed.
+     * @param[] $args Array of item parameters.
+     * @return String Resulting XML-content of an item.
+     */
     public  String writeItem(Object[] $args) {
         String $xmlTemplate = Strings.concat(
             "<item>", EOL,
@@ -68,7 +87,7 @@ public class Rss extends RssBase {
             "</item>", EOL
         );
         String $itemContent = Util.formatString($xmlTemplate, $args);
-        Response.write($itemContent);
+        this.$context.$Response.write($itemContent);
         return $itemContent;
     }
 }

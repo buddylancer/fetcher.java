@@ -19,7 +19,7 @@ import Bula.Objects.Response;
  * Engine for processing templates.
  */
 public class Engine extends Meta {
-    private Context $context = null;
+    public Context $context = null;
     private Boolean $printFlag = false;
     private String $printString = "";
 
@@ -68,7 +68,7 @@ public class Engine extends Meta {
      */
     public void write(String $val) {
         if (this.$printFlag)
-            Response.write($val);
+            this.$context.$Response.write($val);
         else
             this.$printString += $val;
     }
@@ -123,7 +123,7 @@ public class Engine extends Meta {
         String $ext = BLANK(this.$context.$Api) ? ".html" : (Config.API_FORMAT == "Xml"? ".xml" : ".txt");
         String $prefix = CAT(Config.FILE_PREFIX, "Bula/Fetcher/View/");
 
-        String $filename = 
+        String $filename =
                 CAT($prefix, (BLANK(this.$context.$Api) ? "Html/" : (Config.API_FORMAT == "Xml"? "Xml/" : "Rest/")), $id, $ext);
         ArrayList $template = this.getTemplate($filename);
 
@@ -164,10 +164,15 @@ public class Engine extends Meta {
         if ($hash == null)
             $hash = new Hashtable();
         String $content1 = Strings.replaceInTemplate($template, $hash);
-		String $content2 = Strings.replaceInTemplate($content1, this.$context.$GlobalConstants);
+        String $content2 = Strings.replaceInTemplate($content1, this.$context.$GlobalConstants);
         return $content2;
     }
 
+    /**
+     * Trim comments from input string.
+     * @param $str Input string.
+     * @return String Resulting string.
+     */
     private static String trimComments(String $str) {
         return trimComments($str, true);
     }
@@ -175,6 +180,7 @@ public class Engine extends Meta {
     /**
      * Trim comments from input string.
      * @param $str Input string.
+     * @param $trim Whether to trim spaces in resulting string.
      * @return String Resulting string.
      */
     private static String trimComments(String $str, Boolean $trim/* = true*/) {

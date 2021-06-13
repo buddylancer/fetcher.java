@@ -13,6 +13,10 @@ import java.util.Enumeration;
  * Base helper class for processing query/form request.
  */
 public class RequestBase extends Meta {
+    /** Current Http request */
+    public javax.servlet.http.HttpServletRequest $HttpRequest = null;
+    /** Current response */
+    public Response $response = null;
 
     /** Enum value (type) for getting POST parameters */
     public static final int INPUT_POST = 0;
@@ -25,7 +29,13 @@ public class RequestBase extends Meta {
     /** Enum value (type) for getting SERVER parameters */
     public static final int INPUT_SERVER = 5;
 
-    public static javax.servlet.http.HttpServletRequest CurrentRequest = null;
+    public RequestBase () { }
+
+    public RequestBase (Object $currentRequest/* = null*/) {
+        if (NUL($currentRequest))
+            return;
+        $HttpRequest = (javax.servlet.http.HttpServletRequest)$currentRequest;
+    }
 
     /**
      * Get all variables of given type.
@@ -33,7 +43,7 @@ public class RequestBase extends Meta {
      * @return Hashtable Requested variables.
      */
     /*
-    public static getVars($type) {
+    public getVars($type) {
         $output = Arrays.newHashtable();
         $vars = filter_input_array($type);
         if ($vars === false || $vars == null)
@@ -43,24 +53,26 @@ public class RequestBase extends Meta {
         return $output;
     }
     */
-    public static Hashtable getVars(Integer $type) {
-        String $method = CurrentRequest.getMethod();
+    public Hashtable getVars(Integer $type) {
+        String $method = $HttpRequest.getMethod();
         switch ($type) {
             case INPUT_GET:
-                if (EQ($method, "GET")) return createHashtable(CurrentRequest, "getParameterNames", "getParameter");
+                if (EQ($method, "GET"))
+                    return createHashtable($HttpRequest, "getParameterNames", "getParameter");
                 break;
             case INPUT_POST:
-                if (EQ($method, "POST")) return createHashtable(CurrentRequest, "getParameterNames", "getParameter");
+                if (EQ($method, "POST"))
+                    return createHashtable($HttpRequest, "getParameterNames", "getParameter");
                 break;
             case INPUT_SERVER:
-                return createHashtable(CurrentRequest, "getHeaderNames", "getHeader");
+                return createHashtable($HttpRequest, "getHeaderNames", "getHeader");
             default:
                 break;
         }
         return new Hashtable();
     }
 
-    private static Hashtable createHashtable(Object $from, String $getNames, String $getValue) {
+    private Hashtable createHashtable(Object $from, String $getNames, String $getValue) {
         Hashtable $hash = new Hashtable();
         try {
             Method $getNamesMethod = $from.getClass().getMethod($getNames, new Class[] {});
@@ -72,11 +84,11 @@ public class RequestBase extends Meta {
                 $hash.put($postName, $parameter);
             }
         }
-        catch (Exception ex) {
-            Meta.STOP(ex.getMessage());
+        catch (Exception $ex) {
+            $response.end($ex.getMessage());
         }
         return $hash;
-    }	
+    }
 
     /**
      * Get a single variable of given type.
@@ -85,12 +97,12 @@ public class RequestBase extends Meta {
      * @return String Requested variable.
      */
     /*
-    public static String getVar(int $type, String $name) {
+    public String getVar(int $type, String $name) {
         $var = filter_input($type, $name);
         return $var == null ? null : new String($var);
     }
     */
-    public static String getVar(Integer $type, String $name) {
+    public String getVar(Integer $type, String $name) {
         Hashtable $vars = getVars($type);
         return (String)$vars.get($name);
     }

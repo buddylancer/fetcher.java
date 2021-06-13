@@ -285,8 +285,8 @@ public class BOItem extends Meta {
      * @return String Resulting URL title.
      */
     public String getUrlTitle() {
-		return getUrlTitle(false);
-	}
+        return getUrlTitle(false);
+    }
 
     /**
      * Generate URL title from item title.

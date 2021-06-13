@@ -189,7 +189,7 @@ public class Strings extends Meta {
         return $template;
     }
 
-	public static String trim(String $str, String $what) {
+    public static String trim(String $str, String $what) {
         while ($str.indexOf($what) == 0) {
             $str = $str.replaceFirst($what, "");
         }
@@ -197,5 +197,5 @@ public class Strings extends Meta {
             $str = $str.substring(0, $str.length() - $what.length());
         }
         return $str;
-	}
+    }
 }

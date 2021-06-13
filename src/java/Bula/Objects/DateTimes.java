@@ -10,11 +10,12 @@ import java.text.*;
  */
 public class DateTimes extends Meta {
     /** Date/time format for processing GMT date/times */
-    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm";
+    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm"; //TODO -- append GMT
     /** Date/time format for RSS operations */
-    public static final String XML_DTS = "EEE, dd MMM yyyy HH:mm:ss";
+    public static final String XML_DTS = "EEE, dd MMM yyyy HH:mm:ss"; //TODO -- append GMT
     /** Date/time format for DB operations */
     public static final String SQL_DTS = "yyyy-MM-dd HH:mm:ss";
+    /** Format of log-file name. */
     public static final String LOG_DTS = "yyyy-MM-dd_HH-mm-ss";
     /** Format of date/time in RSS-feeds. */
     public static final String RSS_DTS = "ddd, dd MMM yyyy HH:mm:ss zzz";

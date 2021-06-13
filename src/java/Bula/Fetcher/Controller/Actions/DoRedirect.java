@@ -40,6 +40,6 @@ abstract class DoRedirect extends Page {
         }
 
         Engine $engine = this.$context.pushEngine(true);
-        Response.write($engine.showTemplate($templateName, $prepare));
+        this.$context.$Response.write($engine.showTemplate($templateName, $prepare));
     }
 }

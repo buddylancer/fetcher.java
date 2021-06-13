@@ -23,28 +23,28 @@ public class CallMethod extends Page {
 
     /** Execute method using parameters from request. */
     public void execute() {
-        Request.initialize();
-        Request.extractAllVars();
+        //this.$context.$Request.initialize();
+        this.$context.$Request.extractAllVars();
 
         // Check security code
-        if (!Request.contains("code")) {
-            Response.end("Code is required!");
+        if (!this.$context.$Request.contains("code")) {
+            this.$context.$Response.end("Code is required!");
             return;
         }
-        String $code = Request.get("code");
+        String $code = this.$context.$Request.get("code");
         if (!EQ($code, Config.SECURITY_CODE)) {
-            Response.end("Incorrect code!");
+            this.$context.$Response.end("Incorrect code!");
             return;
         }
 
         // Check package
-        if (!Request.contains("package")) {
-            Response.end("Package is required!");
+        if (!this.$context.$Request.contains("package")) {
+            this.$context.$Response.end("Package is required!");
             return;
         }
-        String $package = Request.get("package");
+        String $package = this.$context.$Request.get("package");
         if (BLANK($package)) {
-            Response.end("Empty package!");
+            this.$context.$Response.end("Empty package!");
             return;
         }
         String[] $packageChunks = Strings.split("-", $package);
@@ -53,24 +53,24 @@ public class CallMethod extends Page {
         $package = Strings.join("/", $packageChunks);
 
         // Check class
-        if (!Request.contains("class")) {
-            Response.end("Class is required!");
+        if (!this.$context.$Request.contains("class")) {
+            this.$context.$Response.end("Class is required!");
             return;
         }
-        String $className = Request.get("class");
+        String $className = this.$context.$Request.get("class");
         if (BLANK($className)) {
-            Response.end("Empty class!");
+            this.$context.$Response.end("Empty class!");
             return;
         }
 
         // Check method
-        if (!Request.contains("method")) {
-            Response.end("Method is required!");
+        if (!this.$context.$Request.contains("method")) {
+            this.$context.$Response.end("Method is required!");
             return;
         }
-        String $method = Request.get("method");
+        String $method = this.$context.$Request.get("method");
         if (BLANK($method)) {
-            Response.end("Empty method!");
+            this.$context.$Response.end("Empty method!");
             return;
         }
 
@@ -79,9 +79,9 @@ public class CallMethod extends Page {
         ArrayList $pars = new ArrayList();
         for (int $n = 1; $n <= 6; $n++) {
             String $parName = CAT("par", $n);
-            if (!Request.contains($parName))
+            if (!this.$context.$Request.contains($parName))
                 break;
-            String $parValue = Request.get($parName);
+            String $parValue = this.$context.$Request.get($parName);
             if (EQ($parValue, "_"))
                 $parValue = "";
             //$parsArray[] = $parValue;
@@ -97,9 +97,9 @@ public class CallMethod extends Page {
         if ($result == null)
             $buffer = "NULL";
         else if ($result instanceof DataSet)
-            $buffer = ((DataSet)$result).toXml();
+            $buffer = ((DataSet)$result).toXml(EOL);
         else
             $buffer = STR($result);
-        Response.write($buffer);
+        this.$context.$Response.write($buffer);
     }
 }

@@ -99,7 +99,7 @@ public class Util extends Meta {
             $query = $pageName;
         else {
             if ($query == null)
-                $query = Request.getVar(Request.INPUT_SERVER, "QUERY_STRING");
+                $query = $engine.$context.$Request.getVar(Request.INPUT_SERVER, "QUERY_STRING");
             if (BLANK($query))
                 $query = "p=home";
         }

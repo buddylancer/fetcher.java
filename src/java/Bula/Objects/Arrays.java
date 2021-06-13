@@ -51,7 +51,7 @@ public class Arrays extends Meta {
             return $input;
 
         Hashtable $output = (Hashtable)$input.clone();
-        Enumerator $keys = 
+        Enumerator $keys =
             new Enumerator($extra.keys());
         while ($keys.hasMoreElements()) {
             String $key = (String)$keys.nextElement();

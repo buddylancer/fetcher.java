@@ -17,15 +17,24 @@ import Bula.Fetcher.Controller.Engine;
  */
 public class Context extends Config {
     /** Default constructor. */
-    public Context () throws Exception {
+    public Context() throws Exception { initialize(); }
+
+    /**
+     * Constructor for injecting Request and Response.
+     * @param $request Current request.
+     * @param $response Current response.
+     */
+    public Context (Object $request/* = null*/, Object $response/* = null*/) throws Exception {
+        this.$Request = new Request($request);
+        this.$Response = new Response($response);
+        this.$Request.$response = this.$Response;
         this.initialize();
     }
 
-    public Context (Object $request, Object $response) throws Exception {
-		Request.CurrentRequest = (javax.servlet.http.HttpServletRequest) $request;
-		Response.CurrentResponse = (javax.servlet.http.HttpServletResponse) $response;
-        this.initialize();
-    }
+    /** Current request */
+    public Request $Request = null;
+    /** Current response */
+    public Response $Response = null;
 
     /** Storage for internal variables */
     protected Hashtable $Values = new Hashtable();
@@ -99,7 +108,7 @@ public class Context extends Config {
      * Check whether current request is from test script?
      */
     public void checkTestRun() {
-        String $httpTester = Request.getVar(Request.INPUT_SERVER, "HTTP_USER_AGENT");
+        String $httpTester = this.$Request.getVar(Request.INPUT_SERVER, "HTTP_USER_AGENT");
         if ($httpTester == null)
             return;
         if (EQ($httpTester, "TestFull")) {
@@ -128,7 +137,7 @@ public class Context extends Config {
     public void initialize() throws Exception {
         //------------------------------------------------------------------------------
         // You can change something below this line if you know what are you doing :)
-        String $rootDir = Request.CurrentRequest.getRealPath("/"); //TODO!!!
+        String $rootDir = $Request.$HttpRequest.getRealPath("/"); //TODO!!!
         $rootDir = $rootDir.replace("\\", "/"); // Fix for IIS
         // Regarding that we have the ordinary local website (not virtual directory)
         for (int $n = 0; $n <= 2; $n++) {
@@ -137,7 +146,7 @@ public class Context extends Config {
         }
         this.$LocalRoot = $rootDir += "/";
 
-        this.$Host = Request.getVar(Request.INPUT_SERVER, "host");
+        this.$Host =$Request.getVar(Request.INPUT_SERVER, "host");
         this.$Site = Strings.concat("http://", this.$Host);
         this.$IsMobile = this.$Host.indexOf("m.") == 0;
         this.$Lang = this.$Host.lastIndexOf(".ru") != -1 ? "ru" : "en";
@@ -173,15 +182,15 @@ public class Context extends Config {
         this.$GlobalConstants.put("[#Lang]", this.$Lang);
 
         java.lang.reflect.Field fieldInfo = null;
-		try { fieldInfo = Config.class.getField("NAME_CATEGORY"); } catch (Exception ex) { fieldInfo = null; }
+        try { fieldInfo = Config.class.getField("NAME_CATEGORY"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Category", fieldInfo.get(null));
-		try { fieldInfo = Config.class.getField("NAME_CATEGORIES"); } catch (Exception ex) { fieldInfo = null; }
+        try { fieldInfo = Config.class.getField("NAME_CATEGORIES"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Categories", fieldInfo.get(null));
-		try { fieldInfo = Config.class.getField("NAME_CREATOR"); } catch (Exception ex) { fieldInfo = null; }
+        try { fieldInfo = Config.class.getField("NAME_CREATOR"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Creator", fieldInfo.get(null));
-		try { fieldInfo = Config.class.getField("NAME_CUSTOM1"); } catch (Exception ex) { fieldInfo = null; }
+        try { fieldInfo = Config.class.getField("NAME_CUSTOM1"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Custom1", fieldInfo.get(null));
-		try { fieldInfo = Config.class.getField("NAME_CUSTOM2"); } catch (Exception ex) { fieldInfo = null; }
+        try { fieldInfo = Config.class.getField("NAME_CUSTOM2"); } catch (Exception ex) { fieldInfo = null; }
         if (fieldInfo != null) set("Name_Custom2", fieldInfo.get(null));
 
         // Map custom names

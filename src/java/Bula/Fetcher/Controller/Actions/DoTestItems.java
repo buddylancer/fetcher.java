@@ -63,9 +63,9 @@ public class DoTestItems extends Page {
         else
             $insertRequired = true;
 
-        Response.write($TOP);
+        this.$context.$Response.write($TOP);
         if ($updateRequired || $insertRequired) {
-            Response.write(CAT("Fetching new items... Please wait...<br/>", EOL));
+            this.$context.$Response.write(CAT("Fetching new items... Please wait...<br/>", EOL));
 
             BOFetcher $boFetcher = new BOFetcher(this.$context);
             $boFetcher.fetchFromSources();
@@ -81,8 +81,7 @@ public class DoTestItems extends Page {
                 $doTime.updateById(1, $fields);
         }
         else
-            Response.write(CAT("<hr/>Fetch is not required<br/>", EOL));
-        Response.write($BOTTOM);
-        Response.end("");
+            this.$context.$Response.write(CAT("<hr/>Fetch is not required<br/>", EOL));
+        this.$context.$Response.write($BOTTOM);
     }
 }

@@ -6,15 +6,19 @@ import Bula.Meta;
  * Helper class for processing server response.
  */
 public class Response extends Meta {
-    public static javax.servlet.http.HttpServletResponse CurrentResponse = null;
+    /** Current response */
+    private javax.servlet.http.HttpServletResponse $httpResponse = null;
+
+    public Response (Object $response) {
+        $httpResponse = (javax.servlet.http.HttpServletResponse)$response;
+    }
 
     /**
      * Write text to current response.
      * @param $input Text to write.
      */
-    public static void write(String $input) {
-		try { CurrentResponse.getWriter().append($input); } catch (Exception ex) {}
-
+    public void write(String $input) {
+        try { $httpResponse.getWriter().append($input); } catch (Exception ex) {}
     }
 
     /**
@@ -22,18 +26,25 @@ public class Response extends Meta {
      * @param $name Header name.
      * @param $value Header value.
      */
-    public static void writeHeader(String $name, String $value) {
-		CurrentResponse.addHeader($name, $value);
+    public void writeHeader(String $name, String $value) {
+        $httpResponse.addHeader($name, $value);
+    }
 
+    /**
+     * End current response.
+     */
+    public void end() {
+        end(null);
     }
 
     /**
      * End current response.
      * @param $input Text to write before ending response.
      */
-    public static void end(String $input) {
-        write($input);
-		 try { CurrentResponse.flushBuffer(); } catch (Exception ex) {}
+    public void end(String $input/* = null*/) {
+        if (!NUL($input))
+            write($input);
+         try { $httpResponse.flushBuffer(); } catch (Exception ex) {}
     }
 }
 

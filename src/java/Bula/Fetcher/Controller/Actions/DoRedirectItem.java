@@ -25,10 +25,10 @@ public class DoRedirectItem extends DoRedirect {
     public void execute() {
         String $errorMessage = null;
         String $linkToRedirect = null;
-        if (!Request.contains("id"))
+        if (!this.$context.$Request.contains("id"))
             $errorMessage = "Item ID is required!";
         else {
-            String $id = Request.get("id");
+            String $id = this.$context.$Request.get("id");
             if (!Request.isInteger($id) || INT($id) <= 0)
                 $errorMessage = "Incorrect item ID!";
             else {

@@ -12,24 +12,24 @@ import Bula.Objects.Regex;
  */
 public class Request extends RequestBase {
     /** Internal storage for GET/POST variables */
-    private static Hashtable $Vars = null;
+    private Hashtable $Vars = null;
     /** Internal storage for SERVER variables */
-    private static Hashtable $ServerVars = null;
+    private Hashtable $ServerVars = null;
 
-    static { initialize(); }
+    public Request(Object $currentRequest) { super($currentRequest); initialize(); }
 
     /** Initialize internal variables for new request. */
-    public static void initialize() {
-        $Vars = Arrays.newHashtable();
-        $ServerVars = Arrays.newHashtable();
+    private void initialize() {
+        this.$Vars = Arrays.newHashtable();
+        this.$ServerVars = Arrays.newHashtable();
     }
 
     /**
      * Get private variables.
      * @return Hashtable
      */
-    public static Hashtable getPrivateVars() {
-        return $Vars;
+    public Hashtable getPrivateVars() {
+        return this.$Vars;
     }
 
     /**
@@ -37,8 +37,8 @@ public class Request extends RequestBase {
      * @param $name Variable name.
      * @return Boolean True - variable exists, False - not exists.
      */
-    public static Boolean contains(String $name) {
-        return $Vars.containsKey($name);
+    public Boolean contains(String $name) {
+        return this.$Vars.containsKey($name);
     }
 
     /**
@@ -46,11 +46,11 @@ public class Request extends RequestBase {
      * @param $name Variable name.
      * @return String Variable value.
      */
-    public static String get(String $name) {
+    public String get(String $name) {
         //return (String)($Vars.containsKey($name) ? $Vars.get($name) : null);
-        if (!$Vars.containsKey($name))
+        if (!this.$Vars.containsKey($name))
             return null;
-        String $value = (String)$Vars.get($name);
+        String $value = (String)this.$Vars.get($name);
         if (NUL($value))
             $value = "";
         return $value;
@@ -61,35 +61,35 @@ public class Request extends RequestBase {
      * @param $name Variable name.
      * @param $value Variable value.
      */
-    public static void set(String $name, String $value) {
-        $Vars.put($name, $value);
+    public void set(String $name, String $value) {
+        this.$Vars.put($name, $value);
     }
 
     /**
      * Get all variable keys from request.
      * @return Enumeration All keys enumeration.
      */
-    public static Enumerator getKeys() {
-        return new Enumerator($Vars.keys());
+    public Enumerator getKeys() {
+        return new Enumerator(this.$Vars.keys());
     }
 
     /** Extract all POST variables into internal variables. */
-    public static void extractPostVars() {
-        Hashtable $vars = getVars(INPUT_POST);
-        $Vars = Arrays.mergeHashtable($Vars, $vars);
+    public void extractPostVars() {
+        Hashtable $vars = this.getVars(INPUT_POST);
+        this.$Vars = Arrays.mergeHashtable(this.$Vars, $vars);
     }
 
     /** Extract all SERVER variables into internal storage. */
-    public static void extractServerVars() {
-        Hashtable $vars = getVars(INPUT_SERVER);
-        $Vars = Arrays.mergeHashtable($ServerVars, $vars);
+    public void extractServerVars() {
+        Hashtable $vars = this.getVars(INPUT_SERVER);
+        this.$Vars = Arrays.mergeHashtable(this.$ServerVars, $vars);
     }
 
     /** Extract all GET and POST variables into internal storage. */
-    public static void extractAllVars() {
-        Hashtable $vars = getVars(INPUT_GET);
-        $Vars = Arrays.mergeHashtable($Vars, $vars);
-        extractPostVars();
+    public void extractAllVars() {
+        Hashtable $vars = this.getVars(INPUT_GET);
+        this.$Vars = Arrays.mergeHashtable(this.$Vars, $vars);
+        this.extractPostVars();
     }
 
     /**
@@ -97,9 +97,9 @@ public class Request extends RequestBase {
      * @param $text Text to check.
      * @return Boolean True - referer contains provided text, False - not contains.
      */
-    public static Boolean checkReferer(String $text) {
+    public Boolean checkReferer(String $text) {
         //return true; //TODO
-        String $httpReferer = getVar(INPUT_SERVER, "HTTP_REFERER");
+        String $httpReferer = this.getVar(INPUT_SERVER, "HTTP_REFERER");
         if ($httpReferer == null)
             return false;
         return $httpReferer.indexOf($text) != -1;
@@ -109,8 +109,8 @@ public class Request extends RequestBase {
      * Check that request was originated from test script.
      * @return Boolean True - from test script, False - from ordinary user agent.
      */
-    public static Boolean checkTester() {
-        String $httpTester = getVar(INPUT_SERVER, "HTTP_USER_AGENT");
+    public Boolean checkTester() {
+        String $httpTester = this.getVar(INPUT_SERVER, "HTTP_USER_AGENT");
         if ($httpTester == null)
             return false;
         return $httpTester.indexOf("Wget") != -1;
@@ -121,12 +121,14 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return String Resulting value.
      */
-    public static String getRequiredParameter(String $name) {
+    public String getRequiredParameter(String $name) {
         String $val = null;
-        if (contains($name))
-            $val = get($name);
-        else
-            STOP(CAT("Parameter '", $name, "' is required!"));
+        if (this.contains($name))
+            $val = this.get($name);
+        else {
+            String $error = CAT("Parameter '", $name, "' is required!");
+            this.$response.end($error);
+        }
         return $val;
     }
 
@@ -135,10 +137,10 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return String Resulting value or null.
      */
-    public static String getOptionalParameter(String $name) {
+    public String getOptionalParameter(String $name) {
         String $val = null;
-        if (contains($name))
-            $val = get($name);
+        if (this.contains($name))
+            $val = this.get($name);
         return $val;
     }
 
@@ -147,10 +149,12 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return Integer Resulting value.
      */
-    public static int getRequiredInteger(String $name) {
-        String $str = getRequiredParameter($name);
-        if ($str == "" || !isInteger($str))
-            STOP(CAT("Error in parameter '", $name, "'!"));
+    public int getRequiredInteger(String $name) {
+        String $str = this.getRequiredParameter($name);
+        if ($str == "" || !isInteger($str)) {
+            String $error = CAT("Error in parameter '", $name, "'!");
+            this.$response.end($error);
+        }
         return INT($str);
     }
 
@@ -159,14 +163,16 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return Integer Resulting value or null.
      */
-    public static int getOptionalInteger(String $name) {
-        String $val = getOptionalParameter($name);
+    public int getOptionalInteger(String $name) {
+        String $val = this.getOptionalParameter($name);
         if ($val == null)
             return -99999; //TODO
 
         String $str = STR($val);
-        if ($str == "" || !isInteger($str))
-            STOP(CAT("Error in parameter '", $name, "'!"));
+        if ($str == "" || !isInteger($str)) {
+            String $error = CAT("Error in parameter '", $name, "'!");
+            this.$response.end($error);
+        }
         return INT($val);
     }
 
@@ -175,8 +181,8 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return String Resulting value.
      */
-    public static String getRequiredString(String $name) {
-        String $val = getRequiredParameter($name);
+    public String getRequiredString(String $name) {
+        String $val = this.getRequiredParameter($name);
         return $val;
     }
 
@@ -185,8 +191,8 @@ public class Request extends RequestBase {
      * @param $name Parameter name.
      * @return String Resulting value or null.
      */
-    public static String getOptionalString(String $name) {
-        String $val = getOptionalParameter($name);
+    public String getOptionalString(String $name) {
+        String $val = this.getOptionalParameter($name);
         return $val;
     }
 
@@ -195,7 +201,7 @@ public class Request extends RequestBase {
      * @param[] $pages Array of allowed pages (and their parameters).
      * @return Hashtable Resulting page parameters.
      */
-    public static Hashtable testPage(Object[] $pages) {
+    public Hashtable testPage(Object[] $pages) {
         return testPage($pages, null); }
 
     /**
@@ -204,7 +210,7 @@ public class Request extends RequestBase {
      * @param $defaultPage Default page to import for testing.
      * @return Hashtable Resulting page parameters.
      */
-    public static Hashtable testPage(Object[] $pages, String $defaultPage /*= null*/) {
+    public Hashtable testPage(Object[] $pages, String $defaultPage /*= null*/) {
         Hashtable $pageInfo = new Hashtable();
 
         // Get page name
@@ -212,18 +218,18 @@ public class Request extends RequestBase {
         $pageInfo.put("from_get", 0);
         $pageInfo.put("from_post", 0);
 
-        String $apiValue = getVar(INPUT_GET, "api");
+        String $apiValue = this.getVar(INPUT_GET, "api");
         if ($apiValue != null) {
             if (EQ($apiValue, "rest")) // Only Rest for now
                 $pageInfo.put("api", $apiValue);
         }
 
-        String $pValue = getVar(INPUT_GET, "p");
+        String $pValue = this.getVar(INPUT_GET, "p");
         if ($pValue != null) {
             $page = $pValue;
             $pageInfo.put("from_get", 1);
         }
-        $pValue = getVar(INPUT_POST, "p");
+        $pValue = this.getVar(INPUT_POST, "p");
         if ($pValue != null) {
             $page = $pValue;
             $pageInfo.put("from_post", 1);

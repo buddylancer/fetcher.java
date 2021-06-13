@@ -38,33 +38,33 @@ public class Action extends Page {
         if ($actionsArray == null)
             initialize();
 
-        Hashtable $actionInfo = Request.testPage($actionsArray);
+        Hashtable $actionInfo = this.$context.$Request.testPage($actionsArray);
 
         // Test action name
         if (!$actionInfo.containsKey("page")) {
-            Response.end("Error in parameters -- no page");
+            this.$context.$Response.end("Error in parameters -- no page");
             return;
         }
 
         // Test action context
         if (INT($actionInfo.get("post_required")) == 1 && INT($actionInfo.get("from_post")) == 0) {
-            Response.end("Error in parameters -- inconsistent pars");
+            this.$context.$Response.end("Error in parameters -- inconsistent pars");
             return;
         }
 
-        Request.initialize();
+        //this.$context.$Request.initialize();
         if (INT($actionInfo.get("post_required")) == 1)
-            Request.extractPostVars();
+            this.$context.$Request.extractPostVars();
         else
-            Request.extractAllVars();
+            this.$context.$Request.extractAllVars();
 
         //TODO!!!
-        //if (!Request.CheckReferer(Config.$Site))
+        //if (!this.$context.$Request.CheckReferer(Config.$Site))
         //    err404();
 
         if (INT($actionInfo.get("code_required")) == 1) {
-            if (!Request.contains("code") || !EQ(Request.get("code"), Config.SECURITY_CODE)) { //TODO -- hardcoded!!!
-                Response.end("No access.");
+            if (!this.$context.$Request.contains("code") || !EQ(this.$context.$Request.get("code"), Config.SECURITY_CODE)) { //TODO -- hardcoded!!!
+                this.$context.$Response.end("No access.");
                 return;
             }
         }
@@ -73,9 +73,9 @@ public class Action extends Page {
         ArrayList $args0 = new ArrayList(); $args0.add(this.$context);
         Internal.callMethod($actionClass, $args0, "execute", null);
 
-        //if (DBConfig.$Connection != null) {
-        //    DBConfig.$Connection.close();
-        //    DBConfig.$Connection = null;
-        //}
+        if (DBConfig.$Connection != null) {
+            DBConfig.$Connection.close();
+            DBConfig.$Connection = null;
+        }
     }
 }
