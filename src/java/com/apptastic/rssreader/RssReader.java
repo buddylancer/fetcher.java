@@ -266,6 +266,12 @@ public class RssReader {
                 item.setPubDate(text);
             else if ("link".equals(elementName))
                 item.setLink(text);
+            else if ("{http://purl.org/dc/elements/1.1/}creator".equals(elementName))
+                item.setCreator(text);
+            else if ("source".equals(elementName))
+                item.setCreator(text);
+            else if ("company".equals(elementName))
+                item.setCreator(text);
         }
 
     }

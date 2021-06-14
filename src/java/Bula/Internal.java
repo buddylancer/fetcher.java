@@ -251,11 +251,17 @@ public class Internal extends Bula.Meta {
         while (iterator.hasNext()) {
             Item item = iterator.next();
             Hashtable hash = new Hashtable();
-            hash.put("title", item.getTitle());
-            hash.put("link", item.getLink());
+            if (!NUL(item.getTitle()))
+                hash.put("title", item.getTitle());
+            if (!NUL(item.getLink()))
+                hash.put("link", item.getLink());
             if (!NUL(item.getDescription()))
                 hash.put("description", item.getDescription());
-            hash.put("pubDate", item.getPubDate());
+            if (!NUL(item.getPubDate()))
+                hash.put("pubDate", item.getPubDate());
+            if (!NUL(item.getCreator()))
+                hash.put("creator", item.getCreator());
+            
             items.add(hash);
         }
         itemsStream.close();
