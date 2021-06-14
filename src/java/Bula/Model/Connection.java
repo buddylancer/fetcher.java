@@ -18,9 +18,9 @@ public class Connection extends Meta {
      * @param $admin Admin name.
      * @param $password Admin password.
      * @param $db DB name.
-     * @return Integer Result of operation (1 - OK, -1 - error).
+     * @return int Result of operation (1 - OK, -1 - error).
      */
-    public Integer open(String $host, Integer $port, String $admin, String $password, String $db) {
+    public int open(String $host, int $port, String $admin, String $password, String $db) {
         return open($host, $port, $admin, $password, $db, null); }
 
     /**
@@ -31,7 +31,7 @@ public class Connection extends Meta {
      * @param $password Admin password.
      * @param $db DB name.
      * @param $charset DB charset.
-     * @return Integer Result of operation (1 - OK, -1 - error).
+     * @return int Result of operation (1 - OK, -1 - error).
      */
     public int open(String $host, int $port, String $admin, String $password, String $db, String $charset /*= null*/) {
         this.$link = DataAccess.connect($host, $admin, $password, $db, $port); //TODO PHP

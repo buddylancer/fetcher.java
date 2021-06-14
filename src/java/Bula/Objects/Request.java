@@ -147,7 +147,7 @@ public class Request extends RequestBase {
     /**
      * Get required integer parameter by name (or stop execution).
      * @param $name Parameter name.
-     * @return Integer Resulting value.
+     * @return int Resulting value.
      */
     public int getRequiredInteger(String $name) {
         String $str = this.getRequiredParameter($name);
@@ -161,7 +161,7 @@ public class Request extends RequestBase {
     /**
      * Get optional integer parameter by name.
      * @param $name Parameter name.
-     * @return Integer Resulting value or null.
+     * @return int Resulting value or null.
      */
     public int getOptionalInteger(String $name) {
         String $val = this.getOptionalParameter($name);

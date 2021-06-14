@@ -22,7 +22,10 @@ public class Regex extends Meta {
      * @return Boolean True - matches, False - not matches.
      */
     public static Boolean isMatch(String $input, String $pattern, int $options /* = 0 */) {
-        return Pattern.matches($pattern, $input); //TODO
+        //return Pattern.matches($pattern, $input); //TODO
+        int $patternOptions = 
+                ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
+        return Pattern.compile($pattern, $patternOptions).matcher($input).find();
     }
 
     public static String replace(String $input, String $pattern, String $replacement) {

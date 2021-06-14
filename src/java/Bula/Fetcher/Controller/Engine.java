@@ -128,12 +128,15 @@ public class Engine extends Meta {
         ArrayList $template = this.getTemplate($filename);
 
         String $content = new String();
+        String $short_name = Strings.replace("Bula/Fetcher/View/Html", "View", $filename);
+        if (!BLANK(Config.FILE_PREFIX))
+            $short_name = Strings.replace(Config.FILE_PREFIX, "", $short_name);
         if (BLANK(this.$context.$Api))
-            $content += CAT(EOL, "<!-- BEGIN ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -->", EOL);
+            $content += CAT(EOL, "<!-- BEGIN ", $short_name, " -->", EOL);
         if (!BLANK($template))
             $content += this.processTemplate($template, $hash);
         if (BLANK(this.$context.$Api))
-            $content += CAT("<!-- END ", Strings.replace("Bula/Fetcher/View/Html", "View", $filename), " -->", EOL);
+            $content += CAT("<!-- END ", $short_name, " -->", EOL);
         return $content;
     }
 

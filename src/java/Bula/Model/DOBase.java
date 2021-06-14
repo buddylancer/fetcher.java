@@ -154,9 +154,9 @@ public class DOBase extends Meta {
      * Update database using $query and $parameters
      * @param $query SQL-query to execute.
      * @param[] $pars Query parameters.
-     * @return Integer Update status.
+     * @return int Update status.
      */
-    protected Integer updateInternal(String $query, Object[] $pars) {
+    protected int updateInternal(String $query, Object[] $pars) {
         return updateInternal($query, $pars, "update");}
 
     /**
@@ -164,7 +164,7 @@ public class DOBase extends Meta {
      * @param $query SQL-query to execute.
      * @param[] $pars Query parameters.
      * @param $operation Operation - "update" (default) or "insert".
-     * @return Integer Update status (or inserted ID for "insert" operation).
+     * @return int Update status (or inserted ID for "insert" operation).
      */
     protected int updateInternal(String $query, Object[] $pars, Object $operation/* = "update"*/) {
         PreparedStatement $oStmt = this.$dbConnection.prepareStatement($query);
@@ -344,7 +344,7 @@ public class DOBase extends Meta {
      * @param $rows Number of rows in a list.
      * @return DataSet Resulting data set.
      */
-    public DataSet selectList(Integer $list, Integer $rows) {
+    public DataSet selectList(int $list, int $rows) {
         return selectList($list, $rows, null, null, null); }
 
     /**
@@ -354,7 +354,7 @@ public class DOBase extends Meta {
      * @param $fields Fields to include (divided by ',').
      * @return DataSet Resulting data set.
      */
-    public DataSet selectList(Integer $list, Integer $rows, String $fields) {
+    public DataSet selectList(int $list, int $rows, String $fields) {
         return selectList($list, $rows, $fields, null, null); }
 
     /**
@@ -365,7 +365,7 @@ public class DOBase extends Meta {
      * @param $where Where condition [optional].
      * @return DataSet Resulting data set.
      */
-    public DataSet selectList(Integer $list, Integer $rows, String $fields, String $where) {
+    public DataSet selectList(int $list, int $rows, String $fields, String $where) {
         return selectList($list, $rows, $fields, $where, null); }
 
     /**
@@ -395,7 +395,7 @@ public class DOBase extends Meta {
     /**
      * Delete record by ID.
      * @param $id Unique ID.
-     * @return Integer Result of operation.
+     * @return int Result of operation.
      */
     public int deleteById(int $id) {
         String $query = Strings.concat(
@@ -409,7 +409,7 @@ public class DOBase extends Meta {
     /**
      * Insert new record based on given fields.
      * @param $fields The set of fields.
-     * @return Integer Result of SQL-query execution.
+     * @return int Result of SQL-query execution.
      */
     public int insert(Hashtable $fields) {
         Enumerator $keys =
@@ -439,7 +439,7 @@ public class DOBase extends Meta {
      * Update existing record by ID based on given fields.
      * @param $id Unique record ID.
      * @param $fields The set of fields.
-     * @return Integer Result of SQL-query execution.
+     * @return int Result of SQL-query execution.
      */
     public int updateById(Object $id, Hashtable $fields) {
         Enumerator $keys =

@@ -88,7 +88,7 @@ public class Strings extends Meta {
      * Count substrings in the string.
      * @param $input Input string.
      * @param $chunk String to count.
-     * @return Integer Number of substrings.
+     * @return int Number of substrings.
      */
     public static int countSubstrings(String $input, String $chunk) {
         if ($input.length() == 0)
@@ -149,7 +149,7 @@ public class Strings extends Meta {
      * @return String Resulting string.
      */
     public static String replace(String $from, String $to, String $input, int $limit/* = 0*/) {
-        return $limit != 0 ? Regex.replace($input, $from, $to, $limit) : $input.replace($from, $to);
+        return $limit == 1 ? $input.replaceFirst($from, $to) : $input.replace($from, $to);
     }
 
     /**

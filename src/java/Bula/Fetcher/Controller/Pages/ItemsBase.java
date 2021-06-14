@@ -120,7 +120,7 @@ abstract class ItemsBase extends Page {
      * @param $itemId Item ID.
      * @return String Resulting external link.
      */
-    public String getRedirectItemLink(Integer $itemId) {
+    public String getRedirectItemLink(int $itemId) {
         return getRedirectItemLink($itemId, null);
     }
 
@@ -142,7 +142,7 @@ abstract class ItemsBase extends Page {
      * @param $itemId Item ID.
      * @return String Resulting internal link.
      */
-    public String getViewItemLink(Integer $itemId) {
+    public String getViewItemLink(int $itemId) {
         return getViewItemLink($itemId, null);
     }
 

@@ -146,7 +146,7 @@ public class Context extends Config {
         }
         this.$LocalRoot = $rootDir += "/";
 
-        this.$Host =$Request.getVar(Request.INPUT_SERVER, "host");
+        this.$Host = this.$Request.getVar(Request.INPUT_SERVER, "HTTP_HOST");
         this.$Site = Strings.concat("http://", this.$Host);
         this.$IsMobile = this.$Host.indexOf("m.") == 0;
         this.$Lang = this.$Host.lastIndexOf(".ru") != -1 ? "ru" : "en";

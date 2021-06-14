@@ -38,9 +38,9 @@ public class Internal extends Bula.Meta {
         //Boolean has_open = java.util.regex.isMatch(input, "<[a-z]+[^>]*>");
         //Boolean has_close = Regex.IsMatch(input, "</[a-z]+>");
         //Boolean has_twin = Regex.IsMatch(input, "<[a-z]+/>");
-        Boolean has_open = Pattern.compile("<[a-z]+[^>]*>").matcher(input).matches();
-        Boolean has_close = Pattern.compile("</[a-z]+>").matcher(input).matches();
-        Boolean has_twin = Pattern.compile("<[a-z]+/>").matcher(input).matches();
+        Boolean has_open = Pattern.compile("<[a-z]+[^>]*>").matcher(input).find();
+        Boolean has_close = Pattern.compile("</[a-z]+>").matcher(input).find();
+        Boolean has_twin = Pattern.compile("<[a-z]+/>").matcher(input).find();
 
         if (!has_open && !has_close && !has_twin)
             return input;
@@ -58,7 +58,7 @@ public class Internal extends Bula.Meta {
     private static String removeTag(String input, String tag)
     {
         //return Regex.Replace(input, CAT("<[/]*", tag, "[^>]*[/]*>"), "");
-        return Pattern.compile(CAT("<[/]*", tag, "[^>]*[/]*>")).matcher(input).replaceAll("");
+        return Pattern.compile(CAT("<[/]*", tag, "[^>]*[/]*>")).matcher(input).replaceAll(" ");
     }
 
     private static String decorateTags(String $input, String $except)
@@ -83,7 +83,7 @@ public class Internal extends Bula.Meta {
     private static String undecorateTags(String input)
     {
         //return Regex.Replace(input, CAT("~{([/]*[^}]+)}~"), "<$1>");
-        return Pattern.compile(CAT("~{([/]*[^}]+)}~")).matcher(input).replaceAll("<$1>");
+        return Pattern.compile(CAT("~\\{([/]*[^}]+)\\}~")).matcher(input).replaceAll("<$1>");
     }
 
     /// <summary>
@@ -126,10 +126,11 @@ public class Internal extends Bula.Meta {
                 {
                     try {
                         int result = Integer.parseInt((String)args.get(n));
-                        types[n] = Integer.class;
-                        args.add(n, result);
+                        types[n] = int.class;
+                        args.set(n, result);
                     } catch (Exception ex) {
                         // skip
+                        int x=1;
                     }
                 }
             }
@@ -259,13 +260,15 @@ public class Internal extends Bula.Meta {
                 hash.put("description", item.getDescription());
             if (!NUL(item.getPubDate()))
                 hash.put("pubDate", item.getPubDate());
-            if (!NUL(item.getCreator()))
-                hash.put("creator", item.getCreator());
+            if (!NUL(item.getSource()))
+                hash.put("source", item.getSource());
+            if (!NUL(item.getCategory()))
+                hash.put("category", item.getCategory());
             
             items.add(hash);
         }
         itemsStream.close();
         return items.toArray();
         
-    }    
+    }
 }

@@ -10,19 +10,19 @@ import java.text.*;
  */
 public class DateTimes extends Meta {
     /** Date/time format for processing GMT date/times */
-    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm"; //TODO -- append GMT
+    public static final String GMT_DTS = "dd-MMM-yyyy HH:mm 'GMT'"; //TODO -- append GMT
     /** Date/time format for RSS operations */
-    public static final String XML_DTS = "EEE, dd MMM yyyy HH:mm:ss"; //TODO -- append GMT
+    public static final String XML_DTS = "EEE, dd MMM yyyy HH:mm:ss 'GMT'";
     /** Date/time format for DB operations */
     public static final String SQL_DTS = "yyyy-MM-dd HH:mm:ss";
     /** Format of log-file name. */
     public static final String LOG_DTS = "yyyy-MM-dd_HH-mm-ss";
     /** Format of date/time in RSS-feeds. */
-    public static final String RSS_DTS = "ddd, dd MMM yyyy HH:mm:ss zzz";
+    public static final String RSS_DTS = "EEE, dd MMM yyyy HH:mm:ss zzz";
 
     /**
      * Get current time as Unix timestamp.
-     * @return Integer Resulting time (Unix timestamp).
+     * @return int Resulting time (Unix timestamp).
      */
     public static long getTime() {
         return (long)(new Date()).getTime();
@@ -31,7 +31,7 @@ public class DateTimes extends Meta {
     /**
      * Get time as Unix timestamp.
      * @param $timeString Input string.
-     * @return Integer Resulting time (Unix timestamp).
+     * @return int Resulting time (Unix timestamp).
      */
     public static long getTime(String $timeString/* = null*/) {
         try { return (new SimpleDateFormat(SQL_DTS)).parse($timeString).getTime(); } catch (Exception ex) { return 0; }
@@ -40,10 +40,10 @@ public class DateTimes extends Meta {
     /**
      * Get Unix timestamp from date/time extracted from RSS-feed.
      * @param $timeString Input string.
-     * @return Integer Resulting timestamp.
+     * @return int Resulting timestamp.
      */
     public static long fromRss(String $timeString) {
-        return getTime($timeString);
+        try { return (new SimpleDateFormat(RSS_DTS)).parse($timeString).getTime(); } catch (Exception ex) { return 0; }
     }
 
     /**

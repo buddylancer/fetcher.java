@@ -118,7 +118,7 @@ public class PreparedStatement extends Meta {
     }
 
     /**
-     * Set Integer parameter.
+     * Set int parameter.
      * @param $n Parameter number.
      * @param $val Parameter value.
      */

@@ -72,7 +72,7 @@ public class Index extends Page {
         String $idFromVars = this.$context.$Request.contains("id") ? this.$context.$Request.get("id") : null;
         String $title = Config.SITE_NAME;
         if ($pFromVars != "home")
-            $title = CAT($title, " + ", $pFromVars, (!NUL($idFromVars) ? CAT(" + ", $idFromVars) : null));
+            $title = CAT($title, " :: ", $pFromVars, (!NUL($idFromVars) ? CAT(" :: ", $idFromVars) : null));
 
         $prepare.put("[#Title]", $title); //TODO -- need unique title on each page
         $prepare.put("[#Keywords]", Config.SITE_KEYWORDS);

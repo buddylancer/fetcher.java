@@ -70,7 +70,7 @@ public class DOCategory extends DOBase {
      * @param $minCount Include categories with Counter >= min_count.
      * @return DataSet Resulting data set.
      */
-    public DataSet enumCategories(String $order, Integer $minCount) {
+    public DataSet enumCategories(String $order, int $minCount) {
         return this.enumCategories($order, $minCount, 0); }
 
     /**

@@ -9,7 +9,7 @@ public class Config extends Meta {
     /** Exactly the same as RewriteBase in .htaccess */
     public static final String TOP_DIR = "/";
     /** Index page name */
-    public static final String INDEX_PAGE = "index.jsp";
+    public static final String INDEX_PAGE = "";
     /** Action page name */
     public static final String ACTION_PAGE = "action.jsp";
     /** RSS-feeds page name */

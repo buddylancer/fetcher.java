@@ -36,7 +36,8 @@ public class Item {
     private String guid;
     private boolean isPermaLink;
     private String pubDate;
-    private String creator;
+    private String source;
+    private String category;
     private Channel channel;
 
     /**
@@ -139,13 +140,23 @@ public class Item {
         this.pubDate = pubDate;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getSource() {
+        return source;
     }
     
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setSource(String source) {
+        this.source = source;
     }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
+    }
+    
+    
     /**
      * Get the channel that this item was published in.
      * @return channel

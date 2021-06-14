@@ -102,7 +102,7 @@ public class BOFetcher extends Meta {
      * Parse data from the item.
      * @param $oSource Source object.
      * @param $item Item object.
-     * @return Integer Result of executing SQL-query.
+     * @return int Result of executing SQL-query.
      */
     private int parseItemData(Hashtable $oSource, Hashtable $item) {
         // Load original values

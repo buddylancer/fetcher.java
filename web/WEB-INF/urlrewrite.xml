@@ -1,0 +1,241 @@
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://www.tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+    <rule>
+        <from>/images/$</from>
+        <to>/page404.html</to>
+    </rule>
+
+    <rule>
+        <from>/rss[/]*$</from>
+        <to>/rss.jsp</to>
+    </rule>
+    <rule>
+        <from>/rss/([A-Za-z0-9\.]*).xml*$</from>
+        <to>/rss.jsp?filter=$1</to>
+    </rule>
+    <rule>
+        <from>/rss/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/rss.jsp?filter=$1</to>
+    </rule>
+    <rule>
+        <from>/rss/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/rss.jsp?source=$1</to>
+    </rule>
+    <rule>
+        <from>/rss/source/([A-Za-z0-9\.]*)/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/rss.jsp?source=$1&amp;filter=$2</to>
+    </rule>
+    <rule>
+        <from>/rss/filter/([A-Za-z0-9\.]*)/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/rss.jsp?filter=$1&amp;source=$2</to>
+    </rule>
+
+    <rule>
+        <from>/api/items/source/([A-Za-z0-9\.]*)/filter/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;source=$1&amp;filter=$2&amp;list=$3</to>
+    </rule>
+    <rule>
+        <from>/api/items/filter/([A-Za-z0-9\.]*)/source/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;filter=$1&amp;source=$2&amp;list=$3</to>
+    </rule>
+    <rule>
+        <from>/api/items/source/([A-Za-z0-9\.]*)/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;source=$1&amp;filter=$2</to>
+    </rule>
+    <rule>
+        <from>/api/items/filter/([A-Za-z0-9\.]*)/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;filter=$1&amp;source=$2</to>
+    </rule>
+    <rule>
+        <from>/api/items/source/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;source=$1&amp;list=$2</to>
+    </rule>
+    <rule>
+        <from>/api/items/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;source=$1</to>
+    </rule>
+    <rule>
+        <from>/api/items/filter/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;filter=$1&amp;list=$2</to>
+    </rule>
+    <rule>
+        <from>/api/items/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;filter=$1</to>
+    </rule>
+    <rule>
+        <from>/api/items/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items&amp;list=$1</to>
+    </rule>
+    <rule>
+        <from>/api/items[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=items</to>
+    </rule>
+    
+    <rule>
+        <from>/api/sources[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=sources</to>
+    </rule>
+    <rule>
+        <from>/api/item/([0-9]*)/([A-Za-z0-9\-\.]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=view_item&amp;id=$1&amp;title=$2</to>
+    </rule>
+    <rule>
+        <from>/api/item/([0-9]*)[/]*$</from>
+        <to>/index.jsp?api=rest&amp;p=view_item&amp;id=$1</to>
+    </rule>
+    
+    <rule>
+        <from>/api[/]*$</from>
+        <to>/index.jsp?api=rest</to>
+    </rule>
+
+    <rule>
+        <from>/redirect/item/([0-9]*)[/]*$</from>
+        <to>/action.jsp?p=do_redirect_item&amp;id=$1</to>
+    </rule>
+    <rule>
+        <from>/redirect/item/([0-9]*)/([A-Za-z0-9\-\.]*)[/]*$</from>
+        <to>/action.jsp?p=do_redirect_item&amp;id=$1&amp;title=$2</to>
+    </rule>
+    <rule>
+        <from>/redirect/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/action.jsp?p=do_redirect_source&amp;source=$1</to>
+    </rule>
+
+    <rule>
+        <from>/items/source/([A-Za-z0-9\.]*)/filter/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;source=$1&amp;filter=$2&amp;list=$3</to>
+    </rule>
+    <rule>
+        <from>/items/filter/([A-Za-z0-9\.]*)/source/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;filter=$1&amp;source=$2&amp;list=$3</to>
+    </rule>
+    <rule>
+        <from>/items/source/([A-Za-z0-9\.]*)/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;source=$1&amp;filter=$2</to>
+    </rule>
+    <rule>
+        <from>/items/filter/([A-Za-z0-9\.]*)/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;filter=$1&amp;source=$2</to>
+    </rule>
+    <rule>
+        <from>/items/source/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;source=$1&amp;list=$2</to>
+    </rule>
+    <rule>
+        <from>/items/source/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;source=$1</to>
+    </rule>
+    <rule>
+        <from>/items/filter/([A-Za-z0-9\.]*)/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;filter=$1&amp;list=$2</to>
+    </rule>
+    <rule>
+        <from>/items/filter/([A-Za-z0-9\.]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;filter=$1</to>
+    </rule>
+    <rule>
+        <from>/items/list/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=items&amp;list=$1</to>
+    </rule>
+    <rule>
+        <from>/items[/]*$</from>
+        <to>//index.jsp?p=items</to>
+    </rule>
+    <rule>
+        <from>/sources[/]*$</from>
+        <to>/index.jsp?p=sources</to>
+    </rule>
+    <rule>
+        <from>/item/([0-9]*)/([A-Za-z0-9\-\.]*)[/]*$</from>
+        <to>/index.jsp?p=view_item&amp;id=$1&amp;title=$2</to>
+    </rule>
+    <rule>
+        <from>/item/([0-9]*)[/]*$</from>
+        <to>/index.jsp?p=view_item&amp;id=$1</to>
+    </rule>
+
+	<rule>
+		<note>
+            The rule means that requests to /test/status/ will be redirected to /rewrite-status
+            the url will be rewritten.
+		</note>
+		<from>/test/status/</from>
+		<to type="redirect">%{context-path}/rewrite-status</to>
+	</rule>
+	<outbound-rule>
+		<note>
+            The outbound-rule specifies that when response.encodeURL is called (if you are using JSTL c:url)
+            the url /rewrite-status will be rewritten to /test/status/.
+
+            The above rule and this outbound-rule means that end users should never see the
+            url /rewrite-status only /test/status/ both in thier location bar and in hyperlinks
+            in your pages.
+		</note>
+		<from>/rewrite-status</from>
+		<to>/test/status/</to>
+	</outbound-rule><!--
+
+    INSTALLATION
+
+        in your web.xml add...
+
+        <filter>
+            <filter-name>UrlRewriteFilter</filter-name>
+            <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+            <init-param>
+                <param-name>logLevel</param-name>
+                <param-value>WARN</param-value>
+            </init-param>
+        </filter>
+        <filter-mapping>
+            <filter-name>UrlRewriteFilter</filter-name>
+            <url-pattern>/*</url-pattern>
+        </filter-mapping>
+
+     EXAMPLES
+
+     Redirect one url
+        <rule>
+            <from>/some/old/page.html</from>
+            <to type="redirect">/very/new/page.html</to>
+        </rule>
+
+    Redirect a directory
+        <rule>
+            <from>/some/olddir/(.*)</from>
+            <to type="redirect">/very/newdir/$1</to>
+        </rule>
+
+    Clean a url
+        <rule>
+            <from>/products/([0-9]+)</from>
+            <to>/products/index.jsp?product_id=$1</to>
+        </rule>
+    eg, /products/1234 will be passed on to /products/index.jsp?product_id=1234 without the user noticing.
+
+    Browser detection
+        <rule>
+            <condition name="user-agent">Mozilla/[1-4]</condition>
+            <from>/some/page.html</from>
+            <to>/some/page-for-old-browsers.html</to>
+        </rule>
+    eg, will pass the request for /some/page.html on to /some/page-for-old-browsers.html only for older
+    browsers whose user agent srtings match Mozilla/1, Mozilla/2, Mozilla/3 or Mozilla/4.
+
+    Centralised browser detection
+        <rule>
+            <condition name="user-agent">Mozilla/[1-4]</condition>
+            <set type="request" name="browser">moz</set>
+        </rule>
+    eg, all requests will be checked against the condition and if matched
+    request.setAttribute("browser", "moz") will be called.
+
+    
+-->
+</urlrewrite>

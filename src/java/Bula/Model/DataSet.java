@@ -23,7 +23,7 @@ public class DataSet extends Meta {
 
     /**
      * Get the size (number of rows) of the DataSet.
-     * @return Integer DataSet size.
+     * @return int DataSet size.
      */
     public int getSize() {
         return this.$rows.size();
@@ -48,7 +48,7 @@ public class DataSet extends Meta {
 
     /**
      * Get page size of the DataSet.
-     * @return Integer Current page size.
+     * @return int Current page size.
      */
     public int getPageSize() {
         return this.$pageSize;
@@ -64,7 +64,7 @@ public class DataSet extends Meta {
 
     /**
      * Get total number of pages in the DataSet.
-     * @return Integer Number of pages.
+     * @return int Number of pages.
      */
     public int getTotalPages() {
         return this.$totalPages;

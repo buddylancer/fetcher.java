@@ -242,7 +242,7 @@ public class Util extends Meta {
      * @return String Transliterated text.
      */
     public static String transliterateRusToLat(String $ruText) {
-        for (Integer $n = 0; $n < $ruChars.length; $n++)
+        for (int $n = 0; $n < $ruChars.length; $n++)
             $ruText = Strings.replaceAll($ruChars[$n], $enChars[$n], $ruText);
         return $ruText;
     }

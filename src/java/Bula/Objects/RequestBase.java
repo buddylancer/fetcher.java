@@ -37,33 +37,17 @@ public class RequestBase extends Meta {
         $HttpRequest = (javax.servlet.http.HttpServletRequest)$currentRequest;
     }
 
-    /**
-     * Get all variables of given type.
-     * @param $type Required type.
-     * @return Hashtable Requested variables.
-     */
-    /*
-    public getVars($type) {
-        $output = Arrays.newHashtable();
-        $vars = filter_input_array($type);
-        if ($vars === false || $vars == null)
-            return $output;
-        foreach ($vars as $key => $value)
-            $output.put($key, $value == null ? "" : $value);
-        return $output;
-    }
-    */
     public Hashtable getVars(Integer $type) {
         String $method = $HttpRequest.getMethod();
         switch ($type) {
             case INPUT_GET:
-                if (EQ($method, "GET"))
-                    return createHashtable($HttpRequest, "getParameterNames", "getParameter");
-                break;
+                if (!EQ($method, "GET"))
+                    break;
+                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_POST:
-                if (EQ($method, "POST"))
-                    return createHashtable($HttpRequest, "getParameterNames", "getParameter");
-                break;
+                if (!EQ($method, "POST"))
+                    break;
+                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_SERVER:
                 return createHashtable($HttpRequest, "getHeaderNames", "getHeader");
             default:
@@ -79,9 +63,10 @@ public class RequestBase extends Meta {
             Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] { String.class});
             Enumerator $names = new Enumerator((Enumeration)$getNamesMethod.invoke($from, (Object[])null));
             while ($names.hasMoreElements()) {
-                String $postName = (String)$names.nextElement();
-                String $parameter = (String)$getValueMethod.invoke($from, new Object[] { $postName });
-                $hash.put($postName, $parameter);
+                String $name = (String)$names.nextElement();
+                String $mappedName = $mapHeaders.containsKey($name) ? $mapHeaders.get($name) : $name;
+                String $parameter = (String)$getValueMethod.invoke($from, new Object[] { $name });
+                $hash.put($mappedName, $parameter);
             }
         }
         catch (Exception $ex) {
@@ -96,15 +81,17 @@ public class RequestBase extends Meta {
      * @param $name Variable name.
      * @return String Requested variable.
      */
-    /*
-    public String getVar(int $type, String $name) {
-        $var = filter_input($type, $name);
-        return $var == null ? null : new String($var);
-    }
-    */
     public String getVar(Integer $type, String $name) {
         Hashtable $vars = getVars($type);
         return (String)$vars.get($name);
     }
+    
+    private static final Hashtable<String, String> $mapHeaders = new Hashtable<String, String>() {
+        { put("user-agent", "HTTP_USER_AGENT"); }
+        { put("host", "HTTP_HOST"); }
+        { put("query", "QUERY_STRING"); }
+        { put("referer", "HTTP_REFERER"); }
+    };
+    
 }
 

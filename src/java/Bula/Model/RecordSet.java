@@ -48,7 +48,7 @@ public class RecordSet extends Meta {
 
     /**
      * Get current number of rows in the record set.
-     * @return Integer Number of rows.
+     * @return int Number of rows.
      */
     public int getRows() {
         return this.$numRows;
@@ -56,7 +56,7 @@ public class RecordSet extends Meta {
 
     /**
      * Get current number of pages in the record set.
-     * @return Integer Number of pages.
+     * @return int Number of pages.
      */
     public int getPages() {
         return this.$numPages;
@@ -77,7 +77,7 @@ public class RecordSet extends Meta {
 
     /**
      * Get current page of the record set.
-     * @return Integer Current page number.
+     * @return int Current page number.
      */
     public int getPage() {
         return this.$pageNo;
@@ -85,7 +85,7 @@ public class RecordSet extends Meta {
 
     /**
      * Get next record from the result of operation.
-     * @return Integer Status of operation:
+     * @return int Status of operation:
      *   1 - next record exists.
      *   0 - next record not exists.
      */

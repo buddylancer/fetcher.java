@@ -5,6 +5,7 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 
 import java.util.ArrayList;
+import Bula.Objects.Arrays;
 import java.util.Hashtable;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
@@ -246,7 +247,9 @@ public class BOItem extends Meta {
                     $includeFlag |= true;
             }
             if ($includeFlag) {
-            }
+                ArrayList $arrayList = Arrays.createArrayList($categoryTags); $arrayList.add($name);
+                $categoryTags = (String[])$arrayList.toArray(new String[] {});
+             }
         }
         if (SIZE($categoryTags) == 0)
             return;

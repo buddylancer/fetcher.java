@@ -26,6 +26,8 @@ public class CallMethod extends Page {
         //this.$context.$Request.initialize();
         this.$context.$Request.extractAllVars();
 
+        this.$context.$Response.writeHeader("Content-type", "text/html; charset=UTF-8");
+
         // Check security code
         if (!this.$context.$Request.contains("code")) {
             this.$context.$Response.end("Code is required!");
@@ -94,6 +96,9 @@ public class CallMethod extends Page {
 
         String $fullClass = CAT($package, "/", $className);
 
+        $fullClass = Strings.replace("/", ".", $fullClass);
+        $result = Bula.Internal.callMethod($fullClass, new ArrayList(), $method, $pars);
+
         if ($result == null)
             $buffer = "NULL";
         else if ($result instanceof DataSet)
@@ -101,5 +106,6 @@ public class CallMethod extends Page {
         else
             $buffer = STR($result);
         this.$context.$Response.write($buffer);
+        this.$context.$Response.end();
     }
 }
