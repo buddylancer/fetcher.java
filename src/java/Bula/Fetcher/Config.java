@@ -37,6 +37,8 @@ public class Config extends Meta {
     public static final Boolean CACHE_RSS = false;
     /** Show what source an item is originally from */
     public static final Boolean SHOW_FROM = false;
+    /** Whether to show images for sources */
+    public static final Boolean SHOW_IMAGES = false;
     /** Show an item or immediately redirect to external source item */
     public static final Boolean IMMEDIATE_REDIRECT = false;
     /** How much items to show on "Sources" page */

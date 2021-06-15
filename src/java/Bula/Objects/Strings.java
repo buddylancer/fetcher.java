@@ -185,6 +185,17 @@ public class Strings extends Meta {
      * @return String Resulting string.
      */
     public static String replaceInTemplate(String $template, Hashtable $hash) {
+        /*
+        Hashtable $hash2 = Arrays.newHashtable();
+        Enumerator $keys = $hash.keys();
+        while ($keys.nextElement()) {
+            Object $key = $keys.$current;
+            Object $value = $hash.get($key);
+            if ($value instanceof String || is_integer($value) || is_string($value)) 
+                $hash2.put($key, $value);
+        }
+        return strtr($template, Arrays.toArray($hash2));
+        */
         Enumeration $keys = $hash.keys();
         while ($keys.hasMoreElements()) {
             String $key = STR($keys.nextElement());

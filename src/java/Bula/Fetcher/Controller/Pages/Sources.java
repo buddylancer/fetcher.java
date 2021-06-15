@@ -36,6 +36,8 @@ public class Sources extends ItemsBase {
     /** Execute main logic for Source block. */
     public void execute() {
         Hashtable $prepare = new Hashtable();
+        if (Config.SHOW_IMAGES)
+            $prepare.put("[#Show_Images]", 1);
 
         DOSource $doSource = new DOSource();
         DOItem $doItem = new DOItem();
@@ -48,6 +50,7 @@ public class Sources extends ItemsBase {
             String $sourceName = STR($oSource.get("s_SourceName"));
 
             Hashtable $sourceRow = new Hashtable();
+            $sourceRow.put("[#ColSpan]", Config.SHOW_IMAGES ? 4 : 3);
             $sourceRow.put("[#SourceName]", $sourceName);
             //$sourceRow["[#RedirectSource]"] = Config.TOP_DIR .
             //    (Config.FINE_URLS ? "redirect/source/" : "action.php?p=do_redirect_source&source=") .
@@ -59,7 +62,10 @@ public class Sources extends ItemsBase {
             int $itemCount = 0;
             for (int $ni = 0; $ni < $dsItems.getSize(); $ni++) {
                 Hashtable $oItem = $dsItems.getRow($ni);
-                $items.add(fillItemRow($oItem, $doItem.getIdField(), $itemCount));
+                Hashtable $item = fillItemRow($oItem, $doItem.getIdField(), $itemCount);
+                if (Config.SHOW_IMAGES)
+                    $item.put("[#Show_Images]", 1);
+                $items.add($item);
                 $itemCount++;
             }
             $sourceRow.put("[#Items]", $items);
