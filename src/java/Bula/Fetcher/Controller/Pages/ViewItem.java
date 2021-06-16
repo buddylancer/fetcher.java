@@ -90,7 +90,11 @@ public class ViewItem extends Page {
         $prepare.put("[#Creator]", STR($oItem.get("s_Creator")));
         $prepare.put("[#Description]", $oItem.containsKey("t_Description") ? Util.show(STR($oItem.get("t_Description"))) : "");
         $prepare.put("[#ItemID]", $oItem.get($idField));
-        if (this.$context.contains("Name_Category")) $prepare.put("[#Category]", STR($oItem.get("s_Category")));
+        if (this.$context.contains("Name_Category")) {
+            String $category = STR($oItem.get("s_Category"));
+            if (!BLANK($category))
+                $prepare.put("[#Category]", $category);
+        }
         if (this.$context.contains("Name_Custom1")) $prepare.put("[#Custom1]", $oItem.get("s_Custom1"));
         if (this.$context.contains("Name_Custom2")) $prepare.put("[#Custom2]", $oItem.get("s_Custom2"));
 

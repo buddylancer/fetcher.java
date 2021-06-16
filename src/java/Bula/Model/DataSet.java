@@ -107,9 +107,15 @@ public class DataSet extends Meta {
             while ($keys.hasMoreElements()) {
                 $level++; $spaces = this.addSpaces($level);
                 String $key = (String)$keys.nextElement();
-                $output += CAT($spaces, "<Item Name=\"", $key, "\">");
-                $output += STR($row.get($key));
-                $output += CAT("</Item>", $EOL);
+                Object $value = $row.get($key);
+                if (NUL($value)) {
+                    $output += CAT($spaces, "<Item Name=\"", $key, "\" IsNull=\"True\" />", EOL);
+                }
+                else {
+                    $output += CAT($spaces, "<Item Name=\"", $key, "\">");
+                    $output += STR($row.get($key));
+                    $output += CAT("</Item>", $EOL);
+                }
                 $level--; $spaces = this.addSpaces($level);
             }
             $output += CAT($spaces, "</Row>", $EOL);
