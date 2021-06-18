@@ -115,7 +115,7 @@ public class BOFetcher extends Meta {
         int $sourceId = INT($oSource.get("i_SourceId"));
         BOItem $boItem = new BOItem($sourceName, $item);
         String $pubDate = STR($item.get("pubDate"));
-        String $date = DateTimes.format(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
+        String $date = DateTimes.gmtFormat(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
 
         // Check whether item with the same link exists already
         DOItem $doItem = new DOItem();

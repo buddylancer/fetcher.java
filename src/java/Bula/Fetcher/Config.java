@@ -39,6 +39,8 @@ public class Config extends Meta {
     public static final Boolean SHOW_FROM = false;
     /** Whether to show images for sources */
     public static final Boolean SHOW_IMAGES = false;
+    /** File extension for images */
+    public static final String EXT_IMAGES = "gif";
     /** Show an item or immediately redirect to external source item */
     public static final Boolean IMMEDIATE_REDIRECT = false;
     /** How much items to show on "Sources" page */

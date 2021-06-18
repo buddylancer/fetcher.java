@@ -187,10 +187,14 @@ public class BOItem extends Meta {
             ArrayList $categoriesNew = new ArrayList();
             for (int $c = 0; $c < SIZE($categoriesArr); $c++) {
                 String $temp = $categoriesArr[$c];
-                if (!BLANK($temp))
-                    $categoriesNew.add($temp);
+                if (BLANK($temp.trim()))
+                    continue;
+                $temp = Strings.firstCharToUpper($temp);
+                if ($category == null)
+                    $category = $temp;
+                else
+                    $category += CAT(", ", $temp);
             }
-            $category = Strings.join(", ", (String[])$categoriesNew.toArray());
         }
 
         return $category;
@@ -248,7 +252,7 @@ public class BOItem extends Meta {
                 if (!BLANK(this.$description) && Regex.isMatch(this.$description, $excludeChunk, RegexOptions.IgnoreCase))
                     $includeFlag &= false;
                 if (Regex.isMatch(this.$title, $excludeChunk, RegexOptions.IgnoreCase))
-                    $includeFlag |= true;
+                    $includeFlag &= false;
             }
             if ($includeFlag) {
                 ArrayList $arrayList = Arrays.createArrayList($categoryTags); $arrayList.add($name);
