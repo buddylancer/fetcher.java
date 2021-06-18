@@ -8,7 +8,7 @@ import Bula.Meta;
 
 import Bula.Objects.Arrays;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Regex;
 
 /**
@@ -16,23 +16,23 @@ import Bula.Objects.Regex;
  */
 public class Request extends RequestBase {
     /** Internal storage for GET/POST variables */
-    private Hashtable $Vars = null;
+    private DataRange $Vars = null;
     /** Internal storage for SERVER variables */
-    private Hashtable $ServerVars = null;
+    private DataRange $ServerVars = null;
 
     public Request(Object $currentRequest) { super($currentRequest); initialize(); }
 
     /** Initialize internal variables for new request. */
     private void initialize() {
-        this.$Vars = Arrays.newHashtable();
-        this.$ServerVars = Arrays.newHashtable();
+        this.$Vars = Arrays.newDataRange();
+        this.$ServerVars = Arrays.newDataRange();
     }
 
     /**
      * Get private variables.
-     * @return Hashtable
+     * @return DataRange
      */
-    public Hashtable getPrivateVars() {
+    public DataRange getPrivateVars() {
         return this.$Vars;
     }
 
@@ -79,20 +79,20 @@ public class Request extends RequestBase {
 
     /** Extract all POST variables into internal variables. */
     public void extractPostVars() {
-        Hashtable $vars = this.getVars(INPUT_POST);
-        this.$Vars = Arrays.mergeHashtable(this.$Vars, $vars);
+        DataRange $vars = this.getVars(INPUT_POST);
+        this.$Vars = Arrays.mergeDataRange(this.$Vars, $vars);
     }
 
     /** Extract all SERVER variables into internal storage. */
     public void extractServerVars() {
-        Hashtable $vars = this.getVars(INPUT_SERVER);
-        this.$Vars = Arrays.mergeHashtable(this.$ServerVars, $vars);
+        DataRange $vars = this.getVars(INPUT_SERVER);
+        this.$Vars = Arrays.mergeDataRange(this.$ServerVars, $vars);
     }
 
     /** Extract all GET and POST variables into internal storage. */
     public void extractAllVars() {
-        Hashtable $vars = this.getVars(INPUT_GET);
-        this.$Vars = Arrays.mergeHashtable(this.$Vars, $vars);
+        DataRange $vars = this.getVars(INPUT_GET);
+        this.$Vars = Arrays.mergeDataRange(this.$Vars, $vars);
         this.extractPostVars();
     }
 
@@ -203,19 +203,19 @@ public class Request extends RequestBase {
     /**
      * Test (match) a page request with array of allowed pages.
      * @param[] $pages Array of allowed pages (and their parameters).
-     * @return Hashtable Resulting page parameters.
+     * @return DataRange Resulting page parameters.
      */
-    public Hashtable testPage(Object[] $pages) {
+    public DataRange testPage(Object[] $pages) {
         return testPage($pages, null); }
 
     /**
      * Test (match) a page request with array of allowed pages.
      * @param[] $pages Array of allowed pages (and their parameters).
      * @param $defaultPage Default page to import for testing.
-     * @return Hashtable Resulting page parameters.
+     * @return DataRange Resulting page parameters.
      */
-    public Hashtable testPage(Object[] $pages, String $defaultPage /*= null*/) {
-        Hashtable $pageInfo = new Hashtable();
+    public DataRange testPage(Object[] $pages, String $defaultPage /*= null*/) {
+        DataRange $pageInfo = new DataRange();
 
         // Get page name
         String $page = null;

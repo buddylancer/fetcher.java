@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOItem;
 import Bula.Fetcher.Controller.Engine;
@@ -26,19 +26,19 @@ public class Home extends ItemsBase {
 
     /**
      * Fast check of input query parameters.
-     * @return Hashtable Parsed parameters (or null in case of any error).
+     * @return DataRange Parsed parameters (or null in case of any error).
      */
-    public Hashtable check() {
-        return new Hashtable();
+    public DataRange check() {
+        return new DataRange();
     }
 
     /** Execute main logic for Home block. */
     public void execute() {
-        Hashtable $pars = this.check();
+        DataRange $pars = this.check();
         if ($pars == null)
             return;
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
 
         DOItem $doItem = new DOItem();
 
@@ -51,10 +51,10 @@ public class Home extends ItemsBase {
         int $maxRows = Config.DB_HOME_ROWS;
         DataSet $dsItems = $doItem.enumItems($source, $search, 1, $maxRows);
         int $rowCount = 1;
-        ArrayList $items = new ArrayList();
+        DataList $items = new DataList();
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
-            Hashtable $oItem = $dsItems.getRow($n);
-            Hashtable $row = fillItemRow($oItem, $doItem.getIdField(), $rowCount);
+            DataRange $oItem = $dsItems.getRow($n);
+            DataRange $row = fillItemRow($oItem, $doItem.getIdField(), $rowCount);
             $items.add($row);
             $rowCount++;
         }

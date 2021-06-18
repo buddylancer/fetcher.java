@@ -11,8 +11,8 @@ import Bula.Objects.Response;
 import Bula.Objects.Arrays;
 import Bula.Objects.Strings;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 
 import Bula.Fetcher.Controller.Engine;
 
@@ -41,7 +41,7 @@ public class Context extends Config {
     public Response $Response = null;
 
     /** Storage for internal variables */
-    protected Hashtable $Values = new Hashtable();
+    protected DataRange $Values = new DataRange();
 
     /**
      * Get internal variable.
@@ -103,7 +103,7 @@ public class Context extends Config {
     public Boolean $ImmediateRedirect = Config.IMMEDIATE_REDIRECT;
 
     /** Storage for global constants */
-    public Hashtable $GlobalConstants = null;
+    public DataRange $GlobalConstants = null;
 
     /** Is current request from test script? */
     public Boolean $TestRun = false;
@@ -173,7 +173,7 @@ public class Context extends Config {
      * Define global constants.
      */
     private void defineConstants() throws Exception {
-        this.$GlobalConstants = new Hashtable();
+        this.$GlobalConstants = new DataRange();
         this.$GlobalConstants.put("[#Site_Name]", Config.SITE_NAME);
         this.$GlobalConstants.put("[#Site_Comments]", Config.SITE_COMMENTS);
         this.$GlobalConstants.put("[#Top_Dir]", Config.TOP_DIR);
@@ -212,7 +212,7 @@ public class Context extends Config {
             this.$GlobalConstants.put("[#Name_Custom2]", this.get("Name_Custom2"));
     }
 
-    private ArrayList $EngineInstances = null;
+    private DataList $EngineInstances = null;
     private int $EngineIndex = -1;
 
     /**
@@ -224,7 +224,7 @@ public class Context extends Config {
         $engine.setPrintFlag($printFlag);
         this.$EngineIndex++;
         if (this.$EngineInstances == null)
-            this.$EngineInstances = new ArrayList();
+            this.$EngineInstances = new DataList();
         if (this.$EngineInstances.size() <= this.$EngineIndex)
             this.$EngineInstances.add($engine);
         else

@@ -11,8 +11,8 @@ import Bula.Internal;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 
 import Bula.Objects.Arrays;
 import Bula.Objects.Helper;
@@ -99,7 +99,7 @@ public class Engine extends Meta {
 
         String $content = null;
         if (Helper.fileExists(CAT(this.$context.$LocalRoot, $fileName))) {
-            ArrayList $args0 = new ArrayList(); $args0.add(this.$context);
+            DataList $args0 = new DataList(); $args0.add(this.$context);
             Internal.callMethod(CAT($prefix, $className), $args0, $defaultMethod, null);
             $content = $engine.getPrintString();
         }
@@ -120,16 +120,16 @@ public class Engine extends Meta {
     /**
      * Show template content by merging template and data.
      * @param $id Template ID to import for merging.
-     * @param $hash Data in the form of Hashtable to import for merging.
+     * @param $hash Data in the form of DataRange to import for merging.
      * @return String Resulting content.
      */
-    public String showTemplate(String $id, Hashtable $hash /*= null*/) {
+    public String showTemplate(String $id, DataRange $hash /*= null*/) {
         String $ext = BLANK(this.$context.$Api) ? ".html" : (Config.API_FORMAT == "Xml"? ".xml" : ".txt");
         String $prefix = CAT(Config.FILE_PREFIX, "Bula/Fetcher/View/");
 
         String $filename =
                 CAT($prefix, (BLANK(this.$context.$Api) ? "Html/" : (Config.API_FORMAT == "Xml"? "Xml/" : "Rest/")), $id, $ext);
-        ArrayList $template = this.getTemplate($filename);
+        DataList $template = this.getTemplate($filename);
 
         String $content = new String();
         String $short_name = Strings.replace("Bula/Fetcher/View/Html", "View", $filename);
@@ -147,15 +147,15 @@ public class Engine extends Meta {
     /**
      * Get template as the list of lines.
      * @param $filename File name.
-     * @return ArrayList Resulting array with lines.
+     * @return DataList Resulting array with lines.
      */
-    private ArrayList getTemplate(String $filename) {
+    private DataList getTemplate(String $filename) {
         if (Helper.fileExists(CAT(this.$context.$LocalRoot, $filename))) {
             Object[] $lines = Helper.readAllLines(CAT(this.$context.$LocalRoot, $filename));
-            return Arrays.createArrayList($lines);
+            return Arrays.createDataList($lines);
         }
         else {
-            ArrayList $temp = new ArrayList();
+            DataList $temp = new DataList();
             $temp.add(CAT("File not found -- '", $filename, "'<hr/>"));
             return $temp;
         }
@@ -167,9 +167,9 @@ public class Engine extends Meta {
      * @param $hash Data for merging with template.
      * @return String Resulting content.
      */
-    public String formatTemplate(String $template, Hashtable $hash) {
+    public String formatTemplate(String $template, DataRange $hash) {
         if ($hash == null)
-            $hash = new Hashtable();
+            $hash = new DataRange();
         String $content1 = Strings.replaceInTemplate($template, $hash);
         String $content2 = Strings.replaceInTemplate($content1, this.$context.$GlobalConstants);
         return $content2;
@@ -207,7 +207,7 @@ public class Engine extends Meta {
         return $line;
     }
 
-    private String processTemplate(ArrayList $template) { return processTemplate($template, null); }
+    private String processTemplate(DataList $template) { return processTemplate($template, null); }
 
     /**
      * Execute template processing.
@@ -215,18 +215,18 @@ public class Engine extends Meta {
      * @param $hash Data for merging with template.
      * @return String Resulting content.
      */
-    private String processTemplate(ArrayList $template, Hashtable $hash /*= null*/) {
+    private String processTemplate(DataList $template, DataRange $hash /*= null*/) {
         if (this.$context.$IsMobile) {
             if ($hash == null)
-                $hash = new Hashtable();
+                $hash = new DataRange();
             $hash.put("[#Is_Mobile]", 1);
         }
         Boolean $trimLine = true;
         String $trimEnd = EOL;
         int $ifMode = 0;
         int $repeatMode = 0;
-        ArrayList $ifBuf = new ArrayList();
-        ArrayList $repeatBuf = new ArrayList();
+        DataList $ifBuf = new DataList();
+        DataList $repeatBuf = new DataList();
         String $ifWhat = "";
         String $repeatWhat = "";
         String $content = new String();
@@ -267,7 +267,7 @@ public class Engine extends Meta {
 
                         if ($processFlag)
                             $content += processTemplate($ifBuf, $hash);
-                        $ifBuf = new ArrayList();
+                        $ifBuf = new DataList();
                     }
                     else
                         $ifBuf.add($line);
@@ -282,12 +282,12 @@ public class Engine extends Meta {
                 if ($lineNoComments.indexOf("#end repeat") == 0) {
                     if ($repeatMode == 1) {
                         if ($hash.containsKey($repeatWhat)) {
-                            ArrayList $rows = (ArrayList)$hash.get($repeatWhat);
+                            DataList $rows = (DataList)$hash.get($repeatWhat);
                             for (int $r = 0; $r < $rows.size(); $r++)
-                                $content += processTemplate($repeatBuf, (Hashtable)$rows.get($r));
+                                $content += processTemplate($repeatBuf, (DataRange)$rows.get($r));
                             $hash.remove($repeatWhat);
                         }
-                        $repeatBuf = new ArrayList();
+                        $repeatBuf = new DataList();
                     }
                     else
                         $repeatBuf.add($line);
@@ -304,7 +304,7 @@ public class Engine extends Meta {
                 else if ($lineNoComments.indexOf("#repeat") == 0) {
                     $repeatMode++;
                     $repeatWhat = $lineNoComments.substring(8).trim();
-                    $repeatBuf = new ArrayList();
+                    $repeatBuf = new DataList();
                 }
                 else {
                     if ($trimLine) {

@@ -10,7 +10,7 @@ import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
 import Bula.Objects.Request;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 
 import Bula.Fetcher.Model.DOSource;
 
@@ -36,8 +36,8 @@ public class DoRedirectSource extends DoRedirect {
                 $errorMessage = "Incorrect source name!";
             else {
                 DOSource $doSource = new DOSource();
-                Hashtable[] $oSource =
-                    {new Hashtable()};
+                DataRange[] $oSource =
+                    {new DataRange()};
                 if (!$doSource.checkSourceName($sourceName, $oSource))
                     $errorMessage = "No such source name!";
                 else

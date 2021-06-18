@@ -9,9 +9,9 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 
@@ -58,8 +58,8 @@ abstract class RssBase extends Page {
                 $errorMessage += "Empty source!";
             else {
                 DOSource $doSource = new DOSource();
-                Hashtable[] $oSource =
-                    {new Hashtable()};
+                DataRange[] $oSource =
+                    {new DataRange()};
                 if (!$doSource.checkSourceName($source, $oSource))
                     $errorMessage += CAT("Incorrect source '", $source, "'!");
             }
@@ -85,8 +85,8 @@ abstract class RssBase extends Page {
                     $errorMessage += "Empty filter!";
                 }
                 else {
-                    Hashtable[] $oCategory =
-                        {new Hashtable()};
+                    DataRange[] $oCategory =
+                        {new DataRange()};
                     if ($doCategory.checkFilterName($filterName, $oCategory))
                         $filter = STR($oCategory[0].get("s_Filter"));
                     else {
@@ -178,7 +178,7 @@ abstract class RssBase extends Page {
             $contentToCache = this.writeStart($source, $filterName, $pubDate);
 
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
-            Hashtable $oItem = $dsItems.getRow($n);
+            DataRange $oItem = $dsItems.getRow($n);
             String $date = STR($oItem.get("d_Date"));
             if (DateTimes.getTime($date) > $nowTime)
                 continue;

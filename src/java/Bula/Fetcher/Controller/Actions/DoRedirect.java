@@ -10,7 +10,7 @@ import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
 import Bula.Objects.Response;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 
 import Bula.Fetcher.Controller.Page;
 import Bula.Fetcher.Controller.Engine;
@@ -31,7 +31,7 @@ abstract class DoRedirect extends Page {
      * @param $errorMessage Error to show (or null if no errors).
      */
     public void executeRedirect(String $linkToRedirect, String $errorMessage) {
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         String $templateName = null;
         if (!NUL($errorMessage)) {
             $prepare.put("[#Title]", "Error");

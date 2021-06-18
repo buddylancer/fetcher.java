@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 
 import Bula.Objects.Request;
 import Bula.Objects.DateTimes;

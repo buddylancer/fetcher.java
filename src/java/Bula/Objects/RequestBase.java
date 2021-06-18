@@ -8,7 +8,7 @@ import Bula.Meta;
 
 import Bula.Objects.Arrays;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 
 import java.lang.reflect.*;
 import java.util.Enumeration;
@@ -41,34 +41,34 @@ public class RequestBase extends Meta {
         $HttpRequest = (javax.servlet.http.HttpServletRequest)$currentRequest;
     }
 
-    public Hashtable getVars(Integer $type) {
+    public DataRange getVars(Integer $type) {
         String $method = $HttpRequest.getMethod();
         switch ($type) {
             case INPUT_GET:
                 if (!EQ($method, "GET"))
                     break;
-                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
+                return createDataRange($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_POST:
                 if (!EQ($method, "POST"))
                     break;
-                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
+                return createDataRange($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_SERVER:
-                return createHashtable($HttpRequest, "getHeaderNames", "getHeader");
+                return createDataRange($HttpRequest, "getHeaderNames", "getHeader");
             default:
                 break;
         }
-        return new Hashtable();
+        return new DataRange();
     }
 
-    private Hashtable createHashtable(Object $from, String $getNames, String $getValue) {
-        Hashtable $hash = new Hashtable();
+    private DataRange createDataRange(Object $from, String $getNames, String $getValue) {
+        DataRange $hash = new DataRange();
         try {
             Method $getNamesMethod = $from.getClass().getMethod($getNames, new Class[] {});
             Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] { String.class});
             Enumerator $names = new Enumerator((Enumeration)$getNamesMethod.invoke($from, (Object[])null));
             while ($names.hasMoreElements()) {
                 String $name = (String)$names.nextElement();
-                String $mappedName = $mapHeaders.containsKey($name) ? $mapHeaders.get($name) : $name;
+                String $mappedName = $mapHeaders.containsKey($name) ? (String)$mapHeaders.get($name) : $name;
                 String $parameter = (String)$getValueMethod.invoke($from, new Object[] { $name });
                 $hash.put($mappedName, $parameter);
             }
@@ -86,11 +86,11 @@ public class RequestBase extends Meta {
      * @return String Requested variable.
      */
     public String getVar(Integer $type, String $name) {
-        Hashtable $vars = getVars($type);
+        DataRange $vars = getVars($type);
         return (String)$vars.get($name);
     }
     
-    private static final Hashtable<String, String> $mapHeaders = new Hashtable<String, String>() {
+    private static final DataRange $mapHeaders = new DataRange() {
         { put("user-agent", "HTTP_USER_AGENT"); }
         { put("host", "HTTP_HOST"); }
         { put("query", "QUERY_STRING"); }

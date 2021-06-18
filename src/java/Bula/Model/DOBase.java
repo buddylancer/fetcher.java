@@ -6,9 +6,9 @@
 package Bula.Model;
 import Bula.Meta;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Strings;
 
 /**
@@ -415,7 +415,7 @@ public class DOBase extends Meta {
      * @param $fields The set of fields.
      * @return int Result of SQL-query execution.
      */
-    public int insert(Hashtable $fields) {
+    public int insert(DataRange $fields) {
         Enumerator $keys =
             new Enumerator($fields.keys());
         String $fieldNames = new String();
@@ -445,7 +445,7 @@ public class DOBase extends Meta {
      * @param $fields The set of fields.
      * @return int Result of SQL-query execution.
      */
-    public int updateById(Object $id, Hashtable $fields) {
+    public int updateById(Object $id, DataRange $fields) {
         Enumerator $keys =
             new Enumerator($fields.keys());
         String $setValues = new String();

@@ -6,7 +6,7 @@
 package Bula.Fetcher.Controller.Pages;
 import Bula.Meta;
 
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Regex;
 
 import Bula.Fetcher.Config;
@@ -34,7 +34,7 @@ abstract class ItemsBase extends Page {
     public Boolean checkList() {
         if (this.$context.$Request.contains("list")) {
             if (!Request.isInteger(this.$context.$Request.get("list"))) {
-                Hashtable $prepare = new Hashtable();
+                DataRange $prepare = new DataRange();
                 $prepare.put("[#ErrMessage]", "Incorrect list number!");
                 this.write("error", $prepare);
                 return false;
@@ -61,7 +61,7 @@ abstract class ItemsBase extends Page {
         if ($errMessage.isEmpty())
             return true;
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         $prepare.put("[#ErrMessage]", $errMessage);
         this.write("error", $prepare);
         return false;
@@ -72,10 +72,10 @@ abstract class ItemsBase extends Page {
      * @param $oItem Original Item.
      * @param $idField Name of ID field.
      * @param $count The number of inserted Row in HTML table.
-     * @return Hashtable Resulting Row.
+     * @return DataRange Resulting Row.
      */
-    protected Hashtable fillItemRow(Hashtable $oItem, String $idField, int $count) {
-        Hashtable $row = new Hashtable();
+    protected DataRange fillItemRow(DataRange $oItem, String $idField, int $count) {
+        DataRange $row = new DataRange();
         int $itemId = INT($oItem.get($idField));
         String $urlTitle = STR($oItem.get("s_Url"));
         String $itemHref = this.$context.$ImmediateRedirect ?

@@ -7,8 +7,8 @@ package Bula.Fetcher.Model;
 import Bula.Meta;
 
 import Bula.Fetcher.Config;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Objects.Strings;
 import Bula.Model.DOBase;
 import Bula.Model.DataSet;
@@ -107,7 +107,7 @@ public class DOCategory extends DOBase {
         DataSet $dsCategories = this.select("_this.s_CatId, _this.s_Filter");
         Boolean $filterFound = false;
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
-            Hashtable $oCategory = $dsCategories.getRow($n);
+            DataRange $oCategory = $dsCategories.getRow($n);
             if (EQ($oCategory.get("s_CatId"), $filterName)) {
                 $filterFound = true;
                 if ($category != null)

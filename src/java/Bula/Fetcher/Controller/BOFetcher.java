@@ -14,7 +14,7 @@ import Bula.Fetcher.Context;
 import Bula.Objects.Arrays;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Helper;
 import Bula.Objects.Logger;
 import Bula.Objects.Request;
@@ -72,7 +72,7 @@ public class BOFetcher extends Meta {
      * @param $oSource Source object.
      * @return Object[] Resulting items.
      */
-    private Object[] fetchFromSource(Hashtable $oSource) {
+    private Object[] fetchFromSource(DataRange $oSource) {
         String $url = STR($oSource.get("s_Feed"));
         if ($url.isEmpty())
             return null;
@@ -108,7 +108,7 @@ public class BOFetcher extends Meta {
      * @param $item Item object.
      * @return int Result of executing SQL-query.
      */
-    private int parseItemData(Hashtable $oSource, Hashtable $item) {
+    private int parseItemData(DataRange $oSource, DataRange $item) {
         // Load original values
 
         String $sourceName = STR($oSource.get("s_SourceName"));
@@ -132,7 +132,7 @@ public class BOFetcher extends Meta {
         $boItem.addStandardCategories(this.$dsCategories, this.$context.$Lang);
 
         String $url = $boItem.getUrlTitle(true); //TODO -- Need to pass true if transliteration is required
-        Hashtable $fields = new Hashtable();
+        DataRange $fields = new DataRange();
         $fields.put("s_Link", $boItem.$link);
         $fields.put("s_Title", $boItem.$title);
         $fields.put("s_FullTitle", $boItem.$fullTitle);
@@ -174,7 +174,7 @@ public class BOFetcher extends Meta {
 
         // Loop through sources
         for (int $n = 0; $n < $dsSources.getSize(); $n++) {
-            Hashtable $oSource = $dsSources.getRow($n);
+            DataRange $oSource = $dsSources.getRow($n);
 
             Object[] $itemsArray = this.fetchFromSource($oSource);
             if ($itemsArray == null)
@@ -186,7 +186,7 @@ public class BOFetcher extends Meta {
             int $itemsCounter = 0;
             // Loop through fetched items and parse their data
             for (int $i = SIZE($itemsArray) - 1; $i >= 0; $i--) {
-                Hashtable $hash = (Hashtable)$itemsArray[$i];
+                DataRange $hash = (DataRange)$itemsArray[$i];
                 if (BLANK($hash.get("link")))
                     continue;
                 int $itemid = this.parseItemData($oSource, $hash);
@@ -224,13 +224,13 @@ public class BOFetcher extends Meta {
         DOCategory $doCategory = new DOCategory();
         DataSet $dsCategories = $doCategory.enumCategories();
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
-            Hashtable $oCategory = $dsCategories.getRow($n);
+            DataRange $oCategory = $dsCategories.getRow($n);
             String $id = STR($oCategory.get("s_CatId"));
             String $filter = STR($oCategory.get("s_Filter"));
             DOItem $doItem = new DOItem();
             String $sqlFilter = $doItem.buildSqlFilter($filter);
             DataSet $dsItems = $doItem.enumIds($sqlFilter);
-            Hashtable $fields = new Hashtable();
+            DataRange $fields = new DataRange();
             $fields.put("i_Counter", $dsItems.getSize());
             int $result = $doCategory.updateById($id, $fields);
             if ($result < 0)

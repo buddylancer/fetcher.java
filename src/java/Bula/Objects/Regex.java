@@ -5,7 +5,6 @@
 
 package Bula.Objects;
 import Bula.Meta;
-import java.util.ArrayList;
 
 import java.util.regex.*;
 
@@ -65,7 +64,7 @@ public class Regex extends Meta {
         int $patternOptions = 
                 ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
         String[] $chunks = Pattern.compile($pattern, $patternOptions).split($input/*, $splitOptions*/);
-        ArrayList $outArray = new ArrayList();
+        DataList $outArray = new DataList();
         for (String $chunk : $chunks)
             $outArray.add($chunk);
         return (String[])$outArray.toArray(new String[] {});
@@ -86,7 +85,7 @@ public class Regex extends Meta {
         int $patternOptions = Pattern.UNICODE_CASE |
                 (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         Matcher $matcher = Pattern.compile($pattern, $patternOptions).matcher($input);
-        ArrayList $result = new ArrayList();
+        DataList $result = new DataList();
         while ($matcher.find())
             $result.add($matcher.group());
         return (String[])$result.toArray(new String[] {});

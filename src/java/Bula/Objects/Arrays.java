@@ -6,25 +6,25 @@
 package Bula.Objects;
 import Bula.Meta;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 
 /**
  * Helper class for manipulating with arrays.
  */
 public class Arrays extends Meta {
     /** Create new array list. */
-    public static ArrayList newArrayList() {
-        return new ArrayList();
+    public static DataList newDataList() {
+        return new DataList();
     }
 
     /**
      * Create new hash table.
-     * @return Hashtable New hash table.
+     * @return DataRange New hash table.
      */
-    public static Hashtable newHashtable() {
-        return new Hashtable();
+    public static DataRange newDataRange() {
+        return new DataRange();
     }
 
     /**
@@ -46,15 +46,15 @@ public class Arrays extends Meta {
      * Merge hash tables.
      * @param $input Original hash table.
      * @param $extra Hash table to merge with original one.
-     * @return Hashtable Merged hash table.
+     * @return DataRange Merged hash table.
      */
-    public static Hashtable mergeHashtable(Hashtable $input, Hashtable $extra) {
+    public static DataRange mergeDataRange(DataRange $input, DataRange $extra) {
         if ($input == null)
             return null;
         if ($extra == null)
             return $input;
 
-        Hashtable $output = (Hashtable)$input.clone();
+        DataRange $output = (DataRange)$input.clone();
         Enumerator $keys =
             new Enumerator($extra.keys());
         while ($keys.hasMoreElements()) {
@@ -68,15 +68,15 @@ public class Arrays extends Meta {
      * Merge array lists.
      * @param $input Original array list.
      * @param $extra Array list to merge with original one.
-     * @return ArrayList Resulting array list.
+     * @return DataList Resulting array list.
      */
-    public static ArrayList mergeArrayList(ArrayList $input, ArrayList $extra) {
+    public static DataList mergeDataList(DataList $input, DataList $extra) {
         if ($input == null)
             return null;
         if ($extra == null)
             return $input;
 
-        ArrayList $output = newArrayList();
+        DataList $output = newDataList();
         for (int $n = 0; $n < SIZE($input); $n++)
             $output.add($input.get($n));
         for (int $n = 0; $n < SIZE($extra); $n++)
@@ -131,12 +131,12 @@ public class Arrays extends Meta {
     /**
      * Create array list from array of objects.
      * @param[] $input Array of objects.
-     * @return ArrayList Resulting array list.
+     * @return DataList Resulting array list.
      */
-    public static ArrayList createArrayList(Object[] $input) {
+    public static DataList createDataList(Object[] $input) {
         if ($input == null)
             return null;
-        ArrayList $output = new ArrayList();
+        DataList $output = new DataList();
         if (SIZE($input) == 0)
             return $output;
         for (Object $obj : $input)

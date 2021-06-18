@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 import Bula.Objects.Request;
@@ -46,7 +46,7 @@ public class Index extends Page {
         if ($pagesArray == null)
             initialize();
 
-        Hashtable $pageInfo = this.$context.$Request.testPage($pagesArray, "home");
+        DataRange $pageInfo = this.$context.$Request.testPage($pagesArray, "home");
 
         // Test action name
         if (!$pageInfo.containsKey("page")) {
@@ -70,7 +70,7 @@ public class Index extends Page {
 
         Engine $engine = this.$context.pushEngine(true);
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         $prepare.put("[#Site_Name]", Config.SITE_NAME);
         String $pFromVars = this.$context.$Request.contains("p") ? this.$context.$Request.get("p") : "home";
         String $idFromVars = this.$context.$Request.contains("id") ? this.$context.$Request.get("id") : null;

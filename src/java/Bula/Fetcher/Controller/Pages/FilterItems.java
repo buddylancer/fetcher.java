@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 import Bula.Objects.Request;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Controller.Engine;
@@ -34,7 +34,7 @@ public class FilterItems extends Page {
         if (this.$context.$Request.contains("source"))
             $source = this.$context.$Request.get("source");
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         if (this.$context.$FineUrls)
             $prepare.put("[#Fine_Urls]", 1);
         $prepare.put("[#Selected]", BLANK($source) ? " selected=\"selected\" " : "");
@@ -45,10 +45,10 @@ public class FilterItems extends Page {
             $dsSources = $doSource.enumSourcesWithCounters();
         else
             $dsSources = $doSource.enumSources();
-        ArrayList $options = new ArrayList();
+        DataList $options = new DataList();
         for (int $n = 0; $n < $dsSources.getSize(); $n++) {
-            Hashtable $oSource = $dsSources.getRow($n);
-            Hashtable $option = new Hashtable();
+            DataRange $oSource = $dsSources.getRow($n);
+            DataRange $option = new DataRange();
             $option.put("[#Selected]", ($oSource.get("s_SourceName").equals($source) ? "selected=\"selected\"" : " "));
             $option.put("[#Id]", STR($oSource.get("s_SourceName")));
             $option.put("[#Name]", STR($oSource.get("s_SourceName")));

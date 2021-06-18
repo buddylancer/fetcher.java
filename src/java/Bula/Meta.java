@@ -7,6 +7,7 @@
 
 package Bula;
 
+import Bula.Model.DBConfig;
 import java.util.*;
 import Bula.Objects.*;
 
@@ -77,6 +78,8 @@ public class Meta {
             return ""; //null; //TODO
         if (value instanceof String)
             return (String)value;
+        else if (value instanceof Date)
+            return DateTimes.format(DBConfig.SQL_DTS, ((Date)value).getTime());
         return value.toString();
     }
 
@@ -185,8 +188,8 @@ public class Meta {
     public static int SIZE(Object val) {
         if (val == null) return 0;
         else if (val instanceof Object[]) return ((Object[])val).length;
-        else if (val instanceof ArrayList) return ((ArrayList)val).size();
-        else if (val instanceof Hashtable) return ((Hashtable)val).size();
+        else if (val instanceof DataList) return ((DataList)val).size();
+        else if (val instanceof DataRange) return ((DataRange)val).size();
         else if (val instanceof String) return ((String)val).length();
         return 0;
     }

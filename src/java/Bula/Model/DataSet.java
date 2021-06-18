@@ -6,21 +6,21 @@
 package Bula.Model;
 import Bula.Meta;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 import Bula.Objects.Enumerator;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 
 /**
  * Non-typed data set implementation.
  */
 public class DataSet extends Meta {
-    private ArrayList $rows;
+    private DataList $rows;
     private int $pageSize;
     private int $totalPages;
 
     /** Default public constructor */
     public DataSet () {
-        this.$rows = new ArrayList();
+        this.$rows = new DataList();
         this.$pageSize = 10;
         this.$totalPages = 0;
     }
@@ -36,17 +36,17 @@ public class DataSet extends Meta {
     /**
      * Get a row from the DataSet.
      * @param $n Number of the row.
-     * @return Hashtable Required row or null.
+     * @return DataRange Required row or null.
      */
-    public Hashtable getRow(int $n) {
-        return (Hashtable) this.$rows.get($n);
+    public DataRange getRow(int $n) {
+        return (DataRange) this.$rows.get($n);
     }
 
     /**
      * Add new row into the DataSet.
      * @param $row New row to add.
      */
-    public void addRow(Hashtable $row) {
+    public void addRow(DataRange $row) {
         this.$rows.add($row);
     }
 
@@ -99,7 +99,7 @@ public class DataSet extends Meta {
         String $output = new String();
         $output += CAT("<DataSet Rows=\"", this.$rows.size(), "\">", $EOL);
         for (int $n = 0; $n < this.getSize(); $n++) {
-            Hashtable $row = this.getRow($n);
+            DataRange $row = this.getRow($n);
             $level++; $spaces = this.addSpaces($level);
             $output += CAT($spaces, "<Row>", $EOL);
             Enumerator $keys =

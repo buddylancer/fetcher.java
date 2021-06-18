@@ -6,7 +6,7 @@
 package Bula.Model;
 import Bula.Meta;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 
 import Bula.Objects.Response;
 import Bula.Objects.DateTimes;
@@ -21,7 +21,7 @@ public class PreparedStatement extends Meta {
     /** Initial SQL-query */
     private String $sql;
     /** List of parameters */
-    private ArrayList $pars;
+    private DataList $pars;
     /** Formed (prepared) SQL-query */
     private String $query;
 
@@ -33,7 +33,7 @@ public class PreparedStatement extends Meta {
 
     /** Default public constructor */
     public PreparedStatement () {
-        this.$pars = new ArrayList();
+        this.$pars = new DataList();
         this.$pars.add("dummy"); // Parameter number will start from 1.
     }
 

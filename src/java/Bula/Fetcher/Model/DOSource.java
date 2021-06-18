@@ -7,8 +7,8 @@ package Bula.Fetcher.Model;
 import Bula.Meta;
 
 import Bula.Fetcher.Config;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Objects.Strings;
 import Bula.Model.DOBase;
 import Bula.Model.DataSet;
@@ -112,7 +112,7 @@ public class DOSource extends DOBase {
         DataSet $dsSources = this.enumSources();
         Boolean $sourceFound = false;
         for (int $n = 0; $n < $dsSources.getSize(); $n++) {
-            Hashtable $oSource = $dsSources.getRow($n);
+            DataRange $oSource = $dsSources.getRow($n);
             if (EQ($oSource.get("s_SourceName"), $sourcename)) {
                 $sourceFound = true;
                 if ($source != null)

@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Model.DOItem;
@@ -27,15 +27,15 @@ public class Sources extends ItemsBase {
 
     /**
      * Fast check of input query parameters.
-     * @return Hashtable Parsed parameters (or null in case of any error).
+     * @return DataRange Parsed parameters (or null in case of any error).
      */
-    public Hashtable check() {
-        return new Hashtable();
+    public DataRange check() {
+        return new DataRange();
     }
 
     /** Execute main logic for Source block. */
     public void execute() {
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         if (Config.SHOW_IMAGES)
             $prepare.put("[#Show_Images]", 1);
 
@@ -44,12 +44,12 @@ public class Sources extends ItemsBase {
 
         DataSet $dsSources = $doSource.enumSources();
         int $count = 1;
-        ArrayList $sources = new ArrayList();
+        DataList $sources = new DataList();
         for (int $ns = 0; $ns < $dsSources.getSize(); $ns++) {
-            Hashtable $oSource = $dsSources.getRow($ns);
+            DataRange $oSource = $dsSources.getRow($ns);
             String $sourceName = STR($oSource.get("s_SourceName"));
 
-            Hashtable $sourceRow = new Hashtable();
+            DataRange $sourceRow = new DataRange();
             $sourceRow.put("[#ColSpan]", Config.SHOW_IMAGES ? 4 : 3);
             $sourceRow.put("[#SourceName]", $sourceName);
             $sourceRow.put("[#ExtImages]", Config.EXT_IMAGES);
@@ -59,11 +59,11 @@ public class Sources extends ItemsBase {
             $sourceRow.put("[#RedirectSource]", this.getLink(Config.INDEX_PAGE, "?p=items&source=", "items/source/", $sourceName));
 
             DataSet $dsItems = $doItem.enumItemsFromSource(null, $sourceName, null, 3);
-            ArrayList $items = new ArrayList();
+            DataList $items = new DataList();
             int $itemCount = 0;
             for (int $ni = 0; $ni < $dsItems.getSize(); $ni++) {
-                Hashtable $oItem = $dsItems.getRow($ni);
-                Hashtable $item = fillItemRow($oItem, $doItem.getIdField(), $itemCount);
+                DataRange $oItem = $dsItems.getRow($ni);
+                DataRange $item = fillItemRow($oItem, $doItem.getIdField(), $itemCount);
                 if (Config.SHOW_IMAGES)
                     $item.put("[#Show_Images]", 1);
                 $items.add($item);

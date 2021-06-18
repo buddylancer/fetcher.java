@@ -11,8 +11,8 @@ import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 import Bula.Objects.Request;
 import Bula.Objects.Response;
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Model.DBConfig;
 
 /**
@@ -42,7 +42,7 @@ public class Action extends Page {
         if ($actionsArray == null)
             initialize();
 
-        Hashtable $actionInfo = this.$context.$Request.testPage($actionsArray);
+        DataRange $actionInfo = this.$context.$Request.testPage($actionsArray);
 
         // Test action name
         if (!$actionInfo.containsKey("page")) {
@@ -74,7 +74,7 @@ public class Action extends Page {
         }
 
         String $actionClass = CAT("Bula/Fetcher/Controller/Actions/", $actionInfo.get("class"));
-        ArrayList $args0 = new ArrayList(); $args0.add(this.$context);
+        DataList $args0 = new DataList(); $args0.add(this.$context);
         Internal.callMethod($actionClass, $args0, "execute", null);
 
         if (DBConfig.$Connection != null) {

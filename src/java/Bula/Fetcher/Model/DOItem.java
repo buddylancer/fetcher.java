@@ -8,7 +8,7 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Objects.DateTimes;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Strings;
 import Bula.Model.DBConfig;
 import Bula.Model.DOBase;
@@ -136,7 +136,7 @@ public class DOItem extends DOBase {
         int $totalPages = $ds1.getTotalPages();
         String $inList = new String();
         for (int $n = 0; $n < $ds1.getSize(); $n++) {
-            Hashtable $o = $ds1.getRow($n);
+            DataRange $o = $ds1.getRow($n);
             if ($n != 0)
                 $inList += ", ";
             Object $id = $o.get(this.$idField);
@@ -145,7 +145,7 @@ public class DOItem extends DOBase {
 
         String $query2 = Strings.concat(
             " SELECT _this.", this.$idField, ", s.s_SourceName, _this.s_Title, _this.s_Url, _this.d_Date, _this.s_Category, ",
-            " _this.s_Creator, _this.s_Custom1, _this.s_Custom2, s.s_SourceName ",
+            " _this.s_Creator, _this.s_Custom1, _this.s_Custom2 ",
             " FROM ", this.$tableName, " _this ",
             " LEFT JOIN sources s ON (s.i_SourceId = _this.i_SourceLink ) ",
             " WHERE _this.", this.$idField, " IN (", $inList, ") ",

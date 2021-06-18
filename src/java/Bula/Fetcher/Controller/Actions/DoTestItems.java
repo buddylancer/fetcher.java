@@ -8,7 +8,7 @@ import Bula.Meta;
 
 import Bula.Objects.Response;
 import Bula.Objects.DateTimes;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 
 import Bula.Fetcher.Config;
@@ -60,7 +60,7 @@ public class DoTestItems extends Page {
         int $timeShift = 240; // 4 min
         long $currentTime = DateTimes.getTime();
         if ($dsTimes.getSize() > 0) {
-            Hashtable $oTime = $dsTimes.getRow(0);
+            DataRange $oTime = $dsTimes.getRow(0);
             if ($currentTime > DateTimes.getTime(STR($oTime.get("d_Time"))) + $timeShift)
                 $updateRequired = true;
         }
@@ -75,7 +75,7 @@ public class DoTestItems extends Page {
             $boFetcher.fetchFromSources();
 
             $doTime = new DOTime(); // Need for DB reopen
-            Hashtable $fields = new Hashtable();
+            DataRange $fields = new DataRange();
             $fields.put("d_Time", DateTimes.format(DateTimes.SQL_DTS, DateTimes.getTime()));
             if ($insertRequired) {
                 $fields.put("i_Id", 1);

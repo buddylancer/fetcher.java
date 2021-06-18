@@ -6,8 +6,8 @@
 package Bula.Model;
 import Bula.Meta;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 
 import Bula.Objects.Arrays;
 
@@ -18,7 +18,7 @@ public class RecordSet extends Meta {
     /** Current result */
     public Object $result = null;
     /** Current record */
-    public Hashtable $record = null;
+    public DataRange $record = null;
 
     private int $numRows = 0;
     private int $numPages = 0;
@@ -97,7 +97,7 @@ public class RecordSet extends Meta {
         Object $arr = DataAccess.fetchArray(this.$result);
 
         if ($arr != null) {
-            this.$record = (Hashtable)$arr;
+            this.$record = (DataRange)$arr;
             return 1;
         }
         else

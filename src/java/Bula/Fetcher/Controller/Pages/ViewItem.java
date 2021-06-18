@@ -9,7 +9,7 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 import Bula.Objects.Request;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOItem;
 import Bula.Fetcher.Controller.Util;
@@ -28,10 +28,10 @@ public class ViewItem extends Page {
 
     /**
      * Fast check of input query parameters.
-     * @return Hashtable Parsed parameters (or null in case of any error).
+     * @return DataRange Parsed parameters (or null in case of any error).
      */
-    public Hashtable check() {
-        Hashtable $prepare = new Hashtable();
+    public DataRange check() {
+        DataRange $prepare = new DataRange();
         if (!this.$context.$Request.contains("id")) {
             $prepare.put("[#ErrMessage]", "Item ID is required!");
             this.write("error", $prepare);
@@ -44,20 +44,20 @@ public class ViewItem extends Page {
             return null;
         }
 
-        Hashtable $pars = new Hashtable();
+        DataRange $pars = new DataRange();
         $pars.put("id", $id);
         return $pars;
     }
 
     /** Execute main logic for View Item block. */
     public void execute() {
-        Hashtable $pars = check();
+        DataRange $pars = check();
         if ($pars == null)
             return;
 
         String $id = (String)$pars.get("id");
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
 
         DOItem $doItem = new DOItem();
         DataSet $dsItems = $doItem.getById(INT($id));
@@ -67,7 +67,7 @@ public class ViewItem extends Page {
             return;
         }
 
-        Hashtable $oItem = $dsItems.getRow(0);
+        DataRange $oItem = $dsItems.getRow(0);
         String $title = STR($oItem.get("s_Title"));
         String $sourceName = STR($oItem.get("s_SourceName"));
 

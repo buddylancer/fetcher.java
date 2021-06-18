@@ -8,9 +8,9 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 
-import java.util.ArrayList;
+import Bula.Objects.DataList;
 import Bula.Objects.Arrays;
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 
@@ -25,7 +25,7 @@ public class BOItem extends Meta {
     /** Source name */
     private String $source = null;
     /** RSS-item */
-    private Hashtable $item = null;
+    private DataRange $item = null;
 
     /** Link to external item */
     public String $link = null;
@@ -55,7 +55,7 @@ public class BOItem extends Meta {
      * @param $source Current processed source.
      * @param $item Current processed RSS-item from given source.
      */
-    public BOItem (String $source, Hashtable $item) {
+    public BOItem (String $source, DataRange $item) {
         this.initialize($source, $item);
     }
 
@@ -64,7 +64,7 @@ public class BOItem extends Meta {
      * @param $source Current processed source.
      * @param $item Current processed RSS-item from given source.
      */
-    private void initialize(String $source, Hashtable $item) {
+    private void initialize(String $source, DataRange $item) {
         this.$source = $source;
         this.$item = $item;
 
@@ -184,7 +184,7 @@ public class BOItem extends Meta {
         String $category = null;
         if (!$categoryItem.isEmpty()) {
             String[] $categoriesArr = $categoryItem.replace(",&,", " & ").split(",");
-            ArrayList $categoriesNew = new ArrayList();
+            DataList $categoriesNew = new DataList();
             for (int $c = 0; $c < SIZE($categoriesArr); $c++) {
                 String $temp = $categoriesArr[$c];
                 if (BLANK($temp.trim()))
@@ -228,7 +228,7 @@ public class BOItem extends Meta {
         String[] $categoryTags = BLANK(this.$category) ?
             Strings.emptyArray() : this.$category.split(",");
         for (int $n1 = 0; $n1 < $dsCategories.getSize(); $n1++) {
-            Hashtable $oCategory = $dsCategories.getRow($n1);
+            DataRange $oCategory = $dsCategories.getRow($n1);
             String $rssAllowedKey = STR($oCategory.get("s_CatId"));
             String $name = STR($oCategory.get("s_Name"));
 
@@ -255,7 +255,7 @@ public class BOItem extends Meta {
                     $includeFlag &= false;
             }
             if ($includeFlag) {
-                ArrayList $arrayList = Arrays.createArrayList($categoryTags); $arrayList.add($name);
+                DataList $arrayList = Arrays.createDataList($categoryTags); $arrayList.add($name);
                 $categoryTags = (String[])$arrayList.toArray(new String[] {});
              }
         }
@@ -263,7 +263,7 @@ public class BOItem extends Meta {
             return;
 
         //TODO
-        //ArrayList $uniqueCategories = this.NormalizeList($categoryTags, $lang);
+        //DataList $uniqueCategories = this.NormalizeList($categoryTags, $lang);
         //$category = String.join(", ", $uniqueCategories);
 
         this.$category = Strings.join(", ", $categoryTags);
@@ -280,7 +280,7 @@ public class BOItem extends Meta {
             else if (!BLANK(this.$item.get("source")))
                 this.$creator = STR(this.$item.get("source"));
             else if (!BLANK(this.$item.get("dc"))) { //TODO implement [dc][creator]
-                Hashtable $temp = (Hashtable)this.$item.get("dc");
+                DataRange $temp = (DataRange)this.$item.get("dc");
                 if (!BLANK($temp.get("creator")))
                     this.$creator = STR($temp.get("creator"));
             }

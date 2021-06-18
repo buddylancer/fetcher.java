@@ -9,7 +9,7 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import java.util.Hashtable;
+import Bula.Objects.DataRange;
 import Bula.Objects.Request;
 
 import Bula.Model.DataSet;
@@ -41,7 +41,7 @@ public class DoRedirectItem extends DoRedirect {
                 if ($dsItems.getSize() == 0)
                     $errorMessage = "No item with such ID!";
                 else {
-                    Hashtable $oItem = $dsItems.getRow(0);
+                    DataRange $oItem = $dsItems.getRow(0);
                     $linkToRedirect = STR($oItem.get("s_Link"));
                 }
             }

@@ -7,14 +7,8 @@
 
 package Bula;
 
-//using System;
-//using System.Xml;
-
-//using System.Collections;
-import Bula.Fetcher.Config;
 import java.util.*;
 import java.lang.reflect.*;
-//using System.Text.RegularExpressions;
 import java.util.regex.*;
 import com.apptastic.rssreader.*;
 import java.io.IOException;
@@ -22,6 +16,10 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamReader;
+
+import Bula.Fetcher.Config;
+import Bula.Objects.*;
+
 /// <summary>
 /// Various operations specific to C# version.
 /// </summary>
@@ -104,7 +102,7 @@ public class Internal extends Bula.Meta {
     /// <param name="method_name">Method name</param>
     /// <param name="args">List of arguments</param>
     /// <returns>Result of method execution</returns>
-    public static Object callStaticMethod(String class_name, String method_name, ArrayList args) throws Exception
+    public static Object callStaticMethod(String class_name, String method_name, DataList args) throws Exception
     {
 
         Class type = Class.forName(class_name.replace('/', '.'));
@@ -115,7 +113,7 @@ public class Internal extends Bula.Meta {
             return methodInfo.invoke(null, new Object[] {});
     }
 
-    private static Class[] getTypes(ArrayList args) {
+    private static Class[] getTypes(DataList args) {
         Class[] types = args != null && args.size() > 0 ? new Class[args.size()] : new Class[0];
         if (types.length > 0)
         {
@@ -146,7 +144,7 @@ public class Internal extends Bula.Meta {
     /// <param name="method_name">Method name</param>
     /// <param name="args">List of arguments</param>
     /// <returns>Result of method execution</returns>
-    public static Object callMethod(String class_name, ArrayList args0, String method_name, ArrayList args) {
+    public static Object callMethod(String class_name, DataList args0, String method_name, DataList args) {
         try {
             return callMethodPrivate(class_name, args0, method_name, args);
         }
@@ -157,7 +155,7 @@ public class Internal extends Bula.Meta {
         return null;
     }
     
-    private static Object callMethodPrivate(String class_name, ArrayList args0, String method_name, ArrayList args) throws Exception
+    private static Object callMethodPrivate(String class_name, DataList args0, String method_name, DataList args) throws Exception
     {
         String class_name_fixed = 
                 Config.FILE_PREFIX.isEmpty() ? class_name : class_name.replaceFirst(Config.FILE_PREFIX, "");
@@ -184,7 +182,7 @@ public class Internal extends Bula.Meta {
     /*
     public static Object[] fetchRssOld(String url)
     {
-        ArrayList items = new ArrayList();
+        DataList items = new DataList();
 
         XmlDocument rssXmlDoc = new XmlDocument();
 
@@ -200,7 +198,7 @@ public class Internal extends Bula.Meta {
         // Iterate through the items in the RSS file
         foreach (XmlNode rssNode in rssNodes)
         {
-            var item = new Hashtable();
+            var item = new DataRange();
 
             XmlNode rssSubNode = rssNode.SelectSingleNode("title");
             if (rssSubNode != null)
@@ -221,8 +219,8 @@ public class Internal extends Bula.Meta {
             rssSubNode = rssNode.SelectSingleNode("dc:creator", nsmgr);
             if (rssSubNode != null)
             {
-                item["dc"] = new Hashtable();
-                ((Hashtable)item["dc"])["creator"] = rssSubNode.InnerText;
+                item["dc"] = new DataRange();
+                ((DataRange)item["dc"])["creator"] = rssSubNode.InnerText;
             }
             items.Add(item);
         }
@@ -237,7 +235,7 @@ public class Internal extends Bula.Meta {
     /// <returns>Resulting array of items</returns>
     public static Object[] fetchRss(String url)
     {
-        ArrayList items = new ArrayList();
+        DataList items = new DataList();
 
         RssReader rssReader = new com.apptastic.rssreader.RssReader();
         Stream<Item> itemsStream = null;
@@ -251,7 +249,7 @@ public class Internal extends Bula.Meta {
 
         while (iterator.hasNext()) {
             Item item = iterator.next();
-            Hashtable hash = new Hashtable();
+            DataRange hash = new DataRange();
             if (!NUL(item.getTitle()))
                 hash.put("title", item.getTitle());
             if (!NUL(item.getLink()))

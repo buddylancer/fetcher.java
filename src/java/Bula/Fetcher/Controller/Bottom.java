@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOCategory;
 
@@ -26,7 +26,7 @@ public class Bottom extends Page {
 
     /** Execute main logic for Bottom block */
     public void execute() {
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
 
         DOCategory $doCategory = new DOCategory();
         DataSet $dsCategory = $doCategory.enumAll("_this.i_Counter <> 0");
@@ -35,12 +35,12 @@ public class Bottom extends Page {
         int $n1 = INT($size / 3) + ($size3 == 0 ? 0 : 1);
         int $n2 = $n1 * 2;
         Object[] $nn = ARR(0, $n1, $n2, $size);
-        ArrayList $filterBlocks = new ArrayList();
+        DataList $filterBlocks = new DataList();
         for (int $td = 0; $td < 3; $td++) {
-            Hashtable $filterBlock = new Hashtable();
-            ArrayList $rows = new ArrayList();
+            DataRange $filterBlock = new DataRange();
+            DataList $rows = new DataList();
             for (int $n = INT($nn[$td]); $n < INT($nn[$td+1]); $n++) {
-                Hashtable $oCategory = $dsCategory.getRow($n);
+                DataRange $oCategory = $dsCategory.getRow($n);
                 if (NUL($oCategory))
                     continue;
                 int $counter = INT($oCategory.get("i_Counter"));
@@ -48,7 +48,7 @@ public class Bottom extends Page {
                     continue;
                 String $key = STR($oCategory.get("s_CatId"));
                 String $name = STR($oCategory.get("s_Name"));
-                Hashtable $row = new Hashtable();
+                DataRange $row = new DataRange();
                 $row.put("[#Link]", this.getLink(Config.INDEX_PAGE, "?p=items&filter=", "items/filter/", $key));
                 $row.put("[#LinkText]", $name);
                 //if ($counter > 0)
@@ -67,18 +67,18 @@ public class Bottom extends Page {
             $n1 = INT($size / 3) + ($size3 == 0 ? 0 : 1); //17.3
             $n2 = $n1 * 2; //34.6
             $nn = ARR(0, $n1, $n2, $size);
-            ArrayList $rssBlocks = new ArrayList();
+            DataList $rssBlocks = new DataList();
             for (int $td = 0; $td < 3; $td++) {
-                Hashtable $rssBlock = new Hashtable();
-                ArrayList $rows = new ArrayList();
+                DataRange $rssBlock = new DataRange();
+                DataList $rows = new DataList();
                 for (int $n = INT($nn[$td]); $n < INT($nn[$td+1]); $n++) {
-                    Hashtable $oCategory = $dsCategory.getRow($n);
+                    DataRange $oCategory = $dsCategory.getRow($n);
                     if (NUL($oCategory))
                         continue;
                     String $key = STR($oCategory.get("s_CatId"));
                     String $name = STR($oCategory.get("s_Name"));
                     //$counter = INT($oCategory.get("i_Counter"));
-                    Hashtable $row = new Hashtable();
+                    DataRange $row = new DataRange();
                     $row.put("[#Link]", this.getLink(Config.RSS_PAGE, "?filter=", "rss/", CAT($key, (this.$context.$FineUrls ? ".xml" : null))));
                     $row.put("[#LinkText]", $name);
                     $rows.add($row);

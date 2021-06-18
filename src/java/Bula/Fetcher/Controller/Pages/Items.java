@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
+import Bula.Objects.DataList;
+import Bula.Objects.DataRange;
 
 import Bula.Objects.Request;
 
@@ -34,9 +34,9 @@ public class Items extends ItemsBase {
 
     /**
      * Fast check of input query parameters.
-     * @return Hashtable Parsed parameters (or null in case of any error).
+     * @return DataRange Parsed parameters (or null in case of any error).
      */
-    public Hashtable check() {
+    public DataRange check() {
         String $errorMessage = new String();
 
         String $list = this.$context.$Request.get("list");
@@ -76,13 +76,13 @@ public class Items extends ItemsBase {
         }
 
         if ($errorMessage.length() > 0) {
-            Hashtable $prepare = new Hashtable();
+            DataRange $prepare = new DataRange();
             $prepare.put("[#ErrMessage]", $errorMessage);
             this.write("error", $prepare);
             return null;
         }
 
-        Hashtable $pars = new Hashtable();
+        DataRange $pars = new DataRange();
         if (!NUL($list))
             $pars.put("list", $list);
         if (!NUL($sourceName))
@@ -94,7 +94,7 @@ public class Items extends ItemsBase {
 
     /** Execute main logic for Items block. */
     public void execute() {
-        Hashtable $pars = this.check();
+        DataRange $pars = this.check();
         if ($pars == null)
             return;
 
@@ -108,8 +108,8 @@ public class Items extends ItemsBase {
 
         if (!NUL($filterName)) {
             DOCategory $doCategory = new DOCategory();
-            Hashtable[] $oCategory =
-                {new Hashtable()};
+            DataRange[] $oCategory =
+                {new DataRange()};
             if (!$doCategory.checkFilterName($filterName, $oCategory))
                 $errorMessage += "Non-existing filter name!";
             else
@@ -118,8 +118,8 @@ public class Items extends ItemsBase {
 
         if (!NUL($sourceName)) {
             DOSource $doSource = new DOSource();
-            Hashtable[] $oSource =
-                {new Hashtable()};
+            DataRange[] $oSource =
+                {new DataRange()};
             if (!$doSource.checkSourceName($sourceName, $oSource)) {
                 if ($errorMessage.length() > 0)
                     $errorMessage += "<br/>";
@@ -129,7 +129,7 @@ public class Items extends ItemsBase {
 
         Engine $engine = this.$context.getEngine();
 
-        Hashtable $prepare = new Hashtable();
+        DataRange $prepare = new DataRange();
         if ($errorMessage.length() > 0) {
             $prepare.put("[#ErrMessage]", $errorMessage);
             this.write("error", $prepare);
@@ -169,10 +169,10 @@ public class Items extends ItemsBase {
         }
 
         int $count = 1;
-        ArrayList $rows = new ArrayList();
+        DataList $rows = new DataList();
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
-            Hashtable $oItem = $dsItems.getRow($n);
-            Hashtable $row = fillItemRow($oItem, $doItem.getIdField(), $count);
+            DataRange $oItem = $dsItems.getRow($n);
+            DataRange $row = fillItemRow($oItem, $doItem.getIdField(), $count);
             $count++;
             $rows.add($row);
         }
@@ -183,16 +183,16 @@ public class Items extends ItemsBase {
             Boolean $before = false;
             Boolean $after = false;
 
-            ArrayList $pages = new ArrayList();
+            DataList $pages = new DataList();
             for (int $n = 1; $n <= $listTotal; $n++) {
-                Hashtable $page = new Hashtable();
+                DataRange $page = new DataRange();
                 if ($n < $listNumber - $chunk) {
                     if (!$before) {
                         $before = true;
                         $page.put("[#Text]", "1");
                         $page.put("[#Link]", getPageLink(1));
                         $pages.add($page);
-                        $page = new Hashtable();
+                        $page = new DataRange();
                         $page.put("[#Text]", " ... ");
                         //$row.remove("[#Link]");
                         $pages.add($page);
@@ -204,7 +204,7 @@ public class Items extends ItemsBase {
                         $after = true;
                         $page.put("[#Text]", " ... ");
                         $pages.add($page);
-                        $page = new Hashtable();
+                        $page = new DataRange();
                         $page.put("[#Text]", $listTotal);
                         $page.put("[#Link]", getPageLink($listTotal));
                         $pages.add($page);

@@ -3,14 +3,13 @@
 // Author - Buddy Lancer <http://www.buddylancer.com>.
 // Licensed under the MIT license.
 
-
 package Bula.Model;
-import Bula.Meta;
-import java.sql.*;
-
-import java.util.Hashtable;
-import java.util.Properties;
 //SKIP cs
+import java.sql.*;
+import java.util.Properties;
+
+import Bula.Meta;
+import Bula.Objects.DataRange;
 
 /**
  * Facade class for interfacing with mysql database.
@@ -170,13 +169,13 @@ public class DataAccess extends Meta {
      }
 
     /**
-     * Get next row (as Hashtable) for last query.
+     * Get next row (as DataRange) for last query.
      * @param Object Result of query execution.
-     * @return Hashtable Next row or null.
+     * @return DataRange Next row or null.
      */
-    public static Hashtable fetchArray(Object $result) {
+    public static DataRange fetchArray(Object $result) {
         ResultSet $oRs = (ResultSet)$result;
-        Hashtable $row = new Hashtable();
+        DataRange $row = new DataRange();
         try {
             ResultSetMetaData $md = $oRs.getMetaData(); //Java
             if (!$oRs.next())
