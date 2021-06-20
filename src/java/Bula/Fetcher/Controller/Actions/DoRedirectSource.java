@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.Request;
-import Bula.Objects.DataRange;
+import Bula.Objects.TRequest;
+import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Model.DOSource;
 
@@ -32,12 +32,12 @@ public class DoRedirectSource extends DoRedirect {
             $errorMessage = "Source name is required!";
         else {
             String $sourceName = this.$context.$Request.get("source");
-            if (!Request.isDomainName($sourceName))
+            if (!TRequest.isDomainName($sourceName))
                 $errorMessage = "Incorrect source name!";
             else {
                 DOSource $doSource = new DOSource();
-                DataRange[] $oSource =
-                    {new DataRange()};
+                THashtable[] $oSource =
+                    {new THashtable()};
                 if (!$doSource.checkSourceName($sourceName, $oSource))
                     $errorMessage = "No such source name!";
                 else

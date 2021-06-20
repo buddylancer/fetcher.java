@@ -9,7 +9,7 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.Response;
+import Bula.Objects.TResponse;
 import Bula.Objects.Strings;
 
 /**

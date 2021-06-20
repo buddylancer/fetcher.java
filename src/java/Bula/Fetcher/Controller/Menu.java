@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
 /**
  * Logic for generating Menu block.
@@ -23,7 +23,7 @@ public class Menu extends Page {
 
     /** Execute main logic for Menu block */
     public void execute() {
-        DataList $publicPages = new DataList();
+        TArrayList $publicPages = new TArrayList();
 
         $publicPages.add("Home");
         $publicPages.add("home");
@@ -52,9 +52,9 @@ public class Menu extends Page {
             $publicPages.add("sources");
         }
 
-        DataList $menuItems = new DataList();
+        TArrayList $menuItems = new TArrayList();
         for (int $n = 0; $n < $publicPages.size(); $n += 2) {
-            DataRange $row = new DataRange();
+            THashtable $row = new THashtable();
             String $title = STR($publicPages.get($n+0));
             String $page = STR($publicPages.get($n+1));
             String $href = null;
@@ -73,7 +73,7 @@ public class Menu extends Page {
             $menuItems.add($row);
         }
 
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         $prepare.put("[#MenuItems]", $menuItems);
         this.write("menu", $prepare);
     }

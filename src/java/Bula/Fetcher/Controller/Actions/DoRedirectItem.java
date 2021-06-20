@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.DataRange;
-import Bula.Objects.Request;
+import Bula.Objects.THashtable;
+import Bula.Objects.TRequest;
 
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOItem;
@@ -33,7 +33,7 @@ public class DoRedirectItem extends DoRedirect {
             $errorMessage = "Item ID is required!";
         else {
             String $id = this.$context.$Request.get("id");
-            if (!Request.isInteger($id) || INT($id) <= 0)
+            if (!TRequest.isInteger($id) || INT($id) <= 0)
                 $errorMessage = "Incorrect item ID!";
             else {
                 DOItem $doItem = new DOItem();
@@ -41,7 +41,7 @@ public class DoRedirectItem extends DoRedirect {
                 if ($dsItems.getSize() == 0)
                     $errorMessage = "No item with such ID!";
                 else {
-                    DataRange $oItem = $dsItems.getRow(0);
+                    THashtable $oItem = $dsItems.getRow(0);
                     $linkToRedirect = STR($oItem.get("s_Link"));
                 }
             }

@@ -6,9 +6,9 @@
 package Bula.Model;
 import Bula.Meta;
 
-import Bula.Objects.DataList;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
 
 /**
@@ -415,16 +415,15 @@ public class DOBase extends Meta {
      * @param $fields The set of fields.
      * @return int Result of SQL-query execution.
      */
-    public int insert(DataRange $fields) {
-        Enumerator $keys =
-            new Enumerator($fields.keys());
+    public int insert(THashtable $fields) {
+        TEnumerator $keys = new TEnumerator($fields.keys());
         String $fieldNames = new String();
         String $fieldValues = new String();
         Object[] $pars = ARR();
         //$pars.setPullValues(true);
         int $n = 0;
-        while ($keys.hasMoreElements()) {
-            String $key = (String)$keys.nextElement();
+        while ($keys.moveNext()) {
+            String $key = (String)$keys.getCurrent();
             if ($n != 0) $fieldNames += ", ";
             if ($n != 0) $fieldValues += ", ";
             $fieldNames += $key;
@@ -445,14 +444,13 @@ public class DOBase extends Meta {
      * @param $fields The set of fields.
      * @return int Result of SQL-query execution.
      */
-    public int updateById(Object $id, DataRange $fields) {
-        Enumerator $keys =
-            new Enumerator($fields.keys());
+    public int updateById(Object $id, THashtable $fields) {
+        TEnumerator $keys = new TEnumerator($fields.keys());
         String $setValues = new String();
         Object[] $pars = ARR();
         int $n = 0;
-        while ($keys.hasMoreElements()) {
-            String $key = (String)$keys.nextElement();
+        while ($keys.moveNext()) {
+            String $key = (String)$keys.getCurrent();
             if ($key == this.$idField) //TODO PHP
                 continue;
             if ($n != 0)

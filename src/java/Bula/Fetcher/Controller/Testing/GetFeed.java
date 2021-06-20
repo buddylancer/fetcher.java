@@ -11,8 +11,8 @@ import Bula.Fetcher.Context;
 import Bula.Fetcher.Controller.Page;
 
 import Bula.Objects.Helper;
-import Bula.Objects.Request;
-import Bula.Objects.Response;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
 
 /**
  * Logic for getting test feed.

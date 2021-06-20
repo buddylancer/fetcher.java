@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.Properties;
 
 import Bula.Meta;
-import Bula.Objects.DataRange;
+import Bula.Objects.THashtable;
 
 /**
  * Facade class for interfacing with mysql database.
@@ -173,9 +173,9 @@ public class DataAccess extends Meta {
      * @param Object Result of query execution.
      * @return DataRange Next row or null.
      */
-    public static DataRange fetchArray(Object $result) {
+    public static THashtable fetchArray(Object $result) {
         ResultSet $oRs = (ResultSet)$result;
-        DataRange $row = new DataRange();
+        THashtable $row = new THashtable();
         try {
             ResultSetMetaData $md = $oRs.getMetaData(); //Java
             if (!$oRs.next())

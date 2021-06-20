@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.Request;
-import Bula.Objects.DataRange;
+import Bula.Objects.TRequest;
+import Bula.Objects.THashtable;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOItem;
 import Bula.Fetcher.Controller.Util;
@@ -28,36 +28,36 @@ public class ViewItem extends Page {
 
     /**
      * Fast check of input query parameters.
-     * @return DataRange Parsed parameters (or null in case of any error).
+     * @return THashtable Parsed parameters (or null in case of any error).
      */
-    public DataRange check() {
-        DataRange $prepare = new DataRange();
+    public THashtable check() {
+        THashtable $prepare = new THashtable();
         if (!this.$context.$Request.contains("id")) {
             $prepare.put("[#ErrMessage]", "Item ID is required!");
             this.write("error", $prepare);
             return null;
         }
         String $id = this.$context.$Request.get("id");
-        if (!Request.isInteger($id)) {
+        if (!TRequest.isInteger($id)) {
             $prepare.put("[#ErrMessage]", "Item ID must be positive integer!");
             this.write("error", $prepare);
             return null;
         }
 
-        DataRange $pars = new DataRange();
+        THashtable $pars = new THashtable();
         $pars.put("id", $id);
         return $pars;
     }
 
     /** Execute main logic for View Item block. */
     public void execute() {
-        DataRange $pars = check();
+        THashtable $pars = check();
         if ($pars == null)
             return;
 
         String $id = (String)$pars.get("id");
 
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
 
         DOItem $doItem = new DOItem();
         DataSet $dsItems = $doItem.getById(INT($id));
@@ -67,7 +67,7 @@ public class ViewItem extends Page {
             return;
         }
 
-        DataRange $oItem = $dsItems.getRow(0);
+        THashtable $oItem = $dsItems.getRow(0);
         String $title = STR($oItem.get("s_Title"));
         String $sourceName = STR($oItem.get("s_SourceName"));
 

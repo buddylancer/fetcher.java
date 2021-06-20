@@ -8,12 +8,12 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
-import Bula.Objects.Request;
-import Bula.Objects.Response;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
 import Bula.Model.DBConfig;
 import Bula.Model.DataAccess;
 import Bula.Fetcher.Controller.Util;
@@ -46,7 +46,7 @@ public class Index extends Page {
         if ($pagesArray == null)
             initialize();
 
-        DataRange $pageInfo = this.$context.$Request.testPage($pagesArray, "home");
+        THashtable $pageInfo = this.$context.$Request.testPage($pagesArray, "home");
 
         // Test action name
         if (!$pageInfo.containsKey("page")) {
@@ -70,7 +70,7 @@ public class Index extends Page {
 
         Engine $engine = this.$context.pushEngine(true);
 
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         $prepare.put("[#Site_Name]", Config.SITE_NAME);
         String $pFromVars = this.$context.$Request.contains("p") ? this.$context.$Request.get("p") : "home";
         String $idFromVars = this.$context.$Request.contains("id") ? this.$context.$Request.get("id") : null;

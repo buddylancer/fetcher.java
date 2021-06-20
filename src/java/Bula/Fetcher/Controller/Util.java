@@ -8,10 +8,10 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
-import Bula.Objects.Request;
+import Bula.Objects.TRequest;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Helper;
 import Bula.Objects.Strings;
@@ -103,7 +103,7 @@ public class Util extends Meta {
             $query = $pageName;
         else {
             if ($query == null)
-                $query = $engine.$context.$Request.getVar(Request.INPUT_SERVER, "QUERY_STRING");
+                $query = $engine.$context.$Request.getVar(TRequest.INPUT_SERVER, "QUERY_STRING");
             if (BLANK($query))
                 $query = "p=home";
         }

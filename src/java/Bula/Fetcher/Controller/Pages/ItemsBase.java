@@ -6,12 +6,12 @@
 package Bula.Fetcher.Controller.Pages;
 import Bula.Meta;
 
-import Bula.Objects.DataRange;
+import Bula.Objects.THashtable;
 import Bula.Objects.Regex;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.Request;
+import Bula.Objects.TRequest;
 import Bula.Objects.Strings;
 import Bula.Fetcher.Controller.Util;
 import Bula.Fetcher.Controller.Engine;
@@ -33,8 +33,8 @@ abstract class ItemsBase extends Page {
      */
     public Boolean checkList() {
         if (this.$context.$Request.contains("list")) {
-            if (!Request.isInteger(this.$context.$Request.get("list"))) {
-                DataRange $prepare = new DataRange();
+            if (!TRequest.isInteger(this.$context.$Request.get("list"))) {
+                THashtable $prepare = new THashtable();
                 $prepare.put("[#ErrMessage]", "Incorrect list number!");
                 this.write("error", $prepare);
                 return false;
@@ -55,13 +55,13 @@ abstract class ItemsBase extends Page {
             String $source = this.$context.$Request.get("source");
             if (BLANK($source))
                 $errMessage += "Empty source name!<br/>";
-            else if (!Request.isDomainName("source"))
+            else if (!TRequest.isDomainName("source"))
                 $errMessage += "Incorrect source name!<br/>";
         }
         if ($errMessage.isEmpty())
             return true;
 
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         $prepare.put("[#ErrMessage]", $errMessage);
         this.write("error", $prepare);
         return false;
@@ -72,10 +72,10 @@ abstract class ItemsBase extends Page {
      * @param $oItem Original Item.
      * @param $idField Name of ID field.
      * @param $count The number of inserted Row in HTML table.
-     * @return DataRange Resulting Row.
+     * @return THashtable Resulting Row.
      */
-    protected DataRange fillItemRow(DataRange $oItem, String $idField, int $count) {
-        DataRange $row = new DataRange();
+    protected THashtable fillItemRow(THashtable $oItem, String $idField, int $count) {
+        THashtable $row = new THashtable();
         int $itemId = INT($oItem.get($idField));
         String $urlTitle = STR($oItem.get("s_Url"));
         String $itemHref = this.$context.$ImmediateRedirect ?
@@ -108,9 +108,9 @@ abstract class ItemsBase extends Page {
                 $s_Creator = new String(" "); //TODO -- "" doesn't works somehow, need to investigate
             $row.put("[#Creator]", $s_Creator);
         }
-        if (this.$context.contains("Name_Custom1") && $oItem.contains("s_Custom1") && !NUL($oItem.get("s_Custom1")))
+        if (this.$context.contains("Name_Custom1") && $oItem.containsKey("s_Custom1") && !NUL($oItem.get("s_Custom1")))
             $row.put("[#Custom1]", $oItem.get("s_Custom1"));
-        if (this.$context.contains("Name_Custom2") && $oItem.contains("s_Custom2") && !NUL($oItem.get("s_Custom2")))
+        if (this.$context.contains("Name_Custom2") && $oItem.containsKey("s_Custom2") && !NUL($oItem.get("s_Custom2")))
             $row.put("[#Custom2]", $oItem.get("s_Custom2"));
 
         String $d_Date = Util.showTime(STR($oItem.get("d_Date")));

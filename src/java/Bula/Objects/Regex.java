@@ -64,7 +64,7 @@ public class Regex extends Meta {
         int $patternOptions = 
                 ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
         String[] $chunks = Pattern.compile($pattern, $patternOptions).split($input/*, $splitOptions*/);
-        DataList $outArray = new DataList();
+        TArrayList $outArray = new TArrayList();
         for (String $chunk : $chunks)
             $outArray.add($chunk);
         return (String[])$outArray.toArray(new String[] {});
@@ -85,7 +85,7 @@ public class Regex extends Meta {
         int $patternOptions = Pattern.UNICODE_CASE |
                 (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         Matcher $matcher = Pattern.compile($pattern, $patternOptions).matcher($input);
-        DataList $result = new DataList();
+        TArrayList $result = new TArrayList();
         while ($matcher.find())
             $result.add($matcher.group());
         return (String[])$result.toArray(new String[] {});

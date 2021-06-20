@@ -9,10 +9,10 @@ import Bula.Meta;
 import Bula.Internal;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.Request;
-import Bula.Objects.Response;
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 import Bula.Model.DBConfig;
 
 /**
@@ -42,7 +42,7 @@ public class Action extends Page {
         if ($actionsArray == null)
             initialize();
 
-        DataRange $actionInfo = this.$context.$Request.testPage($actionsArray);
+        THashtable $actionInfo = this.$context.$Request.testPage($actionsArray);
 
         // Test action name
         if (!$actionInfo.containsKey("page")) {
@@ -74,7 +74,7 @@ public class Action extends Page {
         }
 
         String $actionClass = CAT("Bula/Fetcher/Controller/Actions/", $actionInfo.get("class"));
-        DataList $args0 = new DataList(); $args0.add(this.$context);
+        TArrayList $args0 = new TArrayList(); $args0.add(this.$context);
         Internal.callMethod($actionClass, $args0, "execute", null);
 
         if (DBConfig.$Connection != null) {

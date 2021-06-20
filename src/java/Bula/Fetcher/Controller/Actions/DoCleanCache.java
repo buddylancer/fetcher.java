@@ -7,10 +7,10 @@ package Bula.Fetcher.Controller.Actions;
 import Bula.Meta;
 
 import Bula.Objects.DateTimes;
-import Bula.Objects.Enumerator;
+import Bula.Objects.TEnumerator;
 import Bula.Objects.Helper;
 import Bula.Objects.Logger;
-import Bula.Objects.Request;
+import Bula.Objects.TRequest;
 import Bula.Objects.Strings;
 
 import Bula.Fetcher.Config;
@@ -38,7 +38,7 @@ public class DoCleanCache extends Page {
             $oLogger.initFile($filename);
         }
         else
-            $oLogger.initResponse(this.$context.$Response);
+            $oLogger.initTResponse(this.$context.$Response);
         this.cleanCache($oLogger);
     }
 
@@ -52,9 +52,9 @@ public class DoCleanCache extends Page {
         if (!Helper.dirExists($pathName))
             return;
 
-        Enumerator $entries = Helper.listDirEntries($pathName);
-        while ($entries.hasMoreElements()) {
-            String $entry = (String)$entries.nextElement();
+        TEnumerator $entries = Helper.listDirEntries($pathName);
+        while ($entries.moveNext()) {
+            String $entry = (String)$entries.getCurrent();
 
             if (Helper.isFile($entry) && $entry.endsWith($ext)) {
                 $oLogger.output(CAT("Deleting of ", $entry, " ...<br/>", EOL));

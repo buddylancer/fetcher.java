@@ -7,32 +7,32 @@ package Bula.Objects;
 import Bula.Meta;
 
 import Bula.Objects.Arrays;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 import Bula.Objects.Regex;
 
 /**
  * Helper class for processing query/form request.
  */
-public class Request extends RequestBase {
+public class TRequest extends TRequestBase {
     /** Internal storage for GET/POST variables */
-    private DataRange $Vars = null;
+    private THashtable $Vars = null;
     /** Internal storage for SERVER variables */
-    private DataRange $ServerVars = null;
+    private THashtable $ServerVars = null;
 
-    public Request(Object $currentRequest) { super($currentRequest); initialize(); }
+    public TRequest(Object $currentRequest) { super($currentRequest); initialize(); }
 
     /** Initialize internal variables for new request. */
     private void initialize() {
-        this.$Vars = Arrays.newDataRange();
-        this.$ServerVars = Arrays.newDataRange();
+        this.$Vars = THashtable.create();
+        this.$ServerVars = THashtable.create();
     }
 
     /**
      * Get private variables.
-     * @return DataRange
+     * @return THashtable
      */
-    public DataRange getPrivateVars() {
+    public THashtable getPrivateVars() {
         return this.$Vars;
     }
 
@@ -73,26 +73,26 @@ public class Request extends RequestBase {
      * Get all variable keys from request.
      * @return Enumeration All keys enumeration.
      */
-    public Enumerator getKeys() {
-        return new Enumerator(this.$Vars.keys());
+    public TEnumerator getKeys() {
+        return new TEnumerator(this.$Vars.keys());
     }
 
     /** Extract all POST variables into internal variables. */
     public void extractPostVars() {
-        DataRange $vars = this.getVars(INPUT_POST);
-        this.$Vars = Arrays.mergeDataRange(this.$Vars, $vars);
+        THashtable $vars = this.getVars(INPUT_POST);
+        this.$Vars = this.$Vars.merge($vars);
     }
 
     /** Extract all SERVER variables into internal storage. */
     public void extractServerVars() {
-        DataRange $vars = this.getVars(INPUT_SERVER);
-        this.$Vars = Arrays.mergeDataRange(this.$ServerVars, $vars);
+        THashtable $vars = this.getVars(INPUT_SERVER);
+        this.$Vars = this.$ServerVars.merge($vars);
     }
 
     /** Extract all GET and POST variables into internal storage. */
     public void extractAllVars() {
-        DataRange $vars = this.getVars(INPUT_GET);
-        this.$Vars = Arrays.mergeDataRange(this.$Vars, $vars);
+        THashtable $vars = this.getVars(INPUT_GET);
+        this.$Vars = this.$Vars.merge($vars);
         this.extractPostVars();
     }
 
@@ -203,19 +203,19 @@ public class Request extends RequestBase {
     /**
      * Test (match) a page request with array of allowed pages.
      * @param[] $pages Array of allowed pages (and their parameters).
-     * @return DataRange Resulting page parameters.
+     * @return THashtable Resulting page parameters.
      */
-    public DataRange testPage(Object[] $pages) {
+    public THashtable testPage(Object[] $pages) {
         return testPage($pages, null); }
 
     /**
      * Test (match) a page request with array of allowed pages.
      * @param[] $pages Array of allowed pages (and their parameters).
      * @param $defaultPage Default page to import for testing.
-     * @return DataRange Resulting page parameters.
+     * @return THashtable Resulting page parameters.
      */
-    public DataRange testPage(Object[] $pages, String $defaultPage /*= null*/) {
-        DataRange $pageInfo = new DataRange();
+    public THashtable testPage(Object[] $pages, String $defaultPage /*= null*/) {
+        THashtable $pageInfo = new THashtable();
 
         // Get page name
         String $page = null;

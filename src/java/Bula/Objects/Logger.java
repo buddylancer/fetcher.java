@@ -6,7 +6,7 @@
 package Bula.Objects;
 import Bula.Meta;
 
-import Bula.Objects.Response;
+import Bula.Objects.TResponse;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Helper;
 
@@ -15,7 +15,7 @@ import Bula.Objects.Helper;
  */
 public class Logger extends Meta {
     private String $fileName = null;
-    private Response $response = null;
+    private TResponse $response = null;
 
     /**
      * Initialize logging into file.
@@ -34,7 +34,7 @@ public class Logger extends Meta {
      * Initialize logging into file.
      * @param $filename Log file name.
      */
-    public void initResponse(Response $response) {
+    public void initTResponse(TResponse $response) {
         this.$fileName = null;
         if (!NUL($response))
             this.$response = $response;

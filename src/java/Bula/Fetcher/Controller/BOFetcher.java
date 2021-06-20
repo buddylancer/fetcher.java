@@ -13,11 +13,11 @@ import Bula.Fetcher.Context;
 
 import Bula.Objects.Arrays;
 import Bula.Objects.DateTimes;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 import Bula.Objects.Helper;
 import Bula.Objects.Logger;
-import Bula.Objects.Request;
+import Bula.Objects.TRequest;
 import Bula.Objects.Strings;
 
 import Bula.Model.DBConfig;
@@ -56,7 +56,7 @@ public class BOFetcher extends Meta {
             this.$oLogger.initFile($filename);
         }
         else
-            this.$oLogger.initResponse(this.$context.$Response);
+            this.$oLogger.initTResponse(this.$context.$Response);
     }
 
     /**
@@ -72,7 +72,7 @@ public class BOFetcher extends Meta {
      * @param $oSource Source object.
      * @return Object[] Resulting items.
      */
-    private Object[] fetchFromSource(DataRange $oSource) {
+    private Object[] fetchFromSource(THashtable $oSource) {
         String $url = STR($oSource.get("s_Feed"));
         if ($url.isEmpty())
             return null;
@@ -108,7 +108,7 @@ public class BOFetcher extends Meta {
      * @param $item Item object.
      * @return int Result of executing SQL-query.
      */
-    private int parseItemData(DataRange $oSource, DataRange $item) {
+    private int parseItemData(THashtable $oSource, THashtable $item) {
         // Load original values
 
         String $sourceName = STR($oSource.get("s_SourceName"));
@@ -132,7 +132,7 @@ public class BOFetcher extends Meta {
         $boItem.addStandardCategories(this.$dsCategories, this.$context.$Lang);
 
         String $url = $boItem.getUrlTitle(true); //TODO -- Need to pass true if transliteration is required
-        DataRange $fields = new DataRange();
+        THashtable $fields = new THashtable();
         $fields.put("s_Link", $boItem.$link);
         $fields.put("s_Title", $boItem.$title);
         $fields.put("s_FullTitle", $boItem.$fullTitle);
@@ -174,7 +174,7 @@ public class BOFetcher extends Meta {
 
         // Loop through sources
         for (int $n = 0; $n < $dsSources.getSize(); $n++) {
-            DataRange $oSource = $dsSources.getRow($n);
+            THashtable $oSource = $dsSources.getRow($n);
 
             Object[] $itemsArray = this.fetchFromSource($oSource);
             if ($itemsArray == null)
@@ -186,7 +186,10 @@ public class BOFetcher extends Meta {
             int $itemsCounter = 0;
             // Loop through fetched items and parse their data
             for (int $i = SIZE($itemsArray) - 1; $i >= 0; $i--) {
-                DataRange $hash = (DataRange)$itemsArray[$i];
+				if ($i == 34) {
+					int x=1;
+				}
+                THashtable $hash = (THashtable)$itemsArray[$i];
                 if (BLANK($hash.get("link")))
                     continue;
                 int $itemid = this.parseItemData($oSource, $hash);
@@ -224,13 +227,13 @@ public class BOFetcher extends Meta {
         DOCategory $doCategory = new DOCategory();
         DataSet $dsCategories = $doCategory.enumCategories();
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
-            DataRange $oCategory = $dsCategories.getRow($n);
+            THashtable $oCategory = $dsCategories.getRow($n);
             String $id = STR($oCategory.get("s_CatId"));
             String $filter = STR($oCategory.get("s_Filter"));
             DOItem $doItem = new DOItem();
             String $sqlFilter = $doItem.buildSqlFilter($filter);
             DataSet $dsItems = $doItem.enumIds($sqlFilter);
-            DataRange $fields = new DataRange();
+            THashtable $fields = new THashtable();
             $fields.put("i_Counter", $dsItems.getSize());
             int $result = $doCategory.updateById($id, $fields);
             if ($result < 0)

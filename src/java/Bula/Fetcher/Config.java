@@ -10,6 +10,8 @@ import Bula.Meta;
  * Main class for configuring data.
  */
 public class Config extends Meta {
+    /** Platform */
+    public static final String PLATFORM = "Java";
     /** Exactly the same as RewriteBase in .htaccess */
     public static final String TOP_DIR = "/";
     /** Index page name */

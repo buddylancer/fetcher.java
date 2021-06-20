@@ -9,11 +9,11 @@ import Bula.Meta;
 /**
  * Helper class for processing server response.
  */
-public class Response extends Meta {
+public class TResponse extends Meta {
     /** Current response */
     private javax.servlet.http.HttpServletResponse $httpResponse = null;
 
-    public Response (Object $response) {
+    public TResponse (Object $response) {
         $httpResponse = (javax.servlet.http.HttpServletResponse)$response;
     }
 

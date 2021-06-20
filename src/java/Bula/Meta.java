@@ -188,8 +188,8 @@ public class Meta {
     public static int SIZE(Object val) {
         if (val == null) return 0;
         else if (val instanceof Object[]) return ((Object[])val).length;
-        else if (val instanceof DataList) return ((DataList)val).size();
-        else if (val instanceof DataRange) return ((DataRange)val).size();
+        else if (val instanceof TArrayList) return ((TArrayList)val).size();
+        else if (val instanceof THashtable) return ((THashtable)val).size();
         else if (val instanceof String) return ((String)val).length();
         return 0;
     }

@@ -9,10 +9,10 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
-import Bula.Objects.Request;
+import Bula.Objects.TRequest;
 
 import Bula.Model.DataSet;
 
@@ -34,16 +34,16 @@ public class Items extends ItemsBase {
 
     /**
      * Fast check of input query parameters.
-     * @return DataRange Parsed parameters (or null in case of any error).
+     * @return THashtable Parsed parameters (or null in case of any error).
      */
-    public DataRange check() {
+    public THashtable check() {
         String $errorMessage = new String();
 
         String $list = this.$context.$Request.get("list");
         if (!NUL($list)) {
             if (BLANK($list))
                 $errorMessage += "Empty list number!";
-            else if (!Request.isInteger($list))
+            else if (!TRequest.isInteger($list))
                 $errorMessage += "Incorrect list number!";
         }
 
@@ -54,7 +54,7 @@ public class Items extends ItemsBase {
                     $errorMessage += "<br/>";
                 $errorMessage += "Empty source name!";
             }
-            else if (!Request.isDomainName($sourceName)) {
+            else if (!TRequest.isDomainName($sourceName)) {
                 if ($errorMessage.length() > 0)
                     $errorMessage += "<br/>";
                 $errorMessage += "Incorrect source name!";
@@ -68,7 +68,7 @@ public class Items extends ItemsBase {
                     $errorMessage += "<br/>";
                 $errorMessage += "Empty filter name!";
             }
-            else if (!Request.isName($filterName)) {
+            else if (!TRequest.isName($filterName)) {
                 if ($errorMessage.length() > 0)
                     $errorMessage += "<br/>";
                 $errorMessage += "Incorrect filter name!";
@@ -76,13 +76,13 @@ public class Items extends ItemsBase {
         }
 
         if ($errorMessage.length() > 0) {
-            DataRange $prepare = new DataRange();
+            THashtable $prepare = new THashtable();
             $prepare.put("[#ErrMessage]", $errorMessage);
             this.write("error", $prepare);
             return null;
         }
 
-        DataRange $pars = new DataRange();
+        THashtable $pars = new THashtable();
         if (!NUL($list))
             $pars.put("list", $list);
         if (!NUL($sourceName))
@@ -94,7 +94,7 @@ public class Items extends ItemsBase {
 
     /** Execute main logic for Items block. */
     public void execute() {
-        DataRange $pars = this.check();
+        THashtable $pars = this.check();
         if ($pars == null)
             return;
 
@@ -108,8 +108,8 @@ public class Items extends ItemsBase {
 
         if (!NUL($filterName)) {
             DOCategory $doCategory = new DOCategory();
-            DataRange[] $oCategory =
-                {new DataRange()};
+            THashtable[] $oCategory =
+                {new THashtable()};
             if (!$doCategory.checkFilterName($filterName, $oCategory))
                 $errorMessage += "Non-existing filter name!";
             else
@@ -118,8 +118,8 @@ public class Items extends ItemsBase {
 
         if (!NUL($sourceName)) {
             DOSource $doSource = new DOSource();
-            DataRange[] $oSource =
-                {new DataRange()};
+            THashtable[] $oSource =
+                {new THashtable()};
             if (!$doSource.checkSourceName($sourceName, $oSource)) {
                 if ($errorMessage.length() > 0)
                     $errorMessage += "<br/>";
@@ -129,7 +129,7 @@ public class Items extends ItemsBase {
 
         Engine $engine = this.$context.getEngine();
 
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         if ($errorMessage.length() > 0) {
             $prepare.put("[#ErrMessage]", $errorMessage);
             this.write("error", $prepare);
@@ -169,10 +169,10 @@ public class Items extends ItemsBase {
         }
 
         int $count = 1;
-        DataList $rows = new DataList();
+        TArrayList $rows = new TArrayList();
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
-            DataRange $oItem = $dsItems.getRow($n);
-            DataRange $row = fillItemRow($oItem, $doItem.getIdField(), $count);
+            THashtable $oItem = $dsItems.getRow($n);
+            THashtable $row = fillItemRow($oItem, $doItem.getIdField(), $count);
             $count++;
             $rows.add($row);
         }
@@ -183,16 +183,16 @@ public class Items extends ItemsBase {
             Boolean $before = false;
             Boolean $after = false;
 
-            DataList $pages = new DataList();
+            TArrayList $pages = new TArrayList();
             for (int $n = 1; $n <= $listTotal; $n++) {
-                DataRange $page = new DataRange();
+                THashtable $page = new THashtable();
                 if ($n < $listNumber - $chunk) {
                     if (!$before) {
                         $before = true;
                         $page.put("[#Text]", "1");
                         $page.put("[#Link]", getPageLink(1));
                         $pages.add($page);
-                        $page = new DataRange();
+                        $page = new THashtable();
                         $page.put("[#Text]", " ... ");
                         //$row.remove("[#Link]");
                         $pages.add($page);
@@ -204,7 +204,7 @@ public class Items extends ItemsBase {
                         $after = true;
                         $page.put("[#Text]", " ... ");
                         $pages.add($page);
-                        $page = new DataRange();
+                        $page = new THashtable();
                         $page.put("[#Text]", $listTotal);
                         $page.put("[#Link]", getPageLink($listTotal));
                         $pages.add($page);

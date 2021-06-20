@@ -9,10 +9,10 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 import Bula.Fetcher.Controller.Page;
-import Bula.Objects.DataList;
+import Bula.Objects.TArrayList;
 import Bula.Objects.Strings;
-import Bula.Objects.Request;
-import Bula.Objects.Response;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
 import Bula.Model.DataSet;
 
 /**
@@ -82,7 +82,7 @@ public class CallMethod extends Page {
 
         // Fill array with parameters
         int $count = 0;
-        DataList $pars = new DataList();
+        TArrayList $pars = new TArrayList();
         for (int $n = 1; $n <= 6; $n++) {
             String $parName = CAT("par", $n);
             if (!this.$context.$Request.contains($parName))
@@ -101,7 +101,7 @@ public class CallMethod extends Page {
         String $fullClass = CAT($package, "/", $className);
 
         $fullClass = Strings.replace("/", ".", $fullClass);
-        $result = Bula.Internal.callMethod($fullClass, new DataList(), $method, $pars);
+        $result = Bula.Internal.callMethod($fullClass, new TArrayList(), $method, $pars);
 
         if ($result == null)
             $buffer = "NULL";

@@ -6,13 +6,13 @@
 package Bula.Fetcher;
 import Bula.Meta;
 
-import Bula.Objects.Request;
-import Bula.Objects.Response;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
 import Bula.Objects.Arrays;
 import Bula.Objects.Strings;
 
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Controller.Engine;
 
@@ -24,24 +24,24 @@ public class Context extends Config {
     public Context() throws Exception { initialize(); }
 
     /**
-     * Constructor for injecting Request and Response.
+     * Constructor for injecting TRequest and TResponse.
      * @param $request Current request.
      * @param $response Current response.
      */
     public Context (Object $request/* = null*/, Object $response/* = null*/) throws Exception {
-        this.$Request = new Request($request);
-        this.$Response = new Response($response);
+        this.$Request = new TRequest($request);
+        this.$Response = new TResponse($response);
         this.$Request.$response = this.$Response;
         this.initialize();
     }
 
     /** Current request */
-    public Request $Request = null;
+    public TRequest $Request = null;
     /** Current response */
-    public Response $Response = null;
+    public TResponse $Response = null;
 
     /** Storage for internal variables */
-    protected DataRange $Values = new DataRange();
+    protected THashtable $Values = new THashtable();
 
     /**
      * Get internal variable.
@@ -103,7 +103,7 @@ public class Context extends Config {
     public Boolean $ImmediateRedirect = Config.IMMEDIATE_REDIRECT;
 
     /** Storage for global constants */
-    public DataRange $GlobalConstants = null;
+    public THashtable $GlobalConstants = null;
 
     /** Is current request from test script? */
     public Boolean $TestRun = false;
@@ -112,7 +112,7 @@ public class Context extends Config {
      * Check whether current request is from test script?
      */
     public void checkTestRun() {
-        String $httpTester = this.$Request.getVar(Request.INPUT_SERVER, "HTTP_USER_AGENT");
+        String $httpTester = this.$Request.getVar(TRequest.INPUT_SERVER, "HTTP_USER_AGENT");
         if ($httpTester == null)
             return;
         if (EQ($httpTester, "TestFull")) {
@@ -150,7 +150,7 @@ public class Context extends Config {
         }
         this.$LocalRoot = $rootDir += "/";
 
-        this.$Host = this.$Request.getVar(Request.INPUT_SERVER, "HTTP_HOST");
+        this.$Host = this.$Request.getVar(TRequest.INPUT_SERVER, "HTTP_HOST");
         this.$Site = Strings.concat("http://", this.$Host);
         this.$IsMobile = this.$Host.indexOf("m.") == 0;
         this.$Lang = this.$Host.lastIndexOf(".ru") != -1 ? "ru" : "en";
@@ -173,7 +173,7 @@ public class Context extends Config {
      * Define global constants.
      */
     private void defineConstants() throws Exception {
-        this.$GlobalConstants = new DataRange();
+        this.$GlobalConstants = new THashtable();
         this.$GlobalConstants.put("[#Site_Name]", Config.SITE_NAME);
         this.$GlobalConstants.put("[#Site_Comments]", Config.SITE_COMMENTS);
         this.$GlobalConstants.put("[#Top_Dir]", Config.TOP_DIR);
@@ -212,7 +212,7 @@ public class Context extends Config {
             this.$GlobalConstants.put("[#Name_Custom2]", this.get("Name_Custom2"));
     }
 
-    private DataList $EngineInstances = null;
+    private TArrayList $EngineInstances = null;
     private int $EngineIndex = -1;
 
     /**
@@ -224,7 +224,7 @@ public class Context extends Config {
         $engine.setPrintFlag($printFlag);
         this.$EngineIndex++;
         if (this.$EngineInstances == null)
-            this.$EngineInstances = new DataList();
+            this.$EngineInstances = new TArrayList();
         if (this.$EngineInstances.size() <= this.$EngineIndex)
             this.$EngineInstances.add($engine);
         else

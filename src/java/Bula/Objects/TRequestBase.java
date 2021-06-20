@@ -7,8 +7,8 @@ package Bula.Objects;
 import Bula.Meta;
 
 import Bula.Objects.Arrays;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 
 import java.lang.reflect.*;
 import java.util.Enumeration;
@@ -16,11 +16,11 @@ import java.util.Enumeration;
 /**
  * Base helper class for processing query/form request.
  */
-public class RequestBase extends Meta {
+public class TRequestBase extends Meta {
     /** Current Http request */
     public javax.servlet.http.HttpServletRequest $HttpRequest = null;
     /** Current response */
-    public Response $response = null;
+    public TResponse $response = null;
 
     /** Enum value (type) for getting POST parameters */
     public static final int INPUT_POST = 0;
@@ -33,15 +33,15 @@ public class RequestBase extends Meta {
     /** Enum value (type) for getting SERVER parameters */
     public static final int INPUT_SERVER = 5;
 
-    public RequestBase () { }
+    public TRequestBase () { }
 
-    public RequestBase (Object $currentRequest/* = null*/) {
+    public TRequestBase (Object $currentRequest/* = null*/) {
         if (NUL($currentRequest))
             return;
         $HttpRequest = (javax.servlet.http.HttpServletRequest)$currentRequest;
     }
 
-    public DataRange getVars(Integer $type) {
+    public THashtable getVars(Integer $type) {
         String $method = $HttpRequest.getMethod();
         switch ($type) {
             case INPUT_GET:
@@ -57,17 +57,17 @@ public class RequestBase extends Meta {
             default:
                 break;
         }
-        return new DataRange();
+        return new THashtable();
     }
 
-    private DataRange createDataRange(Object $from, String $getNames, String $getValue) {
-        DataRange $hash = new DataRange();
+    private THashtable createDataRange(Object $from, String $getNames, String $getValue) {
+        THashtable $hash = new THashtable();
         try {
             Method $getNamesMethod = $from.getClass().getMethod($getNames, new Class[] {});
             Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] { String.class});
-            Enumerator $names = new Enumerator((Enumeration)$getNamesMethod.invoke($from, (Object[])null));
-            while ($names.hasMoreElements()) {
-                String $name = (String)$names.nextElement();
+            TEnumerator $names = new TEnumerator((Enumeration)$getNamesMethod.invoke($from, (Object[])null));
+            while ($names.moveNext()) {
+                String $name = (String)$names.getCurrent();
                 String $mappedName = $mapHeaders.containsKey($name) ? (String)$mapHeaders.get($name) : $name;
                 String $parameter = (String)$getValueMethod.invoke($from, new Object[] { $name });
                 $hash.put($mappedName, $parameter);
@@ -86,11 +86,11 @@ public class RequestBase extends Meta {
      * @return String Requested variable.
      */
     public String getVar(Integer $type, String $name) {
-        DataRange $vars = getVars($type);
+        THashtable $vars = getVars($type);
         return (String)$vars.get($name);
     }
     
-    private static final DataRange $mapHeaders = new DataRange() {
+    private static final THashtable $mapHeaders = new THashtable() {
         { put("user-agent", "HTTP_USER_AGENT"); }
         { put("host", "HTTP_HOST"); }
         { put("query", "QUERY_STRING"); }

@@ -6,21 +6,21 @@
 package Bula.Model;
 import Bula.Meta;
 
-import Bula.Objects.DataList;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 
 /**
  * Non-typed data set implementation.
  */
 public class DataSet extends Meta {
-    private DataList $rows;
+    private TArrayList $rows;
     private int $pageSize;
     private int $totalPages;
 
     /** Default public constructor */
     public DataSet () {
-        this.$rows = new DataList();
+        this.$rows = new TArrayList();
         this.$pageSize = 10;
         this.$totalPages = 0;
     }
@@ -36,17 +36,17 @@ public class DataSet extends Meta {
     /**
      * Get a row from the DataSet.
      * @param $n Number of the row.
-     * @return DataRange Required row or null.
+     * @return THashtable Required row or null.
      */
-    public DataRange getRow(int $n) {
-        return (DataRange) this.$rows.get($n);
+    public THashtable getRow(int $n) {
+        return (THashtable) this.$rows.get($n);
     }
 
     /**
      * Add new row into the DataSet.
      * @param $row New row to add.
      */
-    public void addRow(DataRange $row) {
+    public void addRow(THashtable $row) {
         this.$rows.add($row);
     }
 
@@ -99,14 +99,13 @@ public class DataSet extends Meta {
         String $output = new String();
         $output += CAT("<DataSet Rows=\"", this.$rows.size(), "\">", $EOL);
         for (int $n = 0; $n < this.getSize(); $n++) {
-            DataRange $row = this.getRow($n);
+            THashtable $row = this.getRow($n);
             $level++; $spaces = this.addSpaces($level);
             $output += CAT($spaces, "<Row>", $EOL);
-            Enumerator $keys =
-                    new Enumerator($row.keys());
-            while ($keys.hasMoreElements()) {
+            TEnumerator $keys = new TEnumerator($row.keys());
+            while ($keys.moveNext()) {
                 $level++; $spaces = this.addSpaces($level);
-                String $key = (String)$keys.nextElement();
+                String $key = (String)$keys.getCurrent();
                 Object $value = $row.get($key);
                 if (NUL($value)) {
                     $output += CAT($spaces, "<Item Name=\"", $key, "\" IsNull=\"True\" />", EOL);

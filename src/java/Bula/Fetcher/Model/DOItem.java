@@ -8,7 +8,7 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Objects.DateTimes;
-import Bula.Objects.DataRange;
+import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
 import Bula.Model.DBConfig;
 import Bula.Model.DOBase;
@@ -136,7 +136,7 @@ public class DOItem extends DOBase {
         int $totalPages = $ds1.getTotalPages();
         String $inList = new String();
         for (int $n = 0; $n < $ds1.getSize(); $n++) {
-            DataRange $o = $ds1.getRow($n);
+            THashtable $o = $ds1.getRow($n);
             if ($n != 0)
                 $inList += ", ";
             Object $id = $o.get(this.$idField);

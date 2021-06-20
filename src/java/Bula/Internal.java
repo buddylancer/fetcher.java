@@ -102,7 +102,7 @@ public class Internal extends Bula.Meta {
     /// <param name="method_name">Method name</param>
     /// <param name="args">List of arguments</param>
     /// <returns>Result of method execution</returns>
-    public static Object callStaticMethod(String class_name, String method_name, DataList args) throws Exception
+    public static Object callStaticMethod(String class_name, String method_name, TArrayList args) throws Exception
     {
 
         Class type = Class.forName(class_name.replace('/', '.'));
@@ -113,7 +113,7 @@ public class Internal extends Bula.Meta {
             return methodInfo.invoke(null, new Object[] {});
     }
 
-    private static Class[] getTypes(DataList args) {
+    private static Class[] getTypes(TArrayList args) {
         Class[] types = args != null && args.size() > 0 ? new Class[args.size()] : new Class[0];
         if (types.length > 0)
         {
@@ -144,7 +144,7 @@ public class Internal extends Bula.Meta {
     /// <param name="method_name">Method name</param>
     /// <param name="args">List of arguments</param>
     /// <returns>Result of method execution</returns>
-    public static Object callMethod(String class_name, DataList args0, String method_name, DataList args) {
+    public static Object callMethod(String class_name, TArrayList args0, String method_name, TArrayList args) {
         try {
             return callMethodPrivate(class_name, args0, method_name, args);
         }
@@ -155,7 +155,7 @@ public class Internal extends Bula.Meta {
         return null;
     }
     
-    private static Object callMethodPrivate(String class_name, DataList args0, String method_name, DataList args) throws Exception
+    private static Object callMethodPrivate(String class_name, TArrayList args0, String method_name, TArrayList args) throws Exception
     {
         String class_name_fixed = 
                 Config.FILE_PREFIX.isEmpty() ? class_name : class_name.replaceFirst(Config.FILE_PREFIX, "");
@@ -235,7 +235,7 @@ public class Internal extends Bula.Meta {
     /// <returns>Resulting array of items</returns>
     public static Object[] fetchRss(String url)
     {
-        DataList items = new DataList();
+        TArrayList items = new TArrayList();
 
         RssReader rssReader = new com.apptastic.rssreader.RssReader();
         Stream<Item> itemsStream = null;
@@ -249,7 +249,7 @@ public class Internal extends Bula.Meta {
 
         while (iterator.hasNext()) {
             Item item = iterator.next();
-            DataRange hash = new DataRange();
+            THashtable hash = new THashtable();
             if (!NUL(item.getTitle()))
                 hash.put("title", item.getTitle());
             if (!NUL(item.getLink()))

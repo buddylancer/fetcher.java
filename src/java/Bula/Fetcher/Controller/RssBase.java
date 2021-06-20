@@ -9,14 +9,14 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.DataList;
-import Bula.Objects.Enumerator;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.TEnumerator;
+import Bula.Objects.THashtable;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 
-import Bula.Objects.Request;
-import Bula.Objects.Response;
+import Bula.Objects.TRequest;
+import Bula.Objects.TResponse;
 
 import Bula.Objects.DateTimes;
 import Bula.Objects.Helper;
@@ -58,8 +58,8 @@ abstract class RssBase extends Page {
                 $errorMessage += "Empty source!";
             else {
                 DOSource $doSource = new DOSource();
-                DataRange[] $oSource =
-                    {new DataRange()};
+                THashtable[] $oSource =
+                    {new THashtable()};
                 if (!$doSource.checkSourceName($source, $oSource))
                     $errorMessage += CAT("Incorrect source '", $source, "'!");
             }
@@ -85,8 +85,8 @@ abstract class RssBase extends Page {
                     $errorMessage += "Empty filter!";
                 }
                 else {
-                    DataRange[] $oCategory =
-                        {new DataRange()};
+                    THashtable[] $oCategory =
+                        {new THashtable()};
                     if ($doCategory.checkFilterName($filterName, $oCategory))
                         $filter = STR($oCategory[0].get("s_Filter"));
                     else {
@@ -103,9 +103,9 @@ abstract class RssBase extends Page {
         }
 
         // Check that parameters contain only 'source' or/and 'filter'
-        Enumerator $keys = this.$context.$Request.getKeys();
-        while ($keys.hasMoreElements()) {
-            String $key = (String)$keys.nextElement();
+        TEnumerator $keys = this.$context.$Request.getKeys();
+        while ($keys.moveNext()) {
+            String $key = (String)$keys.getCurrent();
             if (EQ($key, "source") || EQ($key, "filter") || EQ($key, "code") || EQ($key, "count")) {
                 //OK
             }
@@ -178,7 +178,7 @@ abstract class RssBase extends Page {
             $contentToCache = this.writeStart($source, $filterName, $pubDate);
 
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
-            DataRange $oItem = $dsItems.getRow($n);
+            THashtable $oItem = $dsItems.getRow($n);
             String $date = STR($oItem.get("d_Date"));
             if (DateTimes.getTime($date) > $nowTime)
                 continue;

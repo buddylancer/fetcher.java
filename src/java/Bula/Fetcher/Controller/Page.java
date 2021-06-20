@@ -6,7 +6,7 @@
 package Bula.Fetcher.Controller;
 import Bula.Meta;
 
-import Bula.Objects.DataRange;
+import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
@@ -36,7 +36,7 @@ public abstract class Page extends Meta {
      * @param $template Template name.
      * @param $prepare Prepared variables.
      */
-    public void write(String $template, DataRange $prepare) {
+    public void write(String $template, THashtable $prepare) {
         Engine $engine = this.$context.getEngine();
         $engine.write($engine.showTemplate($template, $prepare));
     }

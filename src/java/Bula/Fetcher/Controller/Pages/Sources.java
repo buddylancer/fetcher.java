@@ -8,8 +8,8 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Model.DOItem;
@@ -27,15 +27,15 @@ public class Sources extends ItemsBase {
 
     /**
      * Fast check of input query parameters.
-     * @return DataRange Parsed parameters (or null in case of any error).
+     * @return THashtable Parsed parameters (or null in case of any error).
      */
-    public DataRange check() {
-        return new DataRange();
+    public THashtable check() {
+        return new THashtable();
     }
 
     /** Execute main logic for Source block. */
     public void execute() {
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         if (Config.SHOW_IMAGES)
             $prepare.put("[#Show_Images]", 1);
 
@@ -44,12 +44,12 @@ public class Sources extends ItemsBase {
 
         DataSet $dsSources = $doSource.enumSources();
         int $count = 1;
-        DataList $sources = new DataList();
+        TArrayList $sources = new TArrayList();
         for (int $ns = 0; $ns < $dsSources.getSize(); $ns++) {
-            DataRange $oSource = $dsSources.getRow($ns);
+            THashtable $oSource = $dsSources.getRow($ns);
             String $sourceName = STR($oSource.get("s_SourceName"));
 
-            DataRange $sourceRow = new DataRange();
+            THashtable $sourceRow = new THashtable();
             $sourceRow.put("[#ColSpan]", Config.SHOW_IMAGES ? 4 : 3);
             $sourceRow.put("[#SourceName]", $sourceName);
             $sourceRow.put("[#ExtImages]", Config.EXT_IMAGES);
@@ -59,11 +59,11 @@ public class Sources extends ItemsBase {
             $sourceRow.put("[#RedirectSource]", this.getLink(Config.INDEX_PAGE, "?p=items&source=", "items/source/", $sourceName));
 
             DataSet $dsItems = $doItem.enumItemsFromSource(null, $sourceName, null, 3);
-            DataList $items = new DataList();
+            TArrayList $items = new TArrayList();
             int $itemCount = 0;
             for (int $ni = 0; $ni < $dsItems.getSize(); $ni++) {
-                DataRange $oItem = $dsItems.getRow($ni);
-                DataRange $item = fillItemRow($oItem, $doItem.getIdField(), $itemCount);
+                THashtable $oItem = $dsItems.getRow($ni);
+                THashtable $item = fillItemRow($oItem, $doItem.getIdField(), $itemCount);
                 if (Config.SHOW_IMAGES)
                     $item.put("[#Show_Images]", 1);
                 $items.add($item);

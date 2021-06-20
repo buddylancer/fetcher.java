@@ -9,8 +9,8 @@ import Bula.Meta;
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
 
-import Bula.Objects.Response;
-import Bula.Objects.DataRange;
+import Bula.Objects.TResponse;
+import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Controller.Page;
 import Bula.Fetcher.Controller.Engine;
@@ -31,7 +31,7 @@ abstract class DoRedirect extends Page {
      * @param $errorMessage Error to show (or null if no errors).
      */
     public void executeRedirect(String $linkToRedirect, String $errorMessage) {
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         String $templateName = null;
         if (!NUL($errorMessage)) {
             $prepare.put("[#Title]", "Error");

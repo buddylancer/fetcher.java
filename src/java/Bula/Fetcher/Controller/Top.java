@@ -6,7 +6,7 @@
 package Bula.Fetcher.Controller;
 import Bula.Meta;
 
-import Bula.Objects.DataRange;
+import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
@@ -24,7 +24,7 @@ public class Top extends Page {
 
     /** Execute main logic for Top block */
     public void execute() {
-        DataRange $prepare = new DataRange();
+        THashtable $prepare = new THashtable();
         $prepare.put("[#ImgWidth]", this.$context.$IsMobile ? 234 : 468);
         $prepare.put("[#ImgHeight]", this.$context.$IsMobile ? 30 : 60);
         if (this.$context.$TestRun)

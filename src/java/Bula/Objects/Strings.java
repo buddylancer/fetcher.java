@@ -9,8 +9,8 @@ import Bula.Meta;
 import java.util.Enumeration;
 
 import Bula.Internal;
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
 /**
  * Helper class for manipulations with strings.
@@ -127,7 +127,7 @@ public class Strings extends Meta {
     public static String[] split(String $divider, String $input) {
         String[] $chunks =
             Regex.split($input, Regex.escape($divider));
-        DataList $result = new DataList();
+        TArrayList $result = new TArrayList();
         for (int $n = 0; $n < SIZE($chunks); $n++)
             $result.add($chunks[$n]);
         return (String[])$result.toArray(new String[] {});
@@ -184,33 +184,30 @@ public class Strings extends Meta {
      * @param $hash Set of key/value pairs.
      * @return String Resulting string.
      */
-    public static String replaceInTemplate(String $template, DataRange $hash) {
-        /*
-        DataRange $hash2 = Arrays.newDataRange();
-        Enumerator $keys = $hash.keys();
-        while ($keys.nextElement()) {
-            Object $key = $keys.$current;
-            Object $value = $hash.get($key);
-            if ($value instanceof String || is_integer($value) || is_string($value)) 
-                $hash2.put($key, $value);
-        }
-        return strtr($template, Arrays.toArray($hash2));
-        */
-        Enumerator $keys = new Enumerator($hash.keys());
-        while ($keys.hasMoreElements()) {
-            String $key = STR($keys.nextElement());
+    public static String replaceInTemplate(String $template, THashtable $hash) {
+        TEnumerator $keys = new TEnumerator($hash.keys());
+        while ($keys.moveNext()) {
+            String $key = STR($keys.getCurrent());
             $template = Strings.replace($key, STR($hash.get($key)), $template);
         }
         return $template;
     }
 
-    public static String trim(String $str, String $what) {
-        while ($str.indexOf($what) == 0) {
-            $str = $str.replaceFirst($what, "");
-        }
-        while ($str.lastIndexOf($what) == $str.length() - $what.length()) {
-            $str = $str.substring(0, $str.length() - $what.length());
-        }
-        return $str;
+    public static String trim(String input) {
+        return trim(input, null);
     }
+
+    /**
+     * Trim this string.
+     * @param $chars Which chars to trim [optional].
+     * @return String Resulting string.
+     */
+    public static String trim(String $input, String $chars/* = null*/) {
+        if ($chars == null)
+            $chars = " \\n\\r\\t\\v\\0";
+        $input = Regex.replace($input, CAT("^", "[", $chars, "]*"), "");
+        $input = Regex.replace($input, CAT("[", $chars, "]*$"), "");
+        return $input;
+    }
+
 }

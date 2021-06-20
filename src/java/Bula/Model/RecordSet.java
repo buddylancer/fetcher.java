@@ -6,8 +6,8 @@
 package Bula.Model;
 import Bula.Meta;
 
-import Bula.Objects.DataList;
-import Bula.Objects.DataRange;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 
 import Bula.Objects.Arrays;
 
@@ -18,7 +18,7 @@ public class RecordSet extends Meta {
     /** Current result */
     public Object $result = null;
     /** Current record */
-    public DataRange $record = null;
+    public THashtable $record = null;
 
     private int $numRows = 0;
     private int $numPages = 0;
@@ -97,7 +97,7 @@ public class RecordSet extends Meta {
         Object $arr = DataAccess.fetchArray(this.$result);
 
         if ($arr != null) {
-            this.$record = (DataRange)$arr;
+            this.$record = (THashtable)$arr;
             return 1;
         }
         else
@@ -109,7 +109,7 @@ public class RecordSet extends Meta {
      * @param $par Number of value.
      * @return Object
      */
-    public Object getValue(int $par) {
+    public Object getValue(String $par) {
         return this.$record.get($par);
     }
 
@@ -118,7 +118,7 @@ public class RecordSet extends Meta {
      * @param $par Number of value.
      * @return String
      */
-    public String getString(int $par) {
+    public String getString(String $par) {
         return STR(this.$record.get($par));
     }
 
@@ -127,7 +127,7 @@ public class RecordSet extends Meta {
      * @param $par Number of value.
      * @return String
      */
-    public String getDate(int $par) {
+    public String getDate(String $par) {
         return STR(this.$record.get($par));
     }
 
@@ -136,7 +136,7 @@ public class RecordSet extends Meta {
      * @param $par Number of value.
      * @return Integer
      */
-    public int getInt(int $par) {
+    public int getInt(String $par) {
         return INT(this.$record.get($par));
     }
 
@@ -145,7 +145,7 @@ public class RecordSet extends Meta {
      * @param $par Number of value.
      * @return Float
      */
-    public Float getFloat(int $par) {
+    public Float getFloat(String $par) {
         return FLOAT(this.$record.get($par));
     }
 

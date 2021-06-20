@@ -6,9 +6,9 @@
 package Bula.Model;
 import Bula.Meta;
 
-import Bula.Objects.DataList;
+import Bula.Objects.TArrayList;
 
-import Bula.Objects.Response;
+import Bula.Objects.TResponse;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Strings;
 
@@ -21,7 +21,7 @@ public class PreparedStatement extends Meta {
     /** Initial SQL-query */
     private String $sql;
     /** List of parameters */
-    private DataList $pars;
+    private TArrayList $pars;
     /** Formed (prepared) SQL-query */
     private String $query;
 
@@ -33,7 +33,7 @@ public class PreparedStatement extends Meta {
 
     /** Default public constructor */
     public PreparedStatement () {
-        this.$pars = new DataList();
+        this.$pars = new TArrayList();
         this.$pars.add("dummy"); // Parameter number will start from 1.
     }
 
