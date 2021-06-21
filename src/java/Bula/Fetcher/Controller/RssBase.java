@@ -267,6 +267,8 @@ abstract class RssBase extends Page {
             //Helper.writeText($cachedFile, Strings.concat("\\xEF\\xBB\\xBF", $xmlContent));
             Helper.writeText($cachedFile, $contentToCache);
         }
+        this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
+        this.$context.$Response.write($contentToCache); //TODO -- BOM?
 
         if (DBConfig.$Connection != null) {
             DBConfig.$Connection.close();

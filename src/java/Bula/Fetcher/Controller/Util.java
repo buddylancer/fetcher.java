@@ -99,7 +99,7 @@ public class Util extends Meta {
      * @return String Resulting content.
      */
     public static String showFromCache(Engine $engine, String $cacheFolder, String $pageName, String $className, String $query /*= null*/) {
-        if (EQ($pageName, "bottom"))
+        if (EQ($pageName, "bottom") || EQ($pageName, "rest_bottom"))
             $query = $pageName;
         else {
             if ($query == null)
@@ -126,7 +126,7 @@ public class Util extends Meta {
             //$content = CAT("*** Got from cache ", str_replace("/", " /", $fileName), "***<br/>", $content);
         }
         else {
-            String $prefix = EQ($pageName, "bottom") ? null : "Pages/";
+            String $prefix = EQ($pageName, "bottom") || EQ($pageName, "rest_bottom") ? null : "Pages/";
             $content = $engine.includeTemplate(CAT($prefix, $className));
 
             Helper.testFileFolder($fileName);

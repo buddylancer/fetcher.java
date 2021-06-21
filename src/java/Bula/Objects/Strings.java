@@ -24,6 +24,10 @@ public class Strings extends Meta {
         return new String[0];
     }
 
+    public static int indexOf(String $sample, String $input) {
+        return $input.indexOf($sample);
+    }
+
     /**
      * Convert first char of a string to upper case.
      * @param $input Input string.
@@ -126,7 +130,7 @@ public class Strings extends Meta {
      */
     public static String[] split(String $divider, String $input) {
         String[] $chunks =
-            Regex.split($input, Regex.escape($divider));
+            Regex.split($input, $divider);
         TArrayList $result = new TArrayList();
         for (int $n = 0; $n < SIZE($chunks); $n++)
             $result.add($chunks[$n]);
@@ -188,7 +192,8 @@ public class Strings extends Meta {
         TEnumerator $keys = new TEnumerator($hash.keys());
         while ($keys.moveNext()) {
             String $key = STR($keys.getCurrent());
-            $template = Strings.replace($key, STR($hash.get($key)), $template);
+            if (Strings.indexOf($key, $template) != -1)
+                $template = Strings.replace($key, STR($hash.get($key)), $template);
         }
         return $template;
     }

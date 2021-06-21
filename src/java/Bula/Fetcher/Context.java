@@ -67,7 +67,7 @@ public class Context extends Config {
      * @return Boolean True - variable exists, False - not exists.
      */
     public Boolean contains(String $name) {
-        return this.$Values.containsKey($name);
+        return this.$Values.contains($name);
     }
 
     /** Project root (where Bula folder is located) */

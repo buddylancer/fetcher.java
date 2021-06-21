@@ -103,7 +103,7 @@ public class Index extends Page {
         if (/*Config.$RssAllowed != null && */Config.SHOW_BOTTOM) {
             // Get bottom block either from cache or build it from the scratch
             if (Config.CACHE_PAGES)
-                $prepare.put("[#Bottom]", Util.showFromCache($engine, this.$context.$CacheFolder, "bottom", "Bottom"));
+                $prepare.put("[#Bottom]", Util.showFromCache($engine, this.$context.$CacheFolder, BLANK($apiName) ? "bottom" : CAT($apiName, "_bottom"), "Bottom"));
             else
                 $prepare.put("[#Bottom]", $engine.includeTemplate("Bottom"));
         }

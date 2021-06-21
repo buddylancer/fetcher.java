@@ -47,21 +47,23 @@ public class TRequestBase extends Meta {
             case INPUT_GET:
                 if (!EQ($method, "GET"))
                     break;
-                return createDataRange($HttpRequest, "getParameterNames", "getParameter");
+                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_POST:
                 if (!EQ($method, "POST"))
                     break;
-                return createDataRange($HttpRequest, "getParameterNames", "getParameter");
+                return createHashtable($HttpRequest, "getParameterNames", "getParameter");
             case INPUT_SERVER:
-                return createDataRange($HttpRequest, "getHeaderNames", "getHeader");
+                return createHashtable($HttpRequest, "getHeaderNames", "getHeader");
             default:
                 break;
         }
         return new THashtable();
     }
 
-    private THashtable createDataRange(Object $from, String $getNames, String $getValue) {
+    private THashtable createHashtable(javax.servlet.http.HttpServletRequest $from, String $getNames, String $getValue) {
         THashtable $hash = new THashtable();
+		if (EQ($getValue, "getHeader"))
+			$hash.put("QUERY_STRING", $from.getQueryString());
         try {
             Method $getNamesMethod = $from.getClass().getMethod($getNames, new Class[] {});
             Method $getValueMethod = $from.getClass().getMethod($getValue, new Class[] { String.class});

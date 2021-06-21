@@ -45,7 +45,8 @@ public class Rss extends RssBase {
             (BLANK($filterName) ? null : CAT(" and filtered by '", $filterName, "'"))
         );
         String $xmlContent = Strings.concat(
-            "<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">\r\n",
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL,
+            "<rss version=\"2.0\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">", EOL,
             "<channel>", EOL,
             //"<title>" + Config.SITE_NAME + "</title>", EOL,
             "<title>", $rssTitle, "</title>", EOL,
@@ -56,9 +57,6 @@ public class Rss extends RssBase {
             "<lastBuildDate>", $pubDate, "</lastBuildDate>", EOL,
             "<generator>", Config.SITE_NAME, "</generator>", EOL
         );
-        this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
-        this.$context.$Response.write(CAT("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL));
-        this.$context.$Response.write($xmlContent);
         return $xmlContent;
     }
 
@@ -69,8 +67,6 @@ public class Rss extends RssBase {
         String $xmlContent = Strings.concat(
             "</channel>", EOL,
             "</rss>", EOL);
-        this.$context.$Response.write($xmlContent);
-        this.$context.$Response.end();
         return $xmlContent;
     }
 
@@ -91,7 +87,6 @@ public class Rss extends RssBase {
             "</item>", EOL
         );
         String $itemContent = Util.formatString($xmlTemplate, $args);
-        this.$context.$Response.write($itemContent);
         return $itemContent;
     }
 }

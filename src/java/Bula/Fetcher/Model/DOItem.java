@@ -77,9 +77,9 @@ public class DOItem extends DOBase {
     public String buildSqlFilter(String $filter) {
         String[] $filterChunks = Strings.split("~", $filter);
         String[] $includeChunks = SIZE($filterChunks) > 0 ?
-            Strings.split("|", $filterChunks[0]) : null;
+            Strings.split("\\|", $filterChunks[0]) : null;
         String[] $excludeChunks = SIZE($filterChunks) > 1 ?
-            Strings.split("|", $filterChunks[1]) : null;
+            Strings.split("\\|", $filterChunks[1]) : null;
         String $includeFilter = new String();
         for (int $n = 0; $n < SIZE($includeChunks); $n++) {
             if (!$includeFilter.isEmpty())

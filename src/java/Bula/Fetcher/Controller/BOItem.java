@@ -145,7 +145,7 @@ public class BOItem extends Meta {
             $description = $description.replace(" \n", "\n");
         while ($description.indexOf("\n\n\n") != -1)
             $description = $description.replace("\n\n\n", "\n\n");
-        $description = Regex.replace($description, "\n\n[ \t]*[+\\-\\*][^+\\-\\*][ \t]*", "\n* ");
+        $description = Regex.replace($description, "\n\n[ \t]*[\\+\\-\\*][^\\+\\-\\*][ \t]*", "\n* ");
         $description = Regex.replace($description, "[ \t]+", " ");
 
         this.$description = $description.trim();
@@ -236,9 +236,9 @@ public class BOItem extends Meta {
             String $filterValue = STR($oCategory.get("s_Filter"));
             String[] $filterChunks = Strings.split("~", $filterValue);
             String[] $includeChunks = SIZE($filterChunks) > 0 ?
-                Strings.split("|", $filterChunks[0]) : Strings.emptyArray();
+                Strings.split("\\|", $filterChunks[0]) : Strings.emptyArray();
             String[] $excludeChunks = SIZE($filterChunks) > 1 ?
-                Strings.split("|", $filterChunks[1]) : Strings.emptyArray();
+                Strings.split("\\|", $filterChunks[1]) : Strings.emptyArray();
 
             Boolean $includeFlag = false;
             for (int $n2 = 0; $n2 < SIZE($includeChunks); $n2++) {
@@ -259,7 +259,7 @@ public class BOItem extends Meta {
                 $categoryTags.add($name);
              }
         }
-        if (SIZE($categoryTags) == 0)
+        if ($categoryTags.size() == 0)
             return;
 
         //TODO
@@ -319,7 +319,7 @@ public class BOItem extends Meta {
 
         $title = Regex.replace($title, "\\&amp\\;", " and ");
         $title = Regex.replace($title, "[^A-Za-z0-9\\-\\. ]", " ");
-        $title = Regex.replace($title, " +", " ");
+        $title = Regex.replace($title, "[ ]+", " ");
         $title = $title.trim();
         $title = Regex.replace($title, "\\.+", "-");
         $title = Regex.replace($title, " \\- ", "-");
