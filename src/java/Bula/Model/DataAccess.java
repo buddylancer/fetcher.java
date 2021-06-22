@@ -182,7 +182,7 @@ public class DataAccess extends Meta {
                 return null;
             for (Integer $n = 0; $n < $md.getColumnCount(); $n++) {
                 Object $obj = $oRs.getObject($n + 1);
-                $row.put($md.getColumnLabel($n + 1), NUL($obj) ? Bula.DBNull.value: $obj);
+                $row.put($md.getColumnLabel($n + 1), NUL($obj) ? Bula.Objects.TNull.getValue() : $obj);
             }
         }
         catch (Exception ex) {

@@ -37,7 +37,7 @@ public class Meta {
     /// <param name="value">Input object</param>
     /// <returns></returns>
     public static boolean NUL(Object value) {
-        return value == null || value instanceof Bula.DBNull;
+        return value == null || value instanceof Bula.Objects.TNull;
     }
 
     /// <summary>

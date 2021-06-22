@@ -9,6 +9,7 @@ import Bula.Meta;
 import Bula.Objects.TArrayList;
 import Bula.Objects.TEnumerator;
 import Bula.Objects.THashtable;
+import Bula.Objects.TNull;
 
 /**
  * Helper class for manipulating with arrays.

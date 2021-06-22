@@ -186,9 +186,6 @@ public class BOFetcher extends Meta {
             int $itemsCounter = 0;
             // Loop through fetched items and parse their data
             for (int $i = SIZE($itemsArray) - 1; $i >= 0; $i--) {
-				if ($i == 34) {
-					int x=1;
-				}
                 THashtable $hash = (THashtable)$itemsArray[$i];
                 if (BLANK($hash.get("link")))
                     continue;
