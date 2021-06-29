@@ -172,7 +172,7 @@ public class Internal extends Bula.Meta {
             if (args != null && args.size() > 0)
                 return methodInfo.invoke(doObject, args.toArray());
             else
-                return methodInfo.invoke(doObject, null);
+                return methodInfo.invoke(doObject);
         }
         else
             return null;

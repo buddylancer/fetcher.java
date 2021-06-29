@@ -25,13 +25,16 @@ public class Menu extends Page {
     public void execute() {
         TArrayList $publicPages = new TArrayList();
 
+        String $bookmark = null;
+        if (this.$context.contains("Name_Category"))
+            $bookmark = CAT("#", Config.NAME_ITEMS, "_by_", this.$context.get("Name_Category")); 
         $publicPages.add("Home");
         $publicPages.add("home");
         if (this.$context.$IsMobile) {
             $publicPages.add(Config.NAME_ITEMS); $publicPages.add("items");
-            if (Config.SHOW_BOTTOM && this.$context.contains("Name_Categories")) {
-                $publicPages.add(CAT("By ", this.$context.get("Name_Categories")));
-                $publicPages.add("#items_by_skills");
+            if (Config.SHOW_BOTTOM && this.$context.contains("Name_Category")) {
+                $publicPages.add(CAT("By ", this.$context.get("Name_Category")));
+                $publicPages.add($bookmark);
                 //$publicPages.add("RSS Feeds");
                 //$publicPages.add("#read_rss_feeds");
             }
@@ -41,12 +44,12 @@ public class Menu extends Page {
         else {
             $publicPages.add(CAT("Browse ", Config.NAME_ITEMS));
             $publicPages.add("items");
-            if (Config.SHOW_BOTTOM && this.$context.contains("Name_Categories")) {
-                $publicPages.add(CAT(Config.NAME_ITEMS, " by ", this.$context.get("Name_Categories")));
-                $publicPages.add("#items_by_skills");
+            if (Config.SHOW_BOTTOM && this.$context.contains("Name_Category")) {
+                $publicPages.add(CAT(Config.NAME_ITEMS, " by ", this.$context.get("Name_Category")));
+                $publicPages.add($bookmark);
 
                 $publicPages.add("Read RSS Feeds");
-                $publicPages.add("#read_rss_feeds");
+                $publicPages.add("#Read_RSS_Feeds");
             }
             $publicPages.add("Sources");
             $publicPages.add("sources");

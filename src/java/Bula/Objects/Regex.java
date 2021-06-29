@@ -70,8 +70,8 @@ public class Regex extends Meta {
         return (String[])$outArray.toArray(new String[] {});
     }
 
-    public static String[] getMatches(String $input, String $pattern) {
-        return getMatches($input, $pattern, 0);
+    public static String[] matches(String $input, String $pattern) {
+        return matches($input, $pattern, 0);
     }
 
     /**
@@ -81,7 +81,7 @@ public class Regex extends Meta {
      * @param $options Matching options (0 - no options).
      * @return String[] Resulting array of strings (or null).
      */
-    public static String[] getMatches(String $input, String $pattern, int $options /* = null */) {
+    public static String[] matches(String $input, String $pattern, int $options /* = null */) {
         int $patternOptions = Pattern.UNICODE_CASE |
                 (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         Matcher $matcher = Pattern.compile($pattern, $patternOptions).matcher($input);
@@ -97,7 +97,16 @@ public class Regex extends Meta {
      * @return String Resulting quoted string/pattern.
      */
     public static String escape(String $pattern) {
-        return Pattern.quote($pattern);
+        $pattern = $pattern.replace(".", "\\.");
+        $pattern = $pattern.replace("|", "\\|");
+        $pattern = $pattern.replace("#", "\\#");
+        $pattern = $pattern.replace("+", "\\+");
+        $pattern = $pattern.replace("-", "\\-");
+        $pattern = $pattern.replace("[", "\\[");
+        $pattern = $pattern.replace("]", "\\]");
+        $pattern = $pattern.replace("(", "\\(");
+        $pattern = $pattern.replace(")", "\\)");
+        return $pattern;
     }
 
     /**

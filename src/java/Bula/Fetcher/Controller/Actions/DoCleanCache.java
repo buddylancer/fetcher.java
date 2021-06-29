@@ -38,7 +38,7 @@ public class DoCleanCache extends Page {
             $oLogger.initFile($filename);
         }
         else
-            $oLogger.initTResponse(this.$context.$Response);
+            $oLogger.initResponse(this.$context.$Response);
         this.cleanCache($oLogger);
     }
 

@@ -40,7 +40,7 @@ public class Config extends Meta {
     /** Show what source an item is originally from */
     public static final Boolean SHOW_FROM = false;
     /** Whether to show images for sources */
-    public static final Boolean SHOW_IMAGES = false;
+    public static final Boolean SHOW_IMAGES = true;
     /** File extension for images */
     public static final String EXT_IMAGES = "gif";
     /** Show an item or immediately redirect to external source item */
@@ -60,24 +60,26 @@ public class Config extends Meta {
     public static final int DB_ITEMS_ROWS = 25;
 
     // Fill these fields by your site data
+    /** Site language (default - null) */
+    public static final String SITE_LANGUAGE = null;          
     /** Site name */
     public static final String SITE_NAME = "Buddy Fetcher";
     /** Site comments */
-    public static final String SITE_COMMENTS = "Latest Items";
+    public static final String SITE_COMMENTS = "Latest News Headlines";
     /** Site keywords */
     public static final String SITE_KEYWORDS = "Buddy Fetcher, rss, fetcher, aggregator, Java, MySQL";
     /** Site description */
     public static final String SITE_DESCRIPTION = "Buddy Fetcher is a simple RSS fetcher/aggregator written in Java/MySQL";
 
     /** Name of item (in singular form) */
-    public static final String NAME_ITEM = "Item";
+    public static final String NAME_ITEM = "Headline";
     /** Name of items (in plural form) */
-    public static final String NAME_ITEMS = "Items";
+    public static final String NAME_ITEMS = "Headlines";
     // Uncomment what fields should be extracted and name them appropriately
     /** Name of category (in singular form) */
-    public static final String NAME_CATEGORY = "Category";
+    public static final String NAME_CATEGORY = "Region";
     /** Name of categories (in plural form) */
-    public static final String NAME_CATEGORIES = "Categories";
+    public static final String NAME_CATEGORIES = "Regions";
     /** Name of creator */
     public static final String NAME_CREATOR = "Creator";
     /** Name of custom field 1 (comment when not extracted) */
@@ -87,6 +89,15 @@ public class Config extends Meta {
 
     /** Show bottom blocks (Filtering and RSS) */
     public static final Boolean SHOW_BOTTOM = true;
+    /** Show empty categories */
+    public static final Boolean SHOW_EMPTY = false;
+    /** Sort categories by Id (s_CatId) or Name (s_Name) or NULL for default (as-is) */
+    public static final String SORT_CATEGORIES = null;
+
+    /** Site time shift with respect to GMT (hours*100+minutes) */
+    public static final int TIME_SHIFT = 0;
+    /** Site time zone name (GMT or any other) */
+    public static final String TIME_ZONE = "GMT";
 
     /** Powered By string */
     public static final String POWERED_BY = "Buddy Fetcher for Java";

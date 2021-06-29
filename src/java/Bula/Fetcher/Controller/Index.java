@@ -8,14 +8,18 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.TArrayList;
-import Bula.Objects.THashtable;
+
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
+
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
 import Bula.Objects.TRequest;
 import Bula.Objects.TResponse;
+
 import Bula.Model.DBConfig;
 import Bula.Model.DataAccess;
+
 import Bula.Fetcher.Controller.Util;
 import Bula.Fetcher.Controller.Engine;
 

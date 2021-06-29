@@ -13,6 +13,8 @@ import java.text.*;
  * Helper class to manipulate with Date and Times.
  */
 public class DateTimes extends Meta {
+    /** Date/time format for processing custom date/times */
+    public static final String DTS = "dd-MMM-yyyy HH:mm";
     /** Date/time format for processing GMT date/times */
     public static final String GMT_DTS = "dd-MMM-yyyy HH:mm 'GMT'"; //TODO -- append GMT
     /** Date/time format for RSS operations */
@@ -38,6 +40,9 @@ public class DateTimes extends Meta {
      * @return int Resulting time (Unix timestamp).
      */
     public static long getTime(String $timeString/* = null*/) {
+        if ($timeString == null) {
+            return getTime();
+        }
         try { return (new SimpleDateFormat(SQL_DTS)).parse($timeString).getTime(); } catch (Exception ex) { return 0; }
     }
 

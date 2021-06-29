@@ -26,6 +26,7 @@ import Bula.Model.DataSet;
 import Bula.Fetcher.Model.DOCategory;
 import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Model.DOItem;
+import Bula.Fetcher.Model.DORule;
 import Bula.Fetcher.Controller.Actions.DoCleanCache;
 
 /**
@@ -35,6 +36,7 @@ public class BOFetcher extends Meta {
     private Context $context = null;
     private Logger $oLogger = null;
     private DataSet $dsCategories = null;
+    private DataSet $dsRules = null;
 
     /** Public default constructor */
     public BOFetcher (Context $context) {
@@ -56,7 +58,7 @@ public class BOFetcher extends Meta {
             this.$oLogger.initFile($filename);
         }
         else
-            this.$oLogger.initTResponse(this.$context.$Response);
+            this.$oLogger.initResponse(this.$context.$Response);
     }
 
     /**
@@ -65,17 +67,23 @@ public class BOFetcher extends Meta {
     private void preLoadCategories() {
         DOCategory $doCategory = new DOCategory();
         this.$dsCategories = $doCategory.enumCategories();
+        DORule $doRule = new DORule();
+        this.$dsRules = $doRule.enumAll();
     }
 
     /**
      * Fetch data from the source.
      * @param $oSource Source object.
      * @return Object[] Resulting items.
+     * @param $from Addition to feed URL (for testing purposes)
      */
-    private Object[] fetchFromSource(THashtable $oSource) {
+    private Object[] fetchFromSource(THashtable $oSource, String $from) {
         String $url = STR($oSource.get("s_Feed"));
         if ($url.isEmpty())
             return null;
+
+        if (!NUL($from))
+            $url = Strings.concat($url, "&from=", $from);
 
         String $source = STR($oSource.get("s_SourceName"));
         if (this.$context.$Request.contains("m") && !$source.equals(this.$context.$Request.get("m")))
@@ -88,7 +96,7 @@ public class BOFetcher extends Meta {
         //    $encUrl = $encUrl.replace("&", "%26");
         //    $url = Strings.concat(Config.$Site, "/get_ssl_rss.php?url=", $encUrl);
         //}
-        this.$oLogger.output(CAT("[[[", $url, "]]]<br/>", EOL));
+        this.$oLogger.output(CAT("[[[", $url, "]]]"));
         Object[] $rss = Internal.fetchRss($url);
         if ($rss == null) {
             this.$oLogger.output(CAT("-- problems --<br/>", EOL));
@@ -115,7 +123,25 @@ public class BOFetcher extends Meta {
         int $sourceId = INT($oSource.get("i_SourceId"));
         BOItem $boItem = new BOItem($sourceName, $item);
         String $pubDate = STR($item.get("pubDate"));
+        if (BLANK($pubDate) && !BLANK($item.get("dc"))) { //TODO implement [dc][time]
+            THashtable $temp = (THashtable)$item.get("dc");
+            if (!BLANK($temp.get("date")))
+                $pubDate = STR($temp.get("date"));
+        }
+        //TODO -- workaround for life.ru (error - pubDate inside guid)
+
         String $date = DateTimes.gmtFormat(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
+
+        $boItem.processDescription();
+        //$boItem.processCustomFields(); // Uncomment for processing custom fields
+        $boItem.processCategory();
+        $boItem.processCreator();
+
+        // Process rules AFTER processing description (as some info can be extracted from it)
+        $boItem.processRules(this.$dsRules);
+
+        if (BLANK($boItem.$link)) //TODO - what we can do else?
+            return 0;
 
         // Check whether item with the same link exists already
         DOItem $doItem = new DOItem();
@@ -123,13 +149,16 @@ public class BOFetcher extends Meta {
         if ($dsItems.getSize() > 0)
             return 0;
 
-        $boItem.processDescription();
-        //$boItem.processCustomFields(); // Uncomment for processing custom fields
-        $boItem.processCategory();
-        $boItem.processCreator();
-
         // Try to add/embed standard categories from description
-        $boItem.addStandardCategories(this.$dsCategories, this.$context.$Lang);
+        int $countCategories = $boItem.addStandardCategories(this.$dsCategories, this.$context.$Lang);
+        //print "countCategories: '" + $countCategories + "'<br/>\r\n";
+
+        // Check the link once again after processing rules
+        if ($dsItems == null && !BLANK($boItem.$link)) {
+            $doItem.findItemByLink($boItem.$link, $sourceId);
+            if ($dsItems.getSize() > 0)
+                return 0;
+        }
 
         String $url = $boItem.getUrlTitle(true); //TODO -- Need to pass true if transliteration is required
         THashtable $fields = new THashtable();
@@ -137,6 +166,7 @@ public class BOFetcher extends Meta {
         $fields.put("s_Title", $boItem.$title);
         $fields.put("s_FullTitle", $boItem.$fullTitle);
         $fields.put("s_Url", $url);
+        $fields.put("i_Categories", $countCategories);
         if ($boItem.$description != null)
             $fields.put("t_Description", $boItem.$description);
         if ($boItem.$fullDescription != null)
@@ -158,8 +188,9 @@ public class BOFetcher extends Meta {
 
     /**
      * Main logic.
+     * @param $from Addition to feed URL (for testing purposes)
      */
-    public void fetchFromSources() {
+    public void fetchFromSources(String $from) {
         this.$oLogger.output(CAT("Start logging<br/>", EOL));
 
         //TODO -- Purge old items
@@ -176,12 +207,12 @@ public class BOFetcher extends Meta {
         for (int $n = 0; $n < $dsSources.getSize(); $n++) {
             THashtable $oSource = $dsSources.getRow($n);
 
-            Object[] $itemsArray = this.fetchFromSource($oSource);
+            Object[] $itemsArray = this.fetchFromSource($oSource, $from);
             if ($itemsArray == null)
                 continue;
 
             // Fetch done for this source
-            this.$oLogger.output(" fetched ");
+            //this.$oLogger.output(" fetched ");
 
             int $itemsCounter = 0;
             // Loop through fetched items and parse their data
@@ -202,13 +233,13 @@ public class BOFetcher extends Meta {
                 DBConfig.$Connection = null;
             }
 
-            this.$oLogger.output(CAT(" (", $itemsCounter, " items) end<br/>", EOL));
+            this.$oLogger.output(CAT("<br/>", EOL, "... fetched (", $itemsCounter, " items) end"));
         }
 
         // Re-count categories
         this.recountCategories();
 
-        this.$oLogger.output(CAT("<hr/>Total items added - ", $totalCounter, "<br/>", EOL));
+        this.$oLogger.output(CAT("<br/>", EOL, "<hr/>Total items added - ", $totalCounter, "<br/>", EOL));
 
         if (Config.CACHE_PAGES && $totalCounter > 0) {
             DoCleanCache $doCleanCache = new DoCleanCache(this.$context);
@@ -220,22 +251,35 @@ public class BOFetcher extends Meta {
      * Execute re-counting of categories.
      */
     private void recountCategories() {
-        this.$oLogger.output(CAT("Recount categories ... <br/>", EOL));
+        this.$oLogger.output(CAT("<br/>", EOL, "Recount categories ... "));
         DOCategory $doCategory = new DOCategory();
+        DOItem $doItem = new DOItem();
         DataSet $dsCategories = $doCategory.enumCategories();
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
             THashtable $oCategory = $dsCategories.getRow($n);
-            String $id = STR($oCategory.get("s_CatId"));
-            String $filter = STR($oCategory.get("s_Filter"));
-            DOItem $doItem = new DOItem();
-            String $sqlFilter = $doItem.buildSqlFilter($filter);
-            DataSet $dsItems = $doItem.enumIds($sqlFilter);
-            THashtable $fields = new THashtable();
-            $fields.put("i_Counter", $dsItems.getSize());
-            int $result = $doCategory.updateById($id, $fields);
-            if ($result < 0)
-                this.$oLogger.output(CAT("-- problems --<br/>", EOL));
+            String $categoryId = STR($oCategory.get("s_CatId"));
+            int $oldCounter = INT($oCategory.get("i_Counter"));
+
+            //String $filter = STR($oCategory.get("s_Filter"));
+            //String $sqlFilter = DOItem.buildSqlByFilter($filter);
+
+            String $categoryName = STR($oCategory.get("s_Name"));
+            String $sqlFilter = DOItem.buildSqlByCategory($categoryName);
+
+            DataSet $dsCounters = $doItem.enumIds(CAT("_this.b_Counted = 0 AND ", $sqlFilter));
+            if ($dsCounters.getSize() == 0)
+                continue;
+
+            int $newCounter = INT($dsCounters.getSize());
+
+            //Update category
+            THashtable $categoryFields = new THashtable();
+            $categoryFields.put("i_Counter", $oldCounter + $newCounter);
+            $doCategory.updateById($categoryId, $categoryFields);
         }
+
+        $doItem.update("_this.b_Counted = 1", "_this.b_Counted = 0");
+
         this.$oLogger.output(CAT(" ... Done<br/>", EOL));
     }
 }

@@ -10,6 +10,12 @@ import Bula.Meta;
  * Straight-forward implementation of ArrayList.
  */
 public class TArrayList extends TArrayListBase {
+    /**
+     * Public constructors.
+     */
+    public TArrayList() { super(); }
+    public TArrayList(Object[] $items) { super($items); }
+
     /** Create new array list. */
     public static TArrayList create() {
         return new TArrayList();
@@ -18,10 +24,15 @@ public class TArrayList extends TArrayListBase {
     /**
      * Add multiple objects.
      * @param[] $inputs Array of objects.
+     * @return int Number of added objects,
      */
-    public void addAll(Object[] $inputs) {
-        for (Object $input : $inputs)
+    public int addAll(Object[] $inputs) {
+        int $counter = 0;
+        for (Object $input : $inputs) {
             this.add($input);
+            $counter++;
+        }
+        return $counter;
     }
 
     /**

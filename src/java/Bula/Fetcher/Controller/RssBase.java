@@ -12,8 +12,6 @@ import Bula.Fetcher.Context;
 import Bula.Objects.TArrayList;
 import Bula.Objects.TEnumerator;
 import Bula.Objects.THashtable;
-import Bula.Objects.Regex;
-import Bula.Objects.RegexOptions;
 
 import Bula.Objects.TRequest;
 import Bula.Objects.TResponse;
@@ -21,6 +19,9 @@ import Bula.Objects.TResponse;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Helper;
 import Bula.Objects.Strings;
+
+import Bula.Objects.Regex;
+import Bula.Objects.RegexOptions;
 
 import Bula.Model.DBConfig;
 import Bula.Model.DataSet;
@@ -74,6 +75,7 @@ abstract class RssBase extends Page {
         // Check filter
         String $filter = null;
         String $filterName = null;
+        String $categoryName = null;
         DOCategory $doCategory = new DOCategory();
         DataSet $dsCategories = $doCategory.enumCategories();
         if ($dsCategories.getSize() > 0) {
@@ -87,8 +89,10 @@ abstract class RssBase extends Page {
                 else {
                     THashtable[] $oCategory =
                         {new THashtable()};
-                    if ($doCategory.checkFilterName($filterName, $oCategory))
+                    if ($doCategory.checkFilterName($filterName, $oCategory)) {
+                        $categoryName = STR($oCategory[0].get("s_Name"));
                         $filter = STR($oCategory[0].get("s_Filter"));
+                    }
                     else {
                         if ($anyFilter)
                             $filter = $filterName;
@@ -170,12 +174,14 @@ abstract class RssBase extends Page {
         String $nowDate = DateTimes.format(DateTimes.SQL_DTS);
         long $nowTime = DateTimes.getTime($nowDate);
         String $fromDate = DateTimes.gmtFormat(DateTimes.SQL_DTS, $nowTime - 6*60*60);
-        DataSet $dsItems = $doItem.enumItemsFromSource($fromDate, $source, $filter, $count);
+        //String $search = DOItem.buildSqlByFilter($filter);
+        String $search = DOItem.buildSqlByCategory($categoryName);
+        DataSet $dsItems = $doItem.enumItemsFromSource($fromDate, $source, $search, $count);
         int $current = 0;
 
         String $contentToCache = "";
         if ($dsItems.getSize() == 0)
-            $contentToCache = this.writeStart($source, $filterName, $pubDate);
+            $contentToCache = this.writeStart($source, $categoryName, $pubDate);
 
         for (int $n = 0; $n < $dsItems.getSize(); $n++) {
             THashtable $oItem = $dsItems.getRow($n);
@@ -186,7 +192,7 @@ abstract class RssBase extends Page {
             if ($current == 0) {
                 // Get puDate from the first item and write starting block
                 $pubDate = DateTimes.format(DateTimes.XML_DTS, DateTimes.getTime($date));
-                $contentToCache = this.writeStart($source, $filterName, $pubDate);
+                $contentToCache = this.writeStart($source, $categoryName, $pubDate);
             }
 
             String $category = this.$context.contains("Name_Category") ? STR($oItem.get("s_Category")) : null;
@@ -232,18 +238,34 @@ abstract class RssBase extends Page {
             $args[2] = this.getAbsoluteLink(Config.ACTION_PAGE, "?p=do_redirect_source&amp;source=", "redirect/source/", $sourceName);
             $args[3] = $sourceName;
             $args[4] = DateTimes.format(DateTimes.XML_DTS, DateTimes.getTime($date));
-            String $additional = CAT(
-                (BLANK($creator) ? null : CAT(this.$context.get("Name_Creator"), ": ", $creator, "<br/>")),
-                (BLANK($category) ? null : CAT(this.$context.get("Name_Categories"), ": ", $category, "<br/>")),
-                (BLANK($custom2) ? null : CAT(this.$context.get("Name_Custom2"), ": ", $custom2, "<br/>")),
-                (BLANK($custom1) ? null : CAT(this.$context.get("Name_Custom1"), ": ", $custom1, "<br/>"))
-            );
+            String $additional = null;
+            if (!BLANK($creator)) {
+                if ($additional != null)
+                    $additional = CAT($additional, "<br/>");
+                $additional = CAT($additional, this.$context.get("Name_Creator"), ": ", $creator);
+            }
+            if (!BLANK($category)) {
+                if ($additional != null)
+                    $additional = CAT($additional, "<br/>");
+                $additional = CAT($additional, this.$context.get("Name_Categories"), ": ", $category);
+            }
+            if (!BLANK($custom2)) {
+                if ($additional != null)
+                    $additional = CAT($additional, "<br/>");
+                $additional = CAT($additional, this.$context.get("Name_Custom2"), ": ", $custom2);
+            }
+            if (!BLANK($custom1)) {
+                if ($additional != null)
+                    $additional = CAT($additional, "<br/>");
+                $additional = CAT($additional, this.$context.get("Name_Custom1"), ": ", $custom1);
+            }
+
             String $extendedDescription = null;
             if (!BLANK($description)) {
                 if (BLANK($additional))
                     $extendedDescription = $description;
                 else
-                    $extendedDescription = CAT($additional, "<br/>", $description);
+                    $extendedDescription = CAT($description, "<br/><br/>", $additional);
             }
             else if (!BLANK($additional))
                 $extendedDescription = $additional;
@@ -285,10 +307,10 @@ abstract class RssBase extends Page {
     /**
      * Write start block (header) of an RSS-feed.
      * @param $source Source selected (or empty).
-     * @param $filterName Filter name selected (or empty).
+     * @param $category Category name selected (or empty).
      * @param $pubDate Date shown in the header.
      */
-    public abstract String writeStart(String $source, String $filterName, String $pubDate);
+    public abstract String writeStart(String $source, String $category, String $pubDate);
 
     /**
      * Write end block of an RSS-feed.

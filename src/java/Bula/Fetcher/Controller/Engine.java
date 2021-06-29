@@ -23,6 +23,7 @@ import Bula.Objects.TResponse;
  * Engine for processing templates.
  */
 public class Engine extends Meta {
+    /** Instance of Context */
     public Context $context = null;
     private Boolean $printFlag = false;
     private String $printString = "";
@@ -71,8 +72,12 @@ public class Engine extends Meta {
      * @param $val String to write.
      */
     public void write(String $val) {
-        if (this.$printFlag)
-            this.$context.$Response.write($val);
+        if (this.$printFlag) {
+            String $langFile = null;
+            if (BLANK(this.$context.$Api) && Config.SITE_LANGUAGE != null)
+                $langFile = CAT(this.$context.$LocalRoot, "local/", Config.SITE_LANGUAGE, ".txt");
+            this.$context.$Response.write($val, $langFile);
+        }
         else
             this.$printString += $val;
     }

@@ -35,14 +35,14 @@ public class Rss extends RssBase {
     /**
      * Write starting block of RSS-feed.
      * @param $source RSS-feed source name.
-     * @param $filterName RSS-feed 'filtered by' value.
+     * @param $category RSS-feed 'filtered by' category.
      * @param $pubDate Publication date.
      * @return String Resulting XML-content of starting block.
      */
-    public  String writeStart(String $source, String $filterName, String $pubDate) {
+    public  String writeStart(String $source, String $category, String $pubDate) {
         String $rssTitle = CAT(
             "Items for ", (BLANK($source) ? "ALL sources" : CAT("'", $source, "'")),
-            (BLANK($filterName) ? null : CAT(" and filtered by '", $filterName, "'"))
+            (BLANK($category) ? null : CAT(" and filtered by '", $category, "'"))
         );
         String $xmlContent = Strings.concat(
             "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>", EOL,

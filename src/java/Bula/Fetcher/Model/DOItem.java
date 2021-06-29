@@ -7,9 +7,13 @@ package Bula.Fetcher.Model;
 import Bula.Meta;
 
 import Bula.Fetcher.Config;
+
+import Bula.Objects.Regex;
+
 import Bula.Objects.DateTimes;
 import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
+
 import Bula.Model.DBConfig;
 import Bula.Model.DOBase;
 import Bula.Model.DataSet;
@@ -70,11 +74,27 @@ public class DOItem extends DOBase {
     }
 
     /**
+     * Build SQL query from category name.
+     * @param $category Category name.
+     * @return String Appropriate SQL-query.
+     */
+    public static String buildSqlByCategory(String $category) {
+        if (NUL($category))
+            return null;
+        //$category = Regex.escape(Regex.escape($category));
+        $category = CAT("\\\\b", Regex.escape(Regex.escape($category))); //, "\\\\b");
+        return $category == null ? null : CAT("_this.s_Category REGEXP '", $category, "'");
+    }
+
+    /**
      * Build SQL query from categories filter.
      * @param $filter Filter from the category.
      * @return String Appropriate SQL-query.
      */
-    public String buildSqlFilter(String $filter) {
+    public static String buildSqlByFilter(String $filter) {
+        if ($filter == null)
+            return null;
+
         String[] $filterChunks = Strings.split("~", $filter);
         String[] $includeChunks = SIZE($filterChunks) > 0 ?
             Strings.split("\\|", $filterChunks[0]) : null;
@@ -84,11 +104,11 @@ public class DOItem extends DOBase {
         for (int $n = 0; $n < SIZE($includeChunks); $n++) {
             if (!$includeFilter.isEmpty())
                 $includeFilter += " OR ";
-            $includeFilter += "(_this.s_Title LIKE '%";
+            $includeFilter += "(_this.s_Title REGEXP '";
                 $includeFilter += $includeChunks[$n];
-            $includeFilter += "%' OR _this.t_FullDescription LIKE '%";
+            $includeFilter += "' OR _this.t_FullDescription REGEXP '";
                 $includeFilter += $includeChunks[$n];
-            $includeFilter += "%')";
+            $includeFilter += "')";
         }
         if (!$includeFilter.isEmpty())
             $includeFilter = Strings.concat(" (", $includeFilter, ") ");
@@ -98,7 +118,7 @@ public class DOItem extends DOBase {
             if (!BLANK($excludeFilter))
                 $excludeFilter = Strings.concat($excludeFilter, " AND ");
             $excludeFilter = Strings.concat($excludeFilter,
-                "(_this.s_Title not like '%", $excludeChunks[$n], "%' AND _this.t_Description not like '%", $excludeChunks[$n], "%')");
+                "(_this.s_Title NOT REGEXP '", $excludeChunks[$n], "' AND _this.t_Description NOT REGEXP '", $excludeChunks[$n], "')");
         }
         if (!$excludeFilter.isEmpty())
             $excludeFilter = Strings.concat(" (", $excludeFilter, ") ");
@@ -118,13 +138,12 @@ public class DOItem extends DOBase {
      * @return DataSet Resulting data set.
      */
     public DataSet enumItems(String $source, String $search, int $list, int $rows) { //, $totalRows) {
-        String $realSearch = BLANK($search) ? null : this.buildSqlFilter($search);
         String $query1 = Strings.concat(
             " SELECT _this.", this.$idField, " FROM ", this.$tableName, " _this ",
             " LEFT JOIN sources s ON (s.i_SourceId = _this.i_SourceLink) ",
-            " WHERE s.b_SourceActive = 1 ",
+            " WHERE s.b_SourceActive = 1 AND _this.b_Counted = 1",
             (BLANK($source) ? null : CAT(" AND s.s_SourceName = '", $source, "' ")),
-            (BLANK($realSearch) ? null : CAT(" AND (", $realSearch, ") ")),
+            (BLANK($search) ? null : CAT(" AND (", $search, ") ")),
             " ORDER BY _this.d_Date DESC, _this.", this.$idField, " DESC "
         );
 
@@ -167,7 +186,7 @@ public class DOItem extends DOBase {
         String $query = Strings.concat(
             " SELECT _this.*, s.s_SourceName FROM ", this.$tableName, " _this ",
             " INNER JOIN sources s ON (s.i_SourceId = _this.i_SourceLink) ",
-            " WHERE _this.d_Date > ? ",
+            " WHERE _this.b_Counted = 1 AND _this.d_Date > ? ",
             " ORDER BY _this.d_Date DESC, _this.", this.$idField, " DESC "
         );
         Object[] $pars = ARR("setDate", $fromdate);
@@ -190,18 +209,17 @@ public class DOItem extends DOBase {
      * Enumerate items from given date.
      * @param $fromDate Date to include items starting from.
      * @param $source Source name to include items from (default - all sources).
-     * @param $filter Filter for the category (or empty - no filtering).
+     * @param $search Search for filtering category (or empty - no filtering).
      * @param $maxItems Max number of returned items.
      * @return DataSet Resulting data set.
      */
-    public DataSet enumItemsFromSource(String $fromDate, String $source, String $filter, int $maxItems/* = 20 */) {
-        String $realFilter = BLANK($filter) ? null : this.buildSqlFilter($filter);
+    public DataSet enumItemsFromSource(String $fromDate, String $source, String $search, int $maxItems/* = 20 */) {
         String $query1 = Strings.concat(
             " SELECT _this.*, s.s_SourceName FROM ", this.$tableName, " _this ",
             " INNER JOIN sources s ON (s.i_SourceId = _this.i_SourceLink) ",
-            " WHERE s.b_SourceActive = 1 ",
+            " WHERE s.b_SourceActive = 1 AND _this.b_Counted = 1",
             (BLANK($source) ? null : Strings.concat(" AND s.s_SourceName = '", $source, "' ")),
-            (BLANK($realFilter) ? null : Strings.concat(" AND (", $realFilter, ") ")),
+            (BLANK($search) ? null : Strings.concat(" AND (", $search, ") ")),
             " ORDER BY _this.d_Date DESC, _this.", this.$idField, " DESC ",
             " LIMIT ", STR($maxItems)
         );
@@ -216,7 +234,7 @@ public class DOItem extends DOBase {
             " WHERE s.b_SourceActive = 1 ",
             (BLANK($source) ? null : Strings.concat(" AND s.s_SourceName = '", $source, "' ")),
             " AND _this.d_Date > ? ",
-            (BLANK($realFilter) ? null : Strings.concat(" AND (", $realFilter, ") ")),
+            (BLANK($search) ? null : Strings.concat(" AND (", $search, ") ")),
             " ORDER BY _this.d_Date DESC, _this.", this.$idField, " DESC ",
             " LIMIT ", STR($maxItems)
         );

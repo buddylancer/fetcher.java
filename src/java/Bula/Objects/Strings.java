@@ -24,10 +24,6 @@ public class Strings extends Meta {
         return new String[0];
     }
 
-    public static int indexOf(String $sample, String $input) {
-        return $input.indexOf($sample);
-    }
-
     /**
      * Convert first char of a string to upper case.
      * @param $input Input string.
@@ -192,22 +188,32 @@ public class Strings extends Meta {
         TEnumerator $keys = new TEnumerator($hash.keys());
         while ($keys.moveNext()) {
             String $key = STR($keys.getCurrent());
-            if (Strings.indexOf($key, $template) != -1)
-                $template = Strings.replace($key, STR($hash.get($key)), $template);
+            if ($template.indexOf($key) != -1)
+                $template = $template.replace($key, STR($hash.get($key)));
         }
         return $template;
     }
 
-    public static String trim(String input) {
-        return trim(input, null);
+    /**
+     * Trim this string.
+     * @param $input String to trim.
+     * @return String Resulting string.
+     */
+    public static String trim(String $input) {
+        return trim($input, null);
     }
 
     /**
      * Trim this string.
+     * @param $input String to trim.
      * @param $chars Which chars to trim [optional].
      * @return String Resulting string.
      */
     public static String trim(String $input, String $chars/* = null*/) {
+        /*
+        if ($input instanceof String) $input = $input;
+        return new String($chars == null ? trim($input) : trim($input, $chars));
+        */
         if ($chars == null)
             $chars = " \\n\\r\\t\\v\\0";
         $input = Regex.replace($input, CAT("^", "[", $chars, "]*"), "");

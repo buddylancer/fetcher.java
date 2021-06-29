@@ -138,13 +138,15 @@ public class Context extends Config {
     /**
      * Initialize all variables for current request.
      */
-    public void initialize() throws Exception {
+    public void initialize() {
         //------------------------------------------------------------------------------
         // You can change something below this line if you know what are you doing :)
         String $rootDir = $Request.$HttpRequest.getRealPath("/"); //TODO!!!
         $rootDir = $rootDir.replace("\\", "/"); // Fix for IIS
+        int $removeSlashes =
+            2;
         // Regarding that we have the ordinary local website (not virtual directory)
-        for (int $n = 0; $n <= 2; $n++) {
+        for (int $n = 0; $n <= $removeSlashes; $n++) {
             int $lastSlashIndex = $rootDir.lastIndexOf("/");
             $rootDir = $rootDir.substring(0, $lastSlashIndex);
         }
@@ -172,7 +174,7 @@ public class Context extends Config {
     /**
      * Define global constants.
      */
-    private void defineConstants() throws Exception {
+    private void defineConstants() {
         this.$GlobalConstants = new THashtable();
         this.$GlobalConstants.put("[#Site_Name]", Config.SITE_NAME);
         this.$GlobalConstants.put("[#Site_Comments]", Config.SITE_COMMENTS);
@@ -186,16 +188,19 @@ public class Context extends Config {
         this.$GlobalConstants.put("[#Lang]", this.$Lang);
 
         java.lang.reflect.Field fieldInfo = null;
-        try { fieldInfo = Config.class.getField("NAME_CATEGORY"); } catch (Exception ex) { fieldInfo = null; }
-        if (fieldInfo != null) set("Name_Category", fieldInfo.get(null));
-        try { fieldInfo = Config.class.getField("NAME_CATEGORIES"); } catch (Exception ex) { fieldInfo = null; }
-        if (fieldInfo != null) set("Name_Categories", fieldInfo.get(null));
-        try { fieldInfo = Config.class.getField("NAME_CREATOR"); } catch (Exception ex) { fieldInfo = null; }
-        if (fieldInfo != null) set("Name_Creator", fieldInfo.get(null));
-        try { fieldInfo = Config.class.getField("NAME_CUSTOM1"); } catch (Exception ex) { fieldInfo = null; }
-        if (fieldInfo != null) set("Name_Custom1", fieldInfo.get(null));
-        try { fieldInfo = Config.class.getField("NAME_CUSTOM2"); } catch (Exception ex) { fieldInfo = null; }
-        if (fieldInfo != null) set("Name_Custom2", fieldInfo.get(null));
+        try {
+			fieldInfo = Config.class.getField("NAME_CATEGORY");
+			if (fieldInfo != null) set("Name_Category", fieldInfo.get(null));
+			fieldInfo = Config.class.getField("NAME_CATEGORIES");
+			if (fieldInfo != null) set("Name_Categories", fieldInfo.get(null));
+			fieldInfo = Config.class.getField("NAME_CREATOR");
+			if (fieldInfo != null) set("Name_Creator", fieldInfo.get(null));
+			fieldInfo = Config.class.getField("NAME_CUSTOM1");
+			if (fieldInfo != null) set("Name_Custom1", fieldInfo.get(null));
+			fieldInfo = Config.class.getField("NAME_CUSTOM2");
+			if (fieldInfo != null) set("Name_Custom2", fieldInfo.get(null));
+		}
+		catch (Exception ex) { } //TODO
 
         // Map custom names
         this.$GlobalConstants.put("[#Name_Item]", Config.NAME_ITEM);
@@ -218,6 +223,7 @@ public class Context extends Config {
     /**
      * Push engine.
      * @param $printFlag Whether to print content immediately (true) or save it for further processing (false).
+     * @return Engine New Engine instance.
      */
     public Engine pushEngine(Boolean $printFlag) {
         Engine $engine = new Engine(this);
@@ -242,7 +248,10 @@ public class Context extends Config {
         this.$EngineIndex--;
     }
 
-    /** Get current engine */
+    /**
+     * Get current engine
+     * @return Engine Current engine instance.
+     */
     public Engine getEngine() {
         return (Engine)this.$EngineInstances.get(this.$EngineIndex);
     }

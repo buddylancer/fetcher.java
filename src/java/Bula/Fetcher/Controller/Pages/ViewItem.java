@@ -90,7 +90,8 @@ public class ViewItem extends Page {
         $prepare.put("[#Date]", Util.showTime(STR($oItem.get("d_Date"))));
         if (!NUL($oItem.get("s_Creator")))
             $prepare.put("[#Creator]", STR($oItem.get("s_Creator")));
-        $prepare.put("[#Description]", $oItem.containsKey("t_Description") ? Util.show(STR($oItem.get("t_Description"))) : "");
+        if ($oItem.containsKey("t_Description") && !BLANK(STR($oItem.get("t_Description"))))
+            $prepare.put("[#Description]", Util.show(STR($oItem.get("t_Description"))));
         $prepare.put("[#ItemID]", $oItem.get($idField));
         if (this.$context.contains("Name_Category") && !NUL($oItem.get("s_Category")))
             $prepare.put("[#Category]", $oItem.get("s_Category"));

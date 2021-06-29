@@ -39,14 +39,14 @@ public class TArray extends Meta {
     }
 
     public void add(Object $value) {
-        TArray $cloned = this.clone();
+        TArray $cloned = this.cloneMe();
         this.instantiate(this.size() + 1);
         for (int $n = 0; $n < $cloned.size(); $n++)
             this.set($n, $cloned.get($n));
         this.set($cloned.size() + 1, $value);
     }
 
-    public TArray clone() {
+    public TArray cloneMe() {
         TArray $cloned = new TArray(this.size());
         for (int $n = 0; $n < this.size(); $n++)
             $cloned.set($n, this.get($n));

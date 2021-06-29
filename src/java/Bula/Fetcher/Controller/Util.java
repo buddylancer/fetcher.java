@@ -29,7 +29,8 @@ public class Util extends Meta {
         String $output = Strings.stripSlashes($input);
         $output = $output.replace("<", "&lt;");
         $output = $output.replace(">", "&gt;");
-        $output = $output.replace("&", "&amp;");
+        $output = $output.replace("&#34;", "&quot;");
+        //$output = $output.replace("&", "&amp;");
         $output = $output.replace("\"", "&quot;");
         return $output;
     }
@@ -48,12 +49,22 @@ public class Util extends Meta {
     }
 
     /**
-     * Format date/time to GMT presentation.
+     * Format date/time according to Config settings.
+     * @return String Resulting current date/time.
+     */
+    public static String showTime() {
+        return showTime(null);
+    }
+
+    /**
+     * Format date/time according to Config settings.
      * @param $input Input date/time.
      * @return String Resulting date/time.
      */
-    public static String showTime(String $input) {
-        return DateTimes.format(DateTimes.GMT_DTS, DateTimes.getTime($input));
+    public static String showTime(String $input/* = null*/) {
+        long $time = DateTimes.getTime($input);
+        $time += 3600 * (Config.TIME_SHIFT / 100) + 60 * (Config.TIME_SHIFT % 100);
+        return CAT(DateTimes.format(DateTimes.DTS, $time), " ", Config.TIME_ZONE);
     }
 
     /**

@@ -180,7 +180,9 @@ public class RssReader {
             try {
                 reader.close();
                 is.close();
-            } catch (XMLStreamException | IOException e) {
+            }
+			//catch (XMLStreamException | IOException e) {
+			catch (Exception e) {
                 Logger logger = Logger.getLogger(LOG_GROUP);
 
                 if (logger.isLoggable(Level.WARNING))

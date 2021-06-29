@@ -6,6 +6,8 @@
 package Bula.Objects;
 import Bula.Meta;
 
+import Bula.Objects.Translator;
+
 /**
  * Helper class for processing server response.
  */
@@ -13,8 +15,12 @@ public class TResponse extends Meta {
     /** Current response */
     private javax.servlet.http.HttpServletResponse $httpResponse = null;
 
-    public TResponse (Object $response) {
-        $httpResponse = (javax.servlet.http.HttpServletResponse)$response;
+    /**
+     * Default constructor.
+     * @param $currentResponse Current http response object.
+     */
+    public TResponse (Object $currentResponse) {
+        $httpResponse = (javax.servlet.http.HttpServletResponse)$currentResponse;
     }
 
     /**
@@ -22,6 +28,20 @@ public class TResponse extends Meta {
      * @param $input Text to write.
      */
     public void write(String $input) {
+        this.write($input, null);
+    }
+
+    /**
+     * Write text to current response.
+     * @param $input Text to write.
+     * @param $lang Language to tranlsate to (default - none).
+     */
+    public void write(String $input, String $langFile/* = null*/) {
+        if ($langFile != null) {
+            if (!Translator.isInitialized())
+                Translator.initialize($langFile);
+            $input = Translator.translate($input);
+        }
         try { $httpResponse.getWriter().append($input); } catch (Exception ex) {}
     }
 

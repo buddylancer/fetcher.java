@@ -6,13 +6,15 @@
 package Bula.Fetcher.Controller.Pages;
 import Bula.Meta;
 
-import Bula.Objects.THashtable;
-import Bula.Objects.Regex;
-
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
-import Bula.Objects.TRequest;
+
+import Bula.Objects.Regex;
+
 import Bula.Objects.Strings;
+import Bula.Objects.THashtable;
+import Bula.Objects.TRequest;
+
 import Bula.Fetcher.Controller.Util;
 import Bula.Fetcher.Controller.Engine;
 import Bula.Fetcher.Controller.Page;

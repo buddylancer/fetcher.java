@@ -235,6 +235,27 @@ public class DOBase extends Meta {
     }
 
     /**
+     * Get DataSet containing counter only.
+     * @return DataSet Resulting data set.
+     */
+    public DataSet countIds() {
+        return countIds(null); }
+
+    /**
+     * Get DataSet containing counter only.
+     * @param $where Where condition [optional].
+     * @return DataSet Resulting data set.
+     */
+    public DataSet countIds(String $where/* = null*/) {
+        String $query = Strings.concat(
+            " select count(", this.$idField, ") as i_Counter from ", this.$tableName, " _this ",
+            (BLANK($where) ? null : CAT(" where ", $where))
+        );
+        Object[] $pars = ARR();
+        return this.getDataSet($query, $pars);
+    }
+
+    /**
      * Get DataSet with all records enumerated.
      * @return DataSet Resulting data set.
      */
@@ -436,6 +457,21 @@ public class DOBase extends Meta {
             " values (", $fieldValues, ")"
         );
         return this.updateInternal($query, $pars, "insert");
+    }
+
+    /**
+     * Execute update query.
+     * @param $setValues String with "set" clause.
+     * @param $where String with "where" clause.
+     * @return int Number of records updated.
+     */
+    public int update(String $setValues, String $where) {
+        String $query = Strings.concat(
+            " update ", this.$tableName, " _this set ", $setValues,
+            " where (", $where, ")"
+        );
+        Object[] $pars = ARR();
+        return this.updateInternal($query, $pars, "update");
     }
 
     /**

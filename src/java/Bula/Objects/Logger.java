@@ -19,7 +19,7 @@ public class Logger extends Meta {
 
     /**
      * Initialize logging into file.
-     * @param $filename Log file name.
+     * @param $filename Filename to write to.
      */
     public void initFile(String $filename) {
         this.$response = null;
@@ -31,10 +31,10 @@ public class Logger extends Meta {
     }
 
     /**
-     * Initialize logging into file.
-     * @param $filename Log file name.
+     * Initialize logging into response.
+     * @param $response Response to write to.
      */
-    public void initTResponse(TResponse $response) {
+    public void initResponse(TResponse $response) {
         this.$fileName = null;
         if (!NUL($response))
             this.$response = $response;

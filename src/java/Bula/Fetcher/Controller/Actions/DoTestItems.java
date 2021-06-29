@@ -67,12 +67,16 @@ public class DoTestItems extends Page {
         else
             $insertRequired = true;
 
+        String $from = null;
+        if (this.$context.$Request.contains("from"))
+            $from = this.$context.$Request.get("from");
+
         this.$context.$Response.write($TOP);
         if ($updateRequired || $insertRequired) {
             this.$context.$Response.write(CAT("Fetching new items... Please wait...<br/>", EOL));
 
             BOFetcher $boFetcher = new BOFetcher(this.$context);
-            $boFetcher.fetchFromSources();
+            $boFetcher.fetchFromSources($from);
 
             $doTime = new DOTime(); // Need for DB reopen
             THashtable $fields = new THashtable();

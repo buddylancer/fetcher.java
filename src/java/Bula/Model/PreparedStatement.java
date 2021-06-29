@@ -6,11 +6,10 @@
 package Bula.Model;
 import Bula.Meta;
 
-import Bula.Objects.TArrayList;
-
-import Bula.Objects.TResponse;
 import Bula.Objects.DateTimes;
 import Bula.Objects.Strings;
+import Bula.Objects.TArrayList;
+import Bula.Objects.TResponse;
 
 /**
  * Implement operations with prepared statement.
@@ -44,10 +43,10 @@ public class PreparedStatement extends Meta {
     public RecordSet executeQuery() {
         this.$recordSet = new RecordSet();
         if (this.formQuery()) {
-            DataAccess.callPrintDelegate(CAT("Executing selection query [", this.$query, "] ..."));
+            DataAccess.callPrintDelegate(CAT("<br/>", EOL, "Executing selection query [", this.$query, "] ..."));
             Object $result = DataAccess.selectQuery(this.$link, this.$query);
             if ($result == null /*|| $result == false*/) {
-                DataAccess.callErrorDelegate(CAT("Selection query failed [", this.$query, "]"));
+                DataAccess.callErrorDelegate(CAT("<br/>", EOL, "Selection query failed [", this.$query, "]"));
                 return null;
             }
             this.$recordSet.$result = $result;

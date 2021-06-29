@@ -104,7 +104,7 @@ public class DOCategory extends DOBase {
      * @return boolean True if exists.
      */
     public Boolean checkFilterName(String $filterName, Object[] /*&*/$category /* = null */) {
-        DataSet $dsCategories = this.select("_this.s_CatId, _this.s_Filter");
+        DataSet $dsCategories = this.select();
         Boolean $filterFound = false;
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
             THashtable $oCategory = $dsCategories.getRow($n);

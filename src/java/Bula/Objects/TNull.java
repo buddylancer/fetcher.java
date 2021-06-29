@@ -6,6 +6,9 @@
 package Bula.Objects;
 import Bula.Meta;
 
+/**
+ * Implementation of DB NULL object.
+ */
 public class TNull extends Meta {
     private static TNull $value;
 
@@ -13,6 +16,10 @@ public class TNull extends Meta {
         $value = null;
     }
 
+    /**
+     * Get NULL value.
+     * @return TNull NULL value.
+     */
     public static TNull getValue() {
         if ($value == null)
             $value = new TNull();

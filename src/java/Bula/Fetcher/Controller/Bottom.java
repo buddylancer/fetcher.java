@@ -27,9 +27,12 @@ public class Bottom extends Page {
     /** Execute main logic for Bottom block */
     public void execute() {
         THashtable $prepare = new THashtable();
+        $prepare.put("[#Items_By_Category]",
+            CAT(Config.NAME_ITEMS, "_by_", this.$context.get("Name_Category")));
 
         DOCategory $doCategory = new DOCategory();
-        DataSet $dsCategory = $doCategory.enumAll("_this.i_Counter <> 0"); //, "_this.s_CatId");
+        DataSet $dsCategory = $doCategory.enumAll(Config.SHOW_EMPTY ? null : "_this.i_Counter <> 0", 
+            Config.SORT_CATEGORIES == null ? null : CAT("_this.", Config.SORT_CATEGORIES));
         int $size = $dsCategory.getSize();
         int $size3 = $size % 3;
         int $n1 = INT($size / 3) + ($size3 == 0 ? 0 : 1);
@@ -44,7 +47,7 @@ public class Bottom extends Page {
                 if (NUL($oCategory))
                     continue;
                 int $counter = INT($oCategory.get("i_Counter"));
-                if (INT($counter) == 0)
+                if (Config.SHOW_EMPTY == false && INT($counter) == 0)
                     continue;
                 String $key = STR($oCategory.get("s_CatId"));
                 String $name = STR($oCategory.get("s_Name"));
@@ -61,7 +64,7 @@ public class Bottom extends Page {
         $prepare.put("[#FilterBlocks]", $filterBlocks);
 
         if (!this.$context.$IsMobile) {
-            $dsCategory = $doCategory.enumAll(); //null, "_this.s_CatId");
+            //$dsCategory = $doCategory.enumAll(null, Config.SORT_CATEGORIES == null ? null : CAT("_this.", Config.SORT_CATEGORIES));
             $size = $dsCategory.getSize(); //50
             $size3 = $size % 3; //2
             $n1 = INT($size / 3) + ($size3 == 0 ? 0 : 1); //17.3

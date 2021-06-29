@@ -105,6 +105,7 @@ public class Items extends ItemsBase {
 
         String $errorMessage = new String();
         String $filter = null;
+        String $category = null;
 
         if (!NUL($filterName)) {
             DOCategory $doCategory = new DOCategory();
@@ -112,10 +113,13 @@ public class Items extends ItemsBase {
                 {new THashtable()};
             if (!$doCategory.checkFilterName($filterName, $oCategory))
                 $errorMessage += "Non-existing filter name!";
-            else
+            else  {
+                $category = STR($oCategory[0].get("s_Name"));
                 $filter = STR($oCategory[0].get("s_Filter"));
+            }
         }
 
+        int $sourceId = -1;
         if (!NUL($sourceName)) {
             DOSource $doSource = new DOSource();
             THashtable[] $oSource =
@@ -125,6 +129,8 @@ public class Items extends ItemsBase {
                     $errorMessage += "<br/>";
                 $errorMessage += "Non-existing source name!";
             }
+            else
+                $sourceId = INT($oSource[0].get("i_SourceId"));
         }
 
         Engine $engine = this.$context.getEngine();
@@ -138,6 +144,7 @@ public class Items extends ItemsBase {
 
         if (Config.SHOW_IMAGES)
             $prepare.put("[#Show_Images]", 1);
+        $prepare.put("[#ColSpan]", Config.SHOW_IMAGES ? 4 : 3);
 
         // Uncomment to enable filtering by source and/or category
         $prepare.put("[#FilterItems]", $engine.includeTemplate("Pages/FilterItems"));
@@ -147,7 +154,7 @@ public class Items extends ItemsBase {
             Config.NAME_ITEMS,
             (this.$context.$IsMobile ? "<br/>" : null),
             (!BLANK($sourceName) ? CAT(" ... from '", $sourceName, "'") : null),
-            (!BLANK($filter) ? CAT(" ... for '", $filterName, "'") : null)
+            (!BLANK($filter) ? CAT(" ... for '", $category, "'") : null)
         );
 
         $prepare.put("[#Title]", $s_Title);
@@ -155,13 +162,22 @@ public class Items extends ItemsBase {
         int $maxRows = Config.DB_ITEMS_ROWS;
 
         DOItem $doItem = new DOItem();
-        DataSet $dsItems = $doItem.enumItems($sourceName, $filter, $listNumber, $maxRows);
+        //String $realFilter = DOItem.buildSqlByFilter($filter);
+        String $realFilter = DOItem.buildSqlByCategory($category);
+        DataSet $dsItems = $doItem.enumItems($sourceName, $realFilter, $listNumber, $maxRows);
 
         int $listTotal = $dsItems.getTotalPages();
         if ($listNumber > $listTotal) {
-            $prepare.put("[#ErrMessage]", "List number is too large!");
-            this.write("error", $prepare);
-            return;
+            if ($listTotal > 0) {
+                $prepare.put("[#ErrMessage]", "List number is too large!");
+                this.write("error", $prepare);
+                return;
+            }
+            else {
+                $prepare.put("[#ErrMessage]", "Empty list!");
+                this.write("error", $prepare);
+                return;
+            }
         }
         if ($listTotal > 1) {
             $prepare.put("[#List_Total]", $listTotal);

@@ -20,6 +20,10 @@ public class TRequest extends TRequestBase {
     /** Internal storage for SERVER variables */
     private THashtable $ServerVars = null;
 
+    /**
+     * Default constructor.
+     * @param $currentRequest Current http request object.
+     */
     public TRequest(Object $currentRequest) { super($currentRequest); initialize(); }
 
     /** Initialize internal variables for new request. */
@@ -269,7 +273,7 @@ public class TRequest extends TRequestBase {
      * @return Boolean True - text matches domain name, False - not matches.
      */
     public static Boolean isDomainName(String $input) {
-        return Regex.isMatch($input, "^[A-Za-z]+[A-Za-z0-9\\.]*$");
+        return Regex.isMatch($input, "^[A-Za-z0-9]+[A-Za-z0-9\\.\\-]*$");
     }
 
     /**

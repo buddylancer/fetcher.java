@@ -8,13 +8,14 @@ import Bula.Meta;
 
 import Bula.Fetcher.Config;
 
-import Bula.Objects.TArrayList;
-import Bula.Objects.Arrays;
-import Bula.Objects.THashtable;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 
+import Bula.Objects.Arrays;
 import Bula.Objects.Strings;
+import Bula.Objects.TArrayList;
+import Bula.Objects.THashtable;
+
 import Bula.Model.DataSet;
 
 /**
@@ -39,6 +40,8 @@ public class BOItem extends Meta {
     public String $title = null;
     /** Final (processed) description */
     public String $description = null;
+    /** Final (processed) date */
+    public String $date = null;
 
     // Custom output fields
     /** Extracted creator (publisher) */
@@ -56,7 +59,7 @@ public class BOItem extends Meta {
      * @param $item Current processed RSS-item from given source.
      */
     public BOItem (String $source, THashtable $item) {
-        this.initialize($source, $item);
+            this.initialize($source, $item);
     }
 
     /**
@@ -90,20 +93,32 @@ public class BOItem extends Meta {
      */
     public void processDescription() {
         String $BR = "\n";
+
         String $title = Strings.removeTags(this.$fullTitle);
-        $title = $title.replace("&#", "[--amp--]");
-        $title = $title.replace("#", "[sharp]");
-        $title = $title.replace("[--amp--]", "&#");
+        // Normalize \r\n to \n
+        $title = Regex.replace($title, "\r\n", $BR);
+        $title = Regex.replace($title, "(^&)#", "$1[sharp]");
         $title = $title.replace("&amp;", "&");
+        $title = Regex.replace($title, "&amp;laquo;", "&laquo;");
+        $title = Regex.replace($title, "&amp;raquo;", "&raquo;");
+        $title = $title.trim();
+        $title = Regex.replace($title, "[\n]+", " ");
+
+        // Moved to Rules
+        //int $httpIndex = Strings.lastIndexOf("http", $title);
+        //if ($httpIndex != -1)
+        //    $title = Strings.substring($title, 0, $httpIndex);
+
         this.$title = $title;
 
         if (this.$fullDescription == null)
             return;
-        String $description = this.$fullDescription;
+        // Normalize \r\n to \n
+        String $description = Regex.replace(this.$fullDescription, "\r\n", $BR);
 
         //TODO -- Fixes for FetchRSS feeds (parsed from Twitter) here...
-        $description = $description.replace("&#160;", "");
-        $description = $description.replace("&nbsp;", "");
+        $description = $description.replace("&#160;", " ");
+        $description = $description.replace("&nbsp;", " ");
 
         // Start -- Fixes and workarounds for some sources here...
         // End
@@ -141,14 +156,17 @@ public class BOItem extends Meta {
         }
 
         // Process end-of-lines...
-        while ($description.indexOf(" \n") != -1)
-            $description = $description.replace(" \n", "\n");
-        while ($description.indexOf("\n\n\n") != -1)
-            $description = $description.replace("\n\n\n", "\n\n");
+        //$description = Regex.replace($description, "[\n]+$", "");
+        $description = Regex.replace($description, "[ \t]+\n", "\n");
+        $description = Regex.replace($description, "[\n]+\n\n", "\n\n");
         $description = Regex.replace($description, "\n\n[ \t]*[\\+\\-\\*][^\\+\\-\\*][ \t]*", "\n* ");
         $description = Regex.replace($description, "[ \t]+", " ");
 
-        this.$description = $description.trim();
+        $description = Regex.replace($description, "&amp;laquo;", "&laquo;");
+        $description = Regex.replace($description, "&amp;raquo;", "&raquo;");
+
+        // Normalize back to \r\n
+        this.$description = Regex.replace($description.trim(), $BR, EOL);
     }
 
     /**
@@ -183,11 +201,12 @@ public class BOItem extends Meta {
 
         String $category = null;
         if (!$categoryItem.isEmpty()) {
-            String[] $categoriesArr = $categoryItem.replace(",&,", " & ").split(",");
+            String[] $categoriesArr = Strings.split(",", $categoryItem.replace(",&,", " & "));
             TArrayList $categoriesNew = new TArrayList();
             for (int $c = 0; $c < SIZE($categoriesArr); $c++) {
                 String $temp = $categoriesArr[$c];
-                if (BLANK($temp.trim()))
+                $temp = Strings.trim($temp);
+                if (BLANK($temp))
                     continue;
                 $temp = Strings.firstCharToUpper($temp);
                 if ($category == null)
@@ -220,14 +239,15 @@ public class BOItem extends Meta {
      * Add standard categories (from DB) to current item.
      * @param $dsCategories DataSet with categories (pre-loaded from DB).
      * @param $lang Input language.
+     * @return int Number of added categories.
      */
-    public void addStandardCategories(DataSet $dsCategories, String $lang) {
+    public int addStandardCategories(DataSet $dsCategories, String $lang) {
         //if (BLANK(this.$description))
         //    return;
 
         TArrayList $categoryTags = new TArrayList();
         if (!BLANK(this.$category))
-            $categoryTags.addAll(this.$category.split(","));
+            $categoryTags.addAll(Strings.split(", ", this.$category));
         for (int $n1 = 0; $n1 < $dsCategories.getSize(); $n1++) {
             THashtable $oCategory = $dsCategories.getRow($n1);
             String $rssAllowedKey = STR($oCategory.get("s_CatId"));
@@ -242,25 +262,32 @@ public class BOItem extends Meta {
 
             Boolean $includeFlag = false;
             for (int $n2 = 0; $n2 < SIZE($includeChunks); $n2++) {
-                String $includeChunk = Regex.escape($includeChunks[$n2]);
-                if (!BLANK(this.$description) && Regex.isMatch(this.$description, $includeChunk, RegexOptions.IgnoreCase))
+                String $includeChunk = $includeChunks[$n2]; //Regex.escape($includeChunks[$n2]);
+                if (Regex.isMatch(this.$title, $includeChunk, RegexOptions.IgnoreCase)) {
                     $includeFlag |= true;
-                if (Regex.isMatch(this.$title, $includeChunk, RegexOptions.IgnoreCase))
+                    break;
+                }
+                if (!BLANK(this.$description) && Regex.isMatch(this.$description, $includeChunk, RegexOptions.IgnoreCase)) {
                     $includeFlag |= true;
+                    break;
+                }
             }
             for (int $n3 = 0; $n3 < SIZE($excludeChunks); $n3++) {
-                String $excludeChunk = Regex.escape($excludeChunks[$n3]);
-                if (!BLANK(this.$description) && Regex.isMatch(this.$description, $excludeChunk, RegexOptions.IgnoreCase))
+                String $excludeChunk = $excludeChunks[$n3]; //Regex.escape($excludeChunks[$n3]);
+                if (Regex.isMatch(this.$title, $excludeChunk, RegexOptions.IgnoreCase)) {
                     $includeFlag &= false;
-                if (Regex.isMatch(this.$title, $excludeChunk, RegexOptions.IgnoreCase))
+                    break;
+                }
+                if (!BLANK(this.$description) && Regex.isMatch(this.$description, $excludeChunk, RegexOptions.IgnoreCase)) {
                     $includeFlag &= false;
-            }
-            if ($includeFlag) {
+                    break;
+                }
+           }
+            if ($includeFlag)
                 $categoryTags.add($name);
-             }
         }
         if ($categoryTags.size() == 0)
-            return;
+            return 0;
 
         //TODO
         //TArrayList $uniqueCategories = this.NormalizeList($categoryTags, $lang);
@@ -269,6 +296,8 @@ public class BOItem extends Meta {
         this.$category = Strings.join(", ", (String[])$categoryTags.toArray(
             new String[] {}
         ));
+
+        return $categoryTags.size();
     }
 
     /**
@@ -291,6 +320,125 @@ public class BOItem extends Meta {
             this.$creator = Regex.replace(this.$creator, "[ \t\r\n]+", " ");
 
         //TODO -- Implement your own logic for extracting creator here
+    }
+
+    /**
+     * Process rules.
+     * @param $rules The list of rules to process.
+     */
+    public int processRules(DataSet $rules) {
+        int $counter = 0;
+        for (int $n = 0; $n < $rules.getSize(); $n++) {
+            THashtable $rule = $rules.getRow($n);
+            String $sourceName = STR($rule.get("s_SourceName"));
+            if (EQ($sourceName, "*") || EQ($sourceName, this.$source))
+                $counter += this.processRule($rule);
+        }
+        return $counter;
+    }
+
+    private int processRule(THashtable $rule) {
+        int $counter = 0;
+        String $nameTo = STR($rule.get("s_To"));
+        String $valueTo = null;
+        String $nameFrom = NUL($rule.get("s_From")) ? $nameTo : STR($rule.get("s_From"));
+        String $valueFrom = STR(this.getString($nameFrom));
+        String $operation = STR($rule.get("s_Operation"));
+        int $intValue = INT($rule.get("i_Value"));
+        String $pattern = STR($rule.get("s_Pattern"));
+        String $stringValue = STR($rule.get("s_Value"));
+        if (EQ($operation, "shrink") && !NUL($valueFrom) && LEN($pattern) > 0) {
+            int $shrinkIndex = $valueFrom.indexOf($pattern);
+            if ($shrinkIndex != -1) 
+                $valueTo = $valueFrom.substring(0, $shrinkIndex).trim();
+        }
+        if (EQ($operation, "cut") && !NUL($valueFrom) && LEN($pattern) > 0) {
+            int $cutIndex = $valueFrom.indexOf($pattern);
+            if ($cutIndex == 0) 
+                $valueTo = $valueFrom.substring($cutIndex + LEN($pattern));
+        }
+        if (EQ($operation, "replace") && !NUL($valueFrom) && LEN($pattern) > 0) {
+            $valueTo = Regex.replace($valueFrom, $pattern, $stringValue, RegexOptions.IgnoreCase);
+            int $replaceIndex = $valueFrom.indexOf($pattern);
+            if ($replaceIndex != -1) 
+                $valueTo = $valueFrom.replace($pattern, $stringValue);
+        }
+        if (EQ($operation, "remove") && !NUL($valueFrom) && LEN($pattern) > 0) {
+            String[] $matches =
+                Regex.matches($valueFrom, $pattern, RegexOptions.IgnoreCase);
+            if (SIZE($matches) > 0)
+                $valueTo = $valueFrom.replace($matches[0] , "");
+        }
+        else if (EQ($operation, "truncate") && !NUL($valueFrom) && $intValue > 0) {
+            if (LEN($valueFrom) > $intValue) {
+                $valueTo = $valueFrom.substring(0, $intValue);
+                while (!$valueTo.endsWith(" "))
+                    $valueTo = $valueTo.substring(0, LEN($valueTo) - 1);
+                $valueTo = $valueTo += "...";
+            }
+            //print "valueTo: '" + $valueTo + "'<br/>\r\n";
+        }
+        else if (EQ($operation, "extract") && !NUL($valueFrom)) {
+            String[] $matches =
+                Regex.matches($valueFrom, $pattern, RegexOptions.IgnoreCase);
+            if (SIZE($matches) > $intValue) {
+                if (BLANK($stringValue))
+                    $valueTo = $matches[$intValue] ;
+                else {
+                    $valueTo = $stringValue;
+                    for (int $n = 0; $n < SIZE($matches); $n++) {
+                        if ($valueTo.indexOf(CAT("$", $n)) != -1)
+                            $valueTo = $valueTo.replace(CAT("$", $n), $matches[$n] );
+                    }
+                }
+            }
+        }
+        if (!NUL($valueTo))
+            this.setString($nameTo, $valueTo);
+        return $counter;
+    }
+
+    private void setString(String $name, String $value) {
+        if (EQ($name, "link"))
+            this.$link = $value;
+        else if (EQ($name, "title"))
+            this.$title = $value;
+        else if (EQ($name, "description"))
+            this.$description = $value;
+        else if (EQ($name, "date"))
+            this.$date = $value;
+        else if (EQ($name, "category")) {
+            if (BLANK(this.$category))
+                this.$category = $value;
+            else
+                this.$category = CAT($value, ", ", this.$category);
+        }
+        else if (EQ($name, "creator"))
+            this.$creator = $value;
+        else if (EQ($name, "custom1"))
+            this.$custom1 = $value;
+        else if (EQ($name, "custom2"))
+            this.$custom2 = $value;
+    }
+
+    private String getString(String $name) {
+        if (EQ($name, "link"))
+            return this.$link;
+        else if (EQ($name, "title"))
+            return this.$title;
+        else if (EQ($name, "description"))
+            return this.$description;
+        else if (EQ($name, "date"))
+            return this.$date;
+        else if (EQ($name, "creator"))
+            return this.$creator;
+        else if (EQ($name, "custom1"))
+            return this.$custom1;
+        else if (EQ($name, "custom2"))
+            return this.$custom2;
+        else if (this.$item.containsKey($name))
+            return STR(this.$item.get($name));
+        return null;
     }
 
     /**
@@ -318,14 +466,8 @@ public class BOItem extends Meta {
             $title = Util.transliterateRusToLat($title);
 
         $title = Regex.replace($title, "\\&amp\\;", " and ");
-        $title = Regex.replace($title, "[^A-Za-z0-9\\-\\. ]", " ");
-        $title = Regex.replace($title, "[ ]+", " ");
-        $title = $title.trim();
-        $title = Regex.replace($title, "\\.+", "-");
-        $title = Regex.replace($title, " \\- ", "-");
-        $title = Regex.replace($title, " \\. ", ".");
-        $title = Regex.replace($title, "[ ]+", "-");
-        $title = Regex.replace($title, "\\-+", "-");
+        $title = Regex.replace($title, "[^A-Za-z0-9]", "-");
+        $title = Regex.replace($title, "[\\-]+", "-");
         $title = Strings.trim($title, "-").toLowerCase();
         return $title;
     }

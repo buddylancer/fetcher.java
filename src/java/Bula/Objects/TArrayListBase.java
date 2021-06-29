@@ -3,6 +3,14 @@ package Bula.Objects;
 import java.util.ArrayList;
 
 public class TArrayListBase extends Bula.Meta {
+	
+	public TArrayListBase() { }
+	
+	public TArrayListBase(Object[] $items) {
+		for (Object $item : $items)
+			content.add($item);
+	}
+	
 	private ArrayList content = new ArrayList();
 
 	public boolean add(Object value) { return content.add(value); }

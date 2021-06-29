@@ -6,11 +6,11 @@
 package Bula.Fetcher.Controller;
 import Bula.Meta;
 
-import Bula.Objects.THashtable;
-
 import Bula.Fetcher.Config;
 import Bula.Fetcher.Context;
+
 import Bula.Objects.DateTimes;
+import Bula.Objects.THashtable;
 
 /**
  * Logic for generating Top block.
@@ -30,7 +30,7 @@ public class Top extends Page {
         if (this.$context.$TestRun)
             $prepare.put("[#Date]", "28-Jun-2020 16:49 GMT");
         else
-            $prepare.put("[#Date]", Util.showTime(DateTimes.gmtFormat(DateTimes.SQL_DTS)));
+            $prepare.put("[#Date]", Util.showTime());
 
         this.write("top", $prepare);
     }
