@@ -10,12 +10,17 @@ package Bula;
 import java.util.*;
 import java.lang.reflect.*;
 import java.util.regex.*;
-import com.apptastic.rssreader.*;
+//import com.apptastic.rssreader.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.stream.Stream;
 import javax.xml.stream.XMLStreamReader;
+
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import java.io.*;
+import java.net.*;
 
 import Bula.Fetcher.Config;
 import Bula.Objects.*;
@@ -56,7 +61,7 @@ public class Internal extends Bula.Meta {
     private static String removeTag(String input, String tag)
     {
         //return Regex.Replace(input, CAT("<[/]*", tag, "[^>]*[/]*>"), "");
-        return Pattern.compile(CAT("<[/]*", tag, "[^>]*[/]*>")).matcher(input).replaceAll(" ");
+        return Pattern.compile(CAT("<[/]*", tag, "[^>]*[/]*>")).matcher(input).replaceAll("");
     }
 
     private static String decorateTags(String $input, String $except)
@@ -82,6 +87,24 @@ public class Internal extends Bula.Meta {
     {
         //return Regex.Replace(input, CAT("~{([/]*[^}]+)}~"), "<$1>");
         return Pattern.compile(CAT("~\\{([/]*[^}]+)\\}~")).matcher(input).replaceAll("<$1>");
+    }
+
+    private static String allowedChars = "€₹₽₴—•–‘’—№…"; //TODO!!! Hardcode Russian Ruble, Ukranian Hryvnia etc for now
+
+    /// <summary>
+    /// Clean out UTF-8 chars which are not accepted by MySQL.
+    /// </summary>
+    /// <param name="input">Input string</param>
+    /// <returns>Resulting string</returns>
+    public static String cleanChars(String input)
+    {
+        char[] inputChars = input.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int n = 0; n < inputChars.length; n++) {
+            if (inputChars[n] < 2048 || allowedChars.indexOf(inputChars[n]) != -1)
+                sb.append(inputChars[n]);
+        }
+        return sb.toString();
     }
 
     /// <summary>
@@ -178,56 +201,6 @@ public class Internal extends Bula.Meta {
             return null;
     }
 
-
-    /*
-    public static Object[] fetchRssOld(String url)
-    {
-        DataList items = new DataList();
-
-        XmlDocument rssXmlDoc = new XmlDocument();
-
-        XmlNamespaceManager nsmgr = new XmlNamespaceManager(rssXmlDoc.NameTable);
-        nsmgr.AddNamespace("dc", "http://purl.org/dc/elements/1.1/");
-
-        // Load the RSS file from the RSS URL
-        rssXmlDoc.Load(url);
-
-        // Parse the Items in the RSS file
-        XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
-
-        // Iterate through the items in the RSS file
-        foreach (XmlNode rssNode in rssNodes)
-        {
-            var item = new DataRange();
-
-            XmlNode rssSubNode = rssNode.SelectSingleNode("title");
-            if (rssSubNode != null)
-                item["title"] = rssSubNode.InnerText;
-
-            rssSubNode = rssNode.SelectSingleNode("link");
-            if (rssSubNode != null)
-                item["link"] = rssSubNode.InnerText;
-
-            rssSubNode = rssNode.SelectSingleNode("description");
-            if (rssSubNode != null)
-                item["description"] = rssSubNode.InnerText;
-
-            rssSubNode = rssNode.SelectSingleNode("pubDate");
-            if (rssSubNode != null)
-                item["pubdate"] = rssSubNode.InnerText; //Yes, lower case
-
-            rssSubNode = rssNode.SelectSingleNode("dc:creator", nsmgr);
-            if (rssSubNode != null)
-            {
-                item["dc"] = new DataRange();
-                ((DataRange)item["dc"])["creator"] = rssSubNode.InnerText;
-            }
-            items.Add(item);
-        }
-        return items.ToArray();
-    }
-    */
-
     /// <summary>
     /// Fetch info from RSS-feed.
     /// </summary>
@@ -237,36 +210,109 @@ public class Internal extends Bula.Meta {
     {
         TArrayList items = new TArrayList();
 
-        RssReader rssReader = new com.apptastic.rssreader.RssReader();
-        Stream<Item> itemsStream = null;
-        try {
-            itemsStream = rssReader.read(url);
-        }
-        catch (Exception ex) {
-            return null;
-        }
-        Iterator<Item> iterator = itemsStream.iterator();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-        while (iterator.hasNext()) {
-            Item item = iterator.next();
-            THashtable hash = new THashtable();
-            if (!NUL(item.getTitle()))
-                hash.put("title", item.getTitle());
-            if (!NUL(item.getLink()))
-                hash.put("link", item.getLink());
-            if (!NUL(item.getDescription()))
-                hash.put("description", item.getDescription());
-            if (!NUL(item.getPubDate()))
-                hash.put("pubDate", item.getPubDate());
-            if (!NUL(item.getSource()))
-                hash.put("source", item.getSource());
-            if (!NUL(item.getCategory()))
-                hash.put("category", item.getCategory());
+        //XmlNamespaceManager nsmgr = new XmlNamespaceManager(rssXmlDoc.NameTable);
+        //nsmgr.AddNamespace("dc", "http://purl.org/dc/elements/1.1/");
+
+        // Load the RSS file from the RSS URL
+        DocumentBuilder builder = null;
+        Document rssXmlDoc = null;
+        Object response = null;
+        String content = "";
+        try {
+            URL urlObject = new URL(url);
+            URLConnection connection = urlObject.openConnection();
+            String contentType = connection.getContentType();
+            int charsetIndex = contentType.indexOf("charset=");
+            String encoding = charsetIndex != -1 ? contentType.substring(charsetIndex + "charset=".length()) : null;
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlObject.openStream(), encoding));
+            String line;
+            while ((line = in.readLine()) != null)
+                content += line + EOL;
+            in.close();            
             
-            items.add(hash);
+            builder = factory.newDocumentBuilder();
+            rssXmlDoc = builder.parse(new ByteArrayInputStream(content.getBytes(encoding)));
         }
-        itemsStream.close();
+        catch (Exception ex1) {
+            String[] matches = Regex.matches(ex1.getMessage(), "'([^']+)' is an undeclared prefix. Line [0-9]+, position [0-9]+.");
+            if (matches.length > 0) {
+                try {
+                    String pattern = CAT("<", matches[1], ":[^>]+>[^<]+</", matches[1], ":[^>]+>");
+                    content = Regex.replace(content, pattern, "");
+                    rssXmlDoc = builder.parse(new ByteArrayInputStream(content.getBytes()));
+                }
+                catch (Exception ex2) {
+                    return null;
+                }
+            }
+            else
+                return null;
+        }
+
+        // Parse the Items in the RSS file
+        NodeList rssNodes = rssXmlDoc.getElementsByTagName("item");
+
+        // Iterate through the items in the RSS file
+        for (int n1 = 0; n1 < rssNodes.getLength(); n1++) {
+            Node rssNode = rssNodes.item(n1);
+            THashtable item = new THashtable();
+
+            NodeList itemNodes = rssNode.getChildNodes();
+            for (int n2 = 0; n2 < itemNodes.getLength(); n2++) {
+                Node itemNode = itemNodes.item(n2);
+                String itemNodeName = itemNode.getNodeName();
+                if (itemNodeName.startsWith("#"))
+                    continue;
+
+                String text = "";
+                if (itemNodeName == "description") {
+                    if (itemNode.getTextContent().contains("10-15")) {
+                        int x=1;
+                    }
+                }
+                if (itemNode.hasChildNodes()) {
+                    NodeList internalNodes = itemNode.getChildNodes();
+                    if (internalNodes.getLength() > 1) {
+                        for (int n3 = 0; n3 < internalNodes.getLength(); n3++) {
+                            Node internalNode = internalNodes.item(n3);
+                            String internalNodeName = internalNode.getNodeName();
+                            if (!internalNodeName.startsWith("#"))
+                                text += "<" + internalNodeName + ">" + 
+                                    internalNode.getTextContent() + "</" + internalNodeName + ">"; 
+                            else {
+                                if (!text.isEmpty())
+                                    text += " ";
+                                text += internalNode.getTextContent();
+                            }
+                        }
+                    }
+                    else 
+                        text = itemNode.getTextContent();
+                }
+                else 
+                    text = itemNode.getTextContent();
+                
+                if (itemNodeName == "category") {
+                    if (!item.containsKey(itemNodeName))
+                        item.put(itemNodeName, text);
+                    else
+                        item.put(itemNodeName, CAT(item.get(itemNodeName), ", ", text));
+                }
+                else if (itemNodeName == "dc:date") {
+                    THashtable $dc = item.containsKey("dc") ? (THashtable)item.get("dc") : new THashtable();
+                    $dc.put("date", text); item.put("dc", $dc);
+                }
+                else if (itemNodeName == "dc:creator") {
+                    THashtable $dc = item.containsKey("dc") ? (THashtable)item.get("dc") : new THashtable();
+                    $dc.put("creator", text); item.put("dc", $dc);
+                }
+                else
+                    item.put(itemNodeName, text);
+            }
+            items.add(item);
+        }
         return items.toArray();
-        
-    }
+    }    
 }

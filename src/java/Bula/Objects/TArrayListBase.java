@@ -20,6 +20,8 @@ public class TArrayListBase extends Bula.Meta {
 	public void set(int pos, Object value) { content.set(pos, value); }
 
 	public int size() { return content.size(); }
+        
+        public boolean contains(Object value) { return content.contains(value); }
 
 	public Object[] toArray() { return content.toArray(); }
 

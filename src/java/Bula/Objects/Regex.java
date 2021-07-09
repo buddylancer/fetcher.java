@@ -26,8 +26,8 @@ public class Regex extends Meta {
      */
     public static Boolean isMatch(String $input, String $pattern, int $options /* = 0 */) {
         //return Pattern.matches($pattern, $input); //TODO
-        int $patternOptions = 
-                ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
+        int $patternOptions = Pattern.UNICODE_CASE |
+                (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         return Pattern.compile($pattern, $patternOptions).matcher($input).find();
     }
 
@@ -44,8 +44,8 @@ public class Regex extends Meta {
      * @return String Resulting string.
      */
     public static String replace(String $input, String $pattern, String $replacement, int $options /* = 0*/) {
-        int $patternOptions = 
-                ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
+        int $patternOptions = Pattern.UNICODE_CASE |
+                (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         return Pattern.compile($pattern, $patternOptions).matcher($input).replaceAll($replacement);
     }
 
@@ -61,8 +61,8 @@ public class Regex extends Meta {
      * @return String[] Resulting array of strings.
      */
     public static String[] split(String $input, String $pattern, int $options /* = null */) {
-        int $patternOptions = 
-                ((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0;
+        int $patternOptions = Pattern.UNICODE_CASE |
+                (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         String[] $chunks = Pattern.compile($pattern, $patternOptions).split($input/*, $splitOptions*/);
         TArrayList $outArray = new TArrayList();
         for (String $chunk : $chunks)
@@ -86,8 +86,10 @@ public class Regex extends Meta {
                 (((INT($options) & RegexOptions.IgnoreCase) != 0) ? Pattern.CASE_INSENSITIVE : 0);
         Matcher $matcher = Pattern.compile($pattern, $patternOptions).matcher($input);
         TArrayList $result = new TArrayList();
-        while ($matcher.find())
-            $result.add($matcher.group());
+        while ($matcher.find()) {
+            for (int $n = 0; $n <= $matcher.groupCount(); $n++)
+                $result.add($matcher.group($n));
+        }
         return (String[])$result.toArray(new String[] {});
     }
 

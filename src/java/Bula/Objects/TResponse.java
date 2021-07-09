@@ -40,7 +40,8 @@ public class TResponse extends Meta {
         if ($langFile != null) {
             if (!Translator.isInitialized())
                 Translator.initialize($langFile);
-            $input = Translator.translate($input);
+            if (Translator.isInitialized())
+                $input = Translator.translate($input);
         }
         try { $httpResponse.getWriter().append($input); } catch (Exception ex) {}
     }
@@ -51,6 +52,16 @@ public class TResponse extends Meta {
      * @param $value Header value.
      */
     public void writeHeader(String $name, String $value) {
+        writeHeader($name, $value, "UTF-8");
+    }
+
+    /**
+     * Write header to current response.
+     * @param $name Header name.
+     * @param $value Header value.
+     * @param $encoding Response encoding.
+     */
+    public void writeHeader(String $name, String $value, String $encoding/* = null*/) {
         $httpResponse.addHeader($name, $value);
     }
 

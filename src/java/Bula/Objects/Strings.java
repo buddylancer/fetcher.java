@@ -9,6 +9,7 @@ import Bula.Meta;
 import java.util.Enumeration;
 
 import Bula.Internal;
+import Bula.Objects.Regex;
 import Bula.Objects.TArrayList;
 import Bula.Objects.THashtable;
 
@@ -22,6 +23,15 @@ public class Strings extends Meta {
      */
     public static String[] emptyArray() {
         return new String[0];
+    }
+
+    /**
+     * Convert string to lower case.
+     * @param $input Input string.
+     * @return String Resulting string.
+     */
+    public static String toLowerCase(String $input) {
+        return $input.toLowerCase();
     }
 
     /**
@@ -221,4 +231,7 @@ public class Strings extends Meta {
         return $input;
     }
 
+    public static String cleanChars(String $input) {
+        return Internal.cleanChars($input);
+    }
 }

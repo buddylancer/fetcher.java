@@ -63,7 +63,9 @@ public class Util extends Meta {
      */
     public static String showTime(String $input/* = null*/) {
         long $time = DateTimes.getTime($input);
-        $time += 3600 * (Config.TIME_SHIFT / 100) + 60 * (Config.TIME_SHIFT % 100);
+        long $delta = 3600 * (Config.TIME_SHIFT / 100) + 60 * (Config.TIME_SHIFT % 100);
+        $delta *= 1000;
+        $time += $delta;
         return CAT(DateTimes.format(DateTimes.DTS, $time), " ", Config.TIME_ZONE);
     }
 

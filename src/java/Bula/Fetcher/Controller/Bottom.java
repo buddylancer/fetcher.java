@@ -31,7 +31,7 @@ public class Bottom extends Page {
             CAT(Config.NAME_ITEMS, "_by_", this.$context.get("Name_Category")));
 
         DOCategory $doCategory = new DOCategory();
-        DataSet $dsCategory = $doCategory.enumAll(Config.SHOW_EMPTY ? null : "_this.i_Counter <> 0", 
+        DataSet $dsCategory = $doCategory.enumAll(Config.SHOW_EMPTY ? null : "_this.i_Counter <> 0",
             Config.SORT_CATEGORIES == null ? null : CAT("_this.", Config.SORT_CATEGORIES));
         int $size = $dsCategory.getSize();
         int $size3 = $size % 3;

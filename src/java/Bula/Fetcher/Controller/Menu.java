@@ -27,7 +27,7 @@ public class Menu extends Page {
 
         String $bookmark = null;
         if (this.$context.contains("Name_Category"))
-            $bookmark = CAT("#", Config.NAME_ITEMS, "_by_", this.$context.get("Name_Category")); 
+            $bookmark = CAT("#", Config.NAME_ITEMS, "_by_", this.$context.get("Name_Category"));
         $publicPages.add("Home");
         $publicPages.add("home");
         if (this.$context.$IsMobile) {

@@ -24,9 +24,10 @@ import Bula.Model.DBConfig;
 import Bula.Model.DataSet;
 
 import Bula.Fetcher.Model.DOCategory;
-import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Model.DOItem;
+import Bula.Fetcher.Model.DOMapping;
 import Bula.Fetcher.Model.DORule;
+import Bula.Fetcher.Model.DOSource;
 import Bula.Fetcher.Controller.Actions.DoCleanCache;
 
 /**
@@ -37,6 +38,7 @@ public class BOFetcher extends Meta {
     private Logger $oLogger = null;
     private DataSet $dsCategories = null;
     private DataSet $dsRules = null;
+    private DataSet $dsMappings = null;
 
     /** Public default constructor */
     public BOFetcher (Context $context) {
@@ -69,6 +71,8 @@ public class BOFetcher extends Meta {
         this.$dsCategories = $doCategory.enumCategories();
         DORule $doRule = new DORule();
         this.$dsRules = $doRule.enumAll();
+        DOMapping $doMapping = new DOMapping();
+        this.$dsMappings = $doMapping.enumAll();
     }
 
     /**
@@ -84,6 +88,9 @@ public class BOFetcher extends Meta {
 
         if (!NUL($from))
             $url = Strings.concat($url, "&from=", $from);
+
+        if ($url.indexOf("[#File_Ext]") != -1)
+            $url = $url.replace("[#File_Ext]", Context.FILE_EXT);
 
         String $source = STR($oSource.get("s_SourceName"));
         if (this.$context.$Request.contains("m") && !$source.equals(this.$context.$Request.get("m")))
@@ -125,12 +132,13 @@ public class BOFetcher extends Meta {
         String $pubDate = STR($item.get("pubDate"));
         if (BLANK($pubDate) && !BLANK($item.get("dc"))) { //TODO implement [dc][time]
             THashtable $temp = (THashtable)$item.get("dc");
-            if (!BLANK($temp.get("date")))
+            if (!BLANK($temp.get("date"))) {
                 $pubDate = STR($temp.get("date"));
+                $item.put("pubDate", $pubDate);
+            }
         }
-        //TODO -- workaround for life.ru (error - pubDate inside guid)
 
-        String $date = DateTimes.gmtFormat(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
+        $boItem.processMappings(this.$dsMappings);
 
         $boItem.processDescription();
         //$boItem.processCustomFields(); // Uncomment for processing custom fields
@@ -143,6 +151,13 @@ public class BOFetcher extends Meta {
         if (BLANK($boItem.$link)) //TODO - what we can do else?
             return 0;
 
+        // Get date here as it can be extracted in rules processing
+        if ($boItem.$date != null)
+            $pubDate = $boItem.$date;
+        if (!BLANK($pubDate))
+            $pubDate = $pubDate.trim();
+        String $date = DateTimes.gmtFormat(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
+
         // Check whether item with the same link exists already
         DOItem $doItem = new DOItem();
         DataSet $dsItems = $doItem.findItemByLink($boItem.$link, $sourceId);
@@ -151,7 +166,8 @@ public class BOFetcher extends Meta {
 
         // Try to add/embed standard categories from description
         int $countCategories = $boItem.addStandardCategories(this.$dsCategories, this.$context.$Lang);
-        //print "countCategories: '" + $countCategories + "'<br/>\r\n";
+
+        $boItem.normalizeCategories();
 
         // Check the link once again after processing rules
         if ($dsItems == null && !BLANK($boItem.$link)) {

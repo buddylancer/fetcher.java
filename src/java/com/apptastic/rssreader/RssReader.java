@@ -52,10 +52,11 @@ public class RssReader {
      * @throws IOException Fail to read url or its content
      */
     public Stream<Item> read(String url) throws IOException {
-        InputStream inputStream = sendRequest(url);
+        String[] encoding = new String[] { null };
+        InputStream inputStream = sendRequest(url, encoding);
         removeBadDate(inputStream);
 
-        RssItemIterator itemIterator = new RssItemIterator(inputStream);
+        RssItemIterator itemIterator = new RssItemIterator(inputStream, encoding[0]);
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(itemIterator, Spliterator.ORDERED), false);
     }
 
@@ -80,10 +81,11 @@ public class RssReader {
      * Internal method for sending the http request.
      *
      * @param url URL to send the request
+     * @param encoding Encoding of response stream
      * @return The response for the request
      * @throws IOException exception
      */
-    protected InputStream sendRequest(String url) throws IOException {
+    protected InputStream sendRequest(String url, String[] encoding) throws IOException {
         URLConnection connection = new URL(url).openConnection();
 
         connection.setConnectTimeout(15 * 1000);
@@ -93,8 +95,16 @@ public class RssReader {
         connection.connect();
         InputStream inputStream = connection.getInputStream();
 
-        if ("gzip".equals(connection.getContentEncoding()))
-            inputStream = new GZIPInputStream(inputStream);
+        String contentType = connection.getHeaderField("Content-type");
+        int charsetIndex = contentType.indexOf("charset=");
+        String charset = charsetIndex != -1 ? contentType.substring(charsetIndex + "charset=".length()) : null;
+        if (charset != null)
+            encoding[0] = charset;
+        
+        if (connection.getContentEncoding() != null) {
+            if ("gzip".equals(connection.getContentEncoding()))
+                inputStream = new GZIPInputStream(inputStream);
+        }
 
         return new BufferedInputStream(inputStream);
     }
@@ -109,21 +119,21 @@ public class RssReader {
         private String elementName = null;
         private StringBuilder textBuilder;
 
-        public RssItemIterator(InputStream is) {
+        public RssItemIterator(InputStream is, String encoding) {
             this.is = is;
             nextItem = null;
             textBuilder = new StringBuilder();
 
             try {
                 XMLInputFactory xmlInFact = XMLInputFactory.newInstance();
-                reader = xmlInFact.createXMLStreamReader(is, "UTF-8");
+                reader = xmlInFact.createXMLStreamReader(is, encoding == null ? "UTF-8" : encoding);
             }
             catch (XMLStreamException e) {
                 Logger logger = Logger.getLogger(LOG_GROUP);
 
                 if (logger.isLoggable(Level.WARNING))
                     logger.log(Level.WARNING, "Failed to process XML. ", e);
-            }
+             }
         }
 
         void peekNext() {
@@ -181,8 +191,8 @@ public class RssReader {
                 reader.close();
                 is.close();
             }
-			//catch (XMLStreamException | IOException e) {
-			catch (Exception e) {
+            //catch (XMLStreamException | IOException e) {
+            catch (Exception e) {
                 Logger logger = Logger.getLogger(LOG_GROUP);
 
                 if (logger.isLoggable(Level.WARNING))
@@ -290,13 +300,13 @@ public class RssReader {
             else if ("link".equals(elementName))
                 item.setLink(text);
             //else if ("{http://purl.org/dc/elements/1.1/}creator".equals(elementName))
-            else if ("creator".equals(elementName))
+            else if ("creator".equals(elementName) || "author".equals(elementName))
                 item.setSource(text);
             else if ("source".equals(elementName))
                 item.setSource(text);
             else if ("company".equals(elementName))
                 item.setSource(text);
-            else if ("categoty".equals(elementName))
+            else if ("category".equals(elementName))
                 item.setCategory(text);
             else {
                 int x=1;

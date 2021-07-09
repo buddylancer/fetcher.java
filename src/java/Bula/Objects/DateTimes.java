@@ -94,4 +94,8 @@ public class DateTimes extends Meta {
         df.setTimeZone(TimeZone.getTimeZone("UTC"));
         return df.format($timeValue == 0 ? new Date() : new Date($timeValue));
     }
+
+    public static long parse(String $formatString, String $timeString) {
+        try { return (new SimpleDateFormat($formatString)).parse($timeString).getTime(); } catch (Exception ex) { return 0; }
+    }
 }

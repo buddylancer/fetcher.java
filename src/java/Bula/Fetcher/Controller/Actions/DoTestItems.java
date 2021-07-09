@@ -57,7 +57,7 @@ public class DoTestItems extends Page {
         DOTime $doTime = new DOTime();
 
         DataSet $dsTimes = $doTime.getById(1);
-        int $timeShift = 240; // 4 min
+        int $timeShift = -1; // 240; // 4 min
         long $currentTime = DateTimes.getTime();
         if ($dsTimes.getSize() > 0) {
             THashtable $oTime = $dsTimes.getRow(0);

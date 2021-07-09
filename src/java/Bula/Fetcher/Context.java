@@ -83,6 +83,9 @@ public class Context extends Config {
     public String $Api;
     /** Current language */
     public String $Lang;
+    /** Current file extension */
+    /* Filename extension */
+    public static final String FILE_EXT = ".jsp";
 
     /** Root cache folder for pages */
     public String $CacheFolderRoot;
@@ -179,10 +182,16 @@ public class Context extends Config {
         this.$GlobalConstants.put("[#Site_Name]", Config.SITE_NAME);
         this.$GlobalConstants.put("[#Site_Comments]", Config.SITE_COMMENTS);
         this.$GlobalConstants.put("[#Top_Dir]", Config.TOP_DIR);
-        this.$GlobalConstants.put("[#Index_Page]", Config.INDEX_PAGE);
-        this.$GlobalConstants.put("[#Action_Page]", Config.ACTION_PAGE);
-        this.$GlobalConstants.put("[#Powered_By]", Config.POWERED_BY);
-        this.$GlobalConstants.put("[#Github_Repo]", Config.GITHUB_REPO);
+
+        if (!this.$TestRun)
+            this.$GlobalConstants.put("[#File_Ext]", FILE_EXT);
+        this.$GlobalConstants.put("[#Index_Page]", this.$TestRun ? Config.INDEX_PAGE :
+            Strings.replace("[#File_Ext]", FILE_EXT, Config.INDEX_PAGE));
+        this.$GlobalConstants.put("[#Action_Page]", this.$TestRun ? Config.ACTION_PAGE :
+            Strings.replace("[#File_Ext]", FILE_EXT, Config.ACTION_PAGE));
+        this.$GlobalConstants.put("[#Rss_Page]", this.$TestRun ? Config.RSS_PAGE :
+            Strings.replace("[#File_Ext]", FILE_EXT, Config.RSS_PAGE));
+
         //if (this.$IsMobile)
         //    this.$GlobalConstants.put("[#Is_Mobile]", "1");
         this.$GlobalConstants.put("[#Lang]", this.$Lang);

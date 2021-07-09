@@ -114,24 +114,24 @@ public class Helper extends Meta {
         catch (Exception $ex) { $lastError = $ex.getMessage().toString(); return null; }
     }
 
-      /**
+    /**
      * Read all content of text file as list of lines.
      * @param $filename File name.
      * @return Object[] Resulting content (lines).
      */
-    public static Object[] readAllLines(String $filename) {
+    public static String[] readAllLines(String $filename) {
         return readAllLines($filename, null); }
 
-      /**
+    /**
      * Read all content of text file as list of lines.
      * @param $filename File name.
      * @param $encoding Encoding name [optional].
      * @return Object[] Resulting content (lines).
      */
-    public static Object[] readAllLines(String $filename, String $encoding /*= null*/) {
+    public static String[] readAllLines(String $filename, String $encoding /*= null*/) {
         try {
-            return $encoding == null ? Files.readAllLines(Paths.get($filename)).toArray() :
-                Files.readAllLines(Paths.get($filename), Charset.forName($encoding)).toArray();
+            return $encoding == null ? Files.readAllLines(Paths.get($filename)).toArray(new String[] {}) :
+                Files.readAllLines(Paths.get($filename), Charset.forName($encoding)).toArray(new String[] {});
         }
         catch (Exception $ex) {
             $lastError = $ex.getMessage().toString();

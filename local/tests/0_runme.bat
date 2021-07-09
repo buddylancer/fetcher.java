@@ -9,8 +9,8 @@ goto :END
 :WGET_OK
 
 rem Set your test site (local) info:
-set website=http://www.ff.com:8084
-set mobile=http://m.ff.com:8084
+set website=http://www.ff.com:8000
+set mobile=http://m.ff.com:8000
 set site=%website%
 
 set ext=.jsp

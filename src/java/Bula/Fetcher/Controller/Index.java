@@ -12,6 +12,7 @@ import Bula.Fetcher.Context;
 import Bula.Objects.Regex;
 import Bula.Objects.RegexOptions;
 
+import Bula.Objects.Strings;
 import Bula.Objects.TArrayList;
 import Bula.Objects.THashtable;
 import Bula.Objects.TRequest;
@@ -22,6 +23,7 @@ import Bula.Model.DataAccess;
 
 import Bula.Fetcher.Controller.Util;
 import Bula.Fetcher.Controller.Engine;
+
 
 /**
  * Controller for main Index page.
@@ -83,8 +85,14 @@ public class Index extends Page {
             $title = CAT($title, " :: ", $pFromVars, (!NUL($idFromVars) ? CAT(" :: ", $idFromVars) : null));
 
         $prepare.put("[#Title]", $title); //TODO -- need unique title on each page
-        $prepare.put("[#Keywords]", Config.SITE_KEYWORDS);
-        $prepare.put("[#Description]", Config.SITE_DESCRIPTION);
+        $prepare.put("[#Keywords]",
+            this.$context.$TestRun ? Config.SITE_KEYWORDS :
+            Strings.replace("[#Platform]", Config.PLATFORM, Config.SITE_KEYWORDS)
+        );
+        $prepare.put("[#Description]",
+            this.$context.$TestRun ? Config.SITE_DESCRIPTION :
+            Strings.replace("[#Platform]", Config.PLATFORM, Config.SITE_DESCRIPTION)
+        );
         $prepare.put("[#Styles]", CAT(
                 (this.$context.$TestRun ? null : Config.TOP_DIR),
                 this.$context.$IsMobile ? "styles2" : "styles"));
@@ -111,6 +119,15 @@ public class Index extends Page {
             else
                 $prepare.put("[#Bottom]", $engine.includeTemplate("Bottom"));
         }
+
+        $prepare.put("[#Github_Repo]",
+            this.$context.$TestRun ? Config.GITHUB_REPO :
+            Strings.replace("[#Platform]", Strings.toLowerCase(Config.PLATFORM), Config.GITHUB_REPO)
+        );
+        $prepare.put("[#Powered_By]",
+            this.$context.$TestRun ? Config.POWERED_BY :
+            Strings.replace("[#Platform]", Config.PLATFORM, Config.POWERED_BY)
+        );
 
         this.$context.$Response.writeHeader("Content-type", CAT(
             (BLANK($apiName) ? "text/html" : Config.API_CONTENT), "; charset=UTF-8")

@@ -17,9 +17,9 @@ public class Config extends Meta {
     /** Index page name */
     public static final String INDEX_PAGE = "";
     /** Action page name */
-    public static final String ACTION_PAGE = "action.jsp";
+    public static final String ACTION_PAGE = "action[#File_Ext]";
     /** RSS-feeds page name */
-    public static final String RSS_PAGE = "rss.jsp";
+    public static final String RSS_PAGE = "rss[#File_Ext]";
     /** Current API output format (can be "Json" or "Xml" for now) */
     public static final String API_FORMAT = "Json";
     /** Current API output content type (can be "application/json" or "text/xml" for now) */
@@ -61,15 +61,15 @@ public class Config extends Meta {
 
     // Fill these fields by your site data
     /** Site language (default - null) */
-    public static final String SITE_LANGUAGE = null;          
+    public static final String SITE_LANGUAGE = null;
     /** Site name */
     public static final String SITE_NAME = "Buddy Fetcher";
     /** Site comments */
     public static final String SITE_COMMENTS = "Latest News Headlines";
     /** Site keywords */
-    public static final String SITE_KEYWORDS = "Buddy Fetcher, rss, fetcher, aggregator, Java, MySQL";
+    public static final String SITE_KEYWORDS = "Buddy Fetcher, rss, fetcher, aggregator, [#Platform], MySQL";
     /** Site description */
-    public static final String SITE_DESCRIPTION = "Buddy Fetcher is a simple RSS fetcher/aggregator written in Java/MySQL";
+    public static final String SITE_DESCRIPTION = "Buddy Fetcher is a simple RSS fetcher/aggregator written in [#Platform]/MySQL";
 
     /** Name of item (in singular form) */
     public static final String NAME_ITEM = "Headline";
@@ -100,7 +100,7 @@ public class Config extends Meta {
     public static final String TIME_ZONE = "GMT";
 
     /** Powered By string */
-    public static final String POWERED_BY = "Buddy Fetcher for Java";
+    public static final String POWERED_BY = "Buddy Fetcher for [#Platform]";
     /** GitHub repository */
-    public static final String GITHUB_REPO = "buddylancer/fetcher.java";
+    public static final String GITHUB_REPO = "buddylancer/fetcher.[#Platform]";
 }

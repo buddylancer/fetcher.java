@@ -82,8 +82,8 @@ public class DOItem extends DOBase {
         if (NUL($category))
             return null;
         //$category = Regex.escape(Regex.escape($category));
-        $category = CAT("\\\\b", Regex.escape(Regex.escape($category))); //, "\\\\b");
-        return $category == null ? null : CAT("_this.s_Category REGEXP '", $category, "'");
+        $category = CAT("[ ]", Regex.escape(Regex.escape($category)), "[, ]");
+        return $category == null ? null : CAT("concat(' ', _this.s_Category, ' ') REGEXP '", $category, "'");
     }
 
     /**

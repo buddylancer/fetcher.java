@@ -11,6 +11,7 @@ import Bula.Fetcher.Context;
 import Bula.Fetcher.Controller.Page;
 
 import Bula.Objects.Helper;
+import Bula.Objects.Strings;
 import Bula.Objects.TRequest;
 import Bula.Objects.TResponse;
 
@@ -47,8 +48,13 @@ public class GetFeed extends Page {
         if (this.$context.$Request.contains("from"))
             $from = this.$context.$Request.get("from");
 
-        this.$context.$Response.writeHeader("Content-type", CAT("text/xml; charset=", $encoding));
-        this.$context.$Response.write(Helper.readAllText(CAT(this.$context.$LocalRoot, "local/", $from, "/", $source, ".xml"), $encoding));
+        this.$context.$Response.writeHeader("Content-type", CAT("text/xml; charset=", $encoding), $encoding);
+        String $filename = Strings.concat(this.$context.$LocalRoot, "local/", $from, "/", $source, ".xml");
+        if ($filename.indexOf("..") == -1) {
+            String $content = Helper.readAllText($filename, $encoding);
+            if (!BLANK($content))
+                this.$context.$Response.write($content);
+        }
         this.$context.$Response.end();
     }
 }
