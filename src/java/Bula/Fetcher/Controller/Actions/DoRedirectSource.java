@@ -35,7 +35,7 @@ public class DoRedirectSource extends DoRedirect {
             if (!TRequest.isDomainName($sourceName))
                 $errorMessage = "Incorrect source name!";
             else {
-                DOSource $doSource = new DOSource();
+                DOSource $doSource = new DOSource(this.$context.$Connection);
                 THashtable[] $oSource =
                     {new THashtable()};
                 if (!$doSource.checkSourceName($sourceName, $oSource))

@@ -24,6 +24,4 @@ public class DBConfig extends Meta {
     public static final int DB_PORT = 3306;
     /** Date/time format used for DB operations */
     public static final String SQL_DTS = "yyyy-MM-dd HH:mm:ss";
-    /** Database connection is stored here */
-    public static Connection $Connection = null;
 }

@@ -28,7 +28,7 @@ public class FilterItems extends Page {
 
     /** Execute main logic for FilterItems block. */
     public void execute() {
-        DOSource $doSource = new DOSource();
+        DOSource $doSource = new DOSource(this.$context.$Connection);
 
         String $source = null;
         if (this.$context.$Request.contains("source"))

@@ -36,7 +36,7 @@ public class DoRedirectItem extends DoRedirect {
             if (!TRequest.isInteger($id) || INT($id) <= 0)
                 $errorMessage = "Incorrect item ID!";
             else {
-                DOItem $doItem = new DOItem();
+                DOItem $doItem = new DOItem(this.$context.$Connection);
                 DataSet $dsItems = $doItem.getById(INT($id));
                 if ($dsItems.getSize() == 0)
                     $errorMessage = "No item with such ID!";

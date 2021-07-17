@@ -59,7 +59,7 @@ public class ViewItem extends Page {
 
         THashtable $prepare = new THashtable();
 
-        DOItem $doItem = new DOItem();
+        DOItem $doItem = new DOItem(this.$context.$Connection);
         DataSet $dsItems = $doItem.getById(INT($id));
         if ($dsItems == null || $dsItems.getSize() == 0) {
             $prepare.put("[#ErrMessage]", "Wrong item ID!");

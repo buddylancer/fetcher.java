@@ -15,6 +15,7 @@ import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
 
 import Bula.Model.DBConfig;
+import Bula.Model.Connection;
 import Bula.Model.DOBase;
 import Bula.Model.DataSet;
 
@@ -23,7 +24,8 @@ import Bula.Model.DataSet;
  */
 public class DOItem extends DOBase {
     /** Public constructor (overrides base constructor) */
-    public DOItem () {
+    public DOItem (Connection $connection) {
+        super($connection);
         this.$tableName = "items";
         this.$idField = "i_ItemId";
     }

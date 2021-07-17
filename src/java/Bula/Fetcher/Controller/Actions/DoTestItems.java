@@ -54,7 +54,7 @@ public class DoTestItems extends Page {
         Boolean $insertRequired = false;
         Boolean $updateRequired = false;
 
-        DOTime $doTime = new DOTime();
+        DOTime $doTime = new DOTime(this.$context.$Connection);
 
         DataSet $dsTimes = $doTime.getById(1);
         int $timeShift = -1; // 240; // 4 min
@@ -78,7 +78,7 @@ public class DoTestItems extends Page {
             BOFetcher $boFetcher = new BOFetcher(this.$context);
             $boFetcher.fetchFromSources($from);
 
-            $doTime = new DOTime(); // Need for DB reopen
+            $doTime = new DOTime(this.$context.$Connection); // Need for DB reopen
             THashtable $fields = new THashtable();
             $fields.put("d_Time", DateTimes.format(DateTimes.SQL_DTS, DateTimes.getTime()));
             if ($insertRequired) {

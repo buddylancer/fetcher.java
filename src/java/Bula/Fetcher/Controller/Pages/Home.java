@@ -40,7 +40,7 @@ public class Home extends ItemsBase {
 
         THashtable $prepare = new THashtable();
 
-        DOItem $doItem = new DOItem();
+        DOItem $doItem = new DOItem(this.$context.$Connection);
 
         $prepare.put("[#BrowseItemsLink]", this.getLink(Config.INDEX_PAGE, "?p=", null, "items"));
         if (Config.SHOW_IMAGES)

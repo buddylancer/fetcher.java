@@ -142,10 +142,5 @@ public class Index extends Page {
 
         this.$context.$Response.write($engine.getPrintString());
         this.$context.$Response.end();
-
-        if (DBConfig.$Connection != null) {
-            DBConfig.$Connection.close();
-            DBConfig.$Connection = null;
-        }
     }
 }

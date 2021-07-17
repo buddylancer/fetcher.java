@@ -58,7 +58,7 @@ abstract class RssBase extends Page {
             if (BLANK($source))
                 $errorMessage += "Empty source!";
             else {
-                DOSource $doSource = new DOSource();
+                DOSource $doSource = new DOSource(this.$context.$Connection);
                 THashtable[] $oSource =
                     {new THashtable()};
                 if (!$doSource.checkSourceName($source, $oSource))
@@ -76,7 +76,7 @@ abstract class RssBase extends Page {
         String $filter = null;
         String $filterName = null;
         String $categoryName = null;
-        DOCategory $doCategory = new DOCategory();
+        DOCategory $doCategory = new DOCategory(this.$context.$Connection);
         DataSet $dsCategories = $doCategory.enumCategories();
         if ($dsCategories.getSize() > 0) {
             $filterName = this.$context.$Request.get("filter");
@@ -160,7 +160,7 @@ abstract class RssBase extends Page {
             }
         }
 
-        DOItem $doItem = new DOItem();
+        DOItem $doItem = new DOItem(this.$context.$Connection);
 
         // 0 - item url
         // 1 - item title
@@ -291,11 +291,6 @@ abstract class RssBase extends Page {
         }
         this.$context.$Response.writeHeader("Content-type", "text/xml; charset=UTF-8");
         this.$context.$Response.write($contentToCache); //TODO -- BOM?
-
-        if (DBConfig.$Connection != null) {
-            DBConfig.$Connection.close();
-            DBConfig.$Connection = null;
-        }
     }
 
     /**

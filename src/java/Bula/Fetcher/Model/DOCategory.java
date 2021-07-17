@@ -10,6 +10,8 @@ import Bula.Fetcher.Config;
 import Bula.Objects.TArrayList;
 import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
+
+import Bula.Model.Connection;
 import Bula.Model.DOBase;
 import Bula.Model.DataSet;
 
@@ -18,7 +20,8 @@ import Bula.Model.DataSet;
  */
 public class DOCategory extends DOBase {
     /** Public constructor (overrides base constructor) */
-    public DOCategory () {
+    public DOCategory (Connection $connection) {
+        super($connection);
         this.$tableName = "categories";
         this.$idField = "s_CatId";
     }

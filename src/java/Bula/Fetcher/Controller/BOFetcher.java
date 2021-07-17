@@ -67,11 +67,11 @@ public class BOFetcher extends Meta {
      * Pre-load categories into DataSet.
      */
     private void preLoadCategories() {
-        DOCategory $doCategory = new DOCategory();
+        DOCategory $doCategory = new DOCategory(this.$context.$Connection);
         this.$dsCategories = $doCategory.enumCategories();
-        DORule $doRule = new DORule();
+        DORule $doRule = new DORule(this.$context.$Connection);
         this.$dsRules = $doRule.enumAll();
-        DOMapping $doMapping = new DOMapping();
+        DOMapping $doMapping = new DOMapping(this.$context.$Connection);
         this.$dsMappings = $doMapping.enumAll();
     }
 
@@ -159,7 +159,7 @@ public class BOFetcher extends Meta {
         String $date = DateTimes.gmtFormat(DateTimes.SQL_DTS, DateTimes.fromRss($pubDate));
 
         // Check whether item with the same link exists already
-        DOItem $doItem = new DOItem();
+        DOItem $doItem = new DOItem(this.$context.$Connection);
         DataSet $dsItems = $doItem.findItemByLink($boItem.$link, $sourceId);
         if ($dsItems.getSize() > 0)
             return 0;
@@ -210,10 +210,10 @@ public class BOFetcher extends Meta {
         this.$oLogger.output(CAT("Start logging<br/>", EOL));
 
         //TODO -- Purge old items
-        //$doItem = new DOItem();
+        //$doItem = new DOItem(this.$context.$Connection);
         //$doItem.purgeOldItems(10);
 
-        DOSource $doSource = new DOSource();
+        DOSource $doSource = new DOSource(this.$context.$Connection);
         DataSet $dsSources = $doSource.enumFetchedSources();
 
         int $totalCounter = 0;
@@ -242,13 +242,6 @@ public class BOFetcher extends Meta {
                     $totalCounter++;
                 }
             }
-
-            // Release connection after each source
-            if (DBConfig.$Connection != null) {
-                DBConfig.$Connection.close();
-                DBConfig.$Connection = null;
-            }
-
             this.$oLogger.output(CAT("<br/>", EOL, "... fetched (", $itemsCounter, " items) end"));
         }
 
@@ -268,8 +261,8 @@ public class BOFetcher extends Meta {
      */
     private void recountCategories() {
         this.$oLogger.output(CAT("<br/>", EOL, "Recount categories ... "));
-        DOCategory $doCategory = new DOCategory();
-        DOItem $doItem = new DOItem();
+        DOCategory $doCategory = new DOCategory(this.$context.$Connection);
+        DOItem $doItem = new DOItem(this.$context.$Connection);
         DataSet $dsCategories = $doCategory.enumCategories();
         for (int $n = 0; $n < $dsCategories.getSize(); $n++) {
             THashtable $oCategory = $dsCategories.getRow($n);

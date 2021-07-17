@@ -6,6 +6,7 @@
 package Bula.Fetcher.Model;
 import Bula.Meta;
 
+import Bula.Model.Connection;
 import Bula.Model.DOBase;
 
 /**
@@ -13,7 +14,8 @@ import Bula.Model.DOBase;
  */
 public class DORule extends DOBase {
     /** Public constructor (overrides base constructor) */
-    public DORule () {
+    public DORule (Connection $connection) {
+        super($connection);
         this.$tableName = "rules";
         this.$idField = "i_RuleId";
     }

@@ -108,7 +108,7 @@ public class Items extends ItemsBase {
         String $category = null;
 
         if (!NUL($filterName)) {
-            DOCategory $doCategory = new DOCategory();
+            DOCategory $doCategory = new DOCategory(this.$context.$Connection);
             THashtable[] $oCategory =
                 {new THashtable()};
             if (!$doCategory.checkFilterName($filterName, $oCategory))
@@ -121,7 +121,7 @@ public class Items extends ItemsBase {
 
         int $sourceId = -1;
         if (!NUL($sourceName)) {
-            DOSource $doSource = new DOSource();
+            DOSource $doSource = new DOSource(this.$context.$Connection);
             THashtable[] $oSource =
                 {new THashtable()};
             if (!$doSource.checkSourceName($sourceName, $oSource)) {
@@ -161,7 +161,7 @@ public class Items extends ItemsBase {
 
         int $maxRows = Config.DB_ITEMS_ROWS;
 
-        DOItem $doItem = new DOItem();
+        DOItem $doItem = new DOItem(this.$context.$Connection);
         //String $realFilter = DOItem.buildSqlByFilter($filter);
         String $realFilter = DOItem.buildSqlByCategory($category);
         DataSet $dsItems = $doItem.enumItems($sourceName, $realFilter, $listNumber, $maxRows);

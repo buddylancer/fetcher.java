@@ -39,8 +39,8 @@ public class Sources extends ItemsBase {
         if (Config.SHOW_IMAGES)
             $prepare.put("[#Show_Images]", 1);
 
-        DOSource $doSource = new DOSource();
-        DOItem $doItem = new DOItem();
+        DOSource $doSource = new DOSource(this.$context.$Connection);
+        DOItem $doItem = new DOItem(this.$context.$Connection);
 
         DataSet $dsSources = $doSource.enumSources();
         int $count = 1;

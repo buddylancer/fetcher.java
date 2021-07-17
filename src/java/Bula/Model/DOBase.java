@@ -11,6 +11,8 @@ import Bula.Objects.TEnumerator;
 import Bula.Objects.THashtable;
 import Bula.Objects.Strings;
 
+import Bula.Model.Connection;
+
 /**
  * Base class for manipulating with DB objects.
  */
@@ -30,26 +32,8 @@ public class DOBase extends Meta {
     protected String $idField;
 
     /** Public constructor */
-    public DOBase () {
-        if (DBConfig.$Connection == null)
-            DBConfig.$Connection = this.createConnection();
-
-        this.$dbConnection = DBConfig.$Connection;
-    }
-
-    // Create connection to the database given parameters from DBConfig.
-    private Connection createConnection() {
-        Connection $oConn = new Connection();
-        String $dbAdmin = DBConfig.DB_ADMIN != null ? DBConfig.DB_ADMIN : DBConfig.DB_NAME;
-        String $dbPassword = DBConfig.DB_PASSWORD != null ? DBConfig.DB_PASSWORD : DBConfig.DB_NAME;
-        int $ret = 0;
-        if (DBConfig.DB_CHARSET != null)
-            $ret = $oConn.open(DBConfig.DB_HOST, DBConfig.DB_PORT, $dbAdmin, $dbPassword, DBConfig.DB_NAME, DBConfig.DB_CHARSET);
-        else
-            $ret = $oConn.open(DBConfig.DB_HOST, DBConfig.DB_PORT, $dbAdmin, $dbPassword, DBConfig.DB_NAME);
-        if ($ret == -1)
-            $oConn = null;
-        return $oConn;
+    public DOBase (Connection $connection) {
+        this.$dbConnection = $connection;
     }
 
     /**

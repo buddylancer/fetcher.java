@@ -101,7 +101,8 @@ public class CallMethod extends Page {
         String $fullClass = CAT($package, "/", $className);
 
         $fullClass = Strings.replace("/", ".", $fullClass);
-        $result = Bula.Internal.callMethod($fullClass, new TArrayList(), $method, $pars);
+        TArrayList $pars0 = new TArrayList(new Object[] { this.$context.$Connection });
+        $result = Bula.Internal.callMethod($fullClass, $pars0, $method, $pars);
 
         if ($result == null)
             $buffer = "NULL";

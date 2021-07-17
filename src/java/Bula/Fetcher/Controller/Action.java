@@ -76,10 +76,5 @@ public class Action extends Page {
         String $actionClass = CAT("Bula/Fetcher/Controller/Actions/", $actionInfo.get("class"));
         TArrayList $args0 = new TArrayList(); $args0.add(this.$context);
         Internal.callMethod($actionClass, $args0, "execute", null);
-
-        if (DBConfig.$Connection != null) {
-            DBConfig.$Connection.close();
-            DBConfig.$Connection = null;
-        }
     }
 }

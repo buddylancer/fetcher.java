@@ -6,6 +6,7 @@
 package Bula.Model;
 import Bula.Meta;
 
+import Bula.Model.DBConfig;
 import Bula.Model.PreparedStatement;
 
 /**
@@ -14,6 +15,21 @@ import Bula.Model.PreparedStatement;
 public class Connection extends Meta {
     private Object $link = null;
     private PreparedStatement $stmt; // Prepared statement to import with connection
+
+    // Create connection to the database given parameters from DBConfig.
+    public static Connection createConnection() {
+        Connection $oConn = new Connection();
+        String $dbAdmin = DBConfig.DB_ADMIN != null ? DBConfig.DB_ADMIN : DBConfig.DB_NAME;
+        String $dbPassword = DBConfig.DB_PASSWORD != null ? DBConfig.DB_PASSWORD : DBConfig.DB_NAME;
+        int $ret = 0;
+        if (DBConfig.DB_CHARSET != null)
+            $ret = $oConn.open(DBConfig.DB_HOST, DBConfig.DB_PORT, $dbAdmin, $dbPassword, DBConfig.DB_NAME, DBConfig.DB_CHARSET);
+        else
+            $ret = $oConn.open(DBConfig.DB_HOST, DBConfig.DB_PORT, $dbAdmin, $dbPassword, DBConfig.DB_NAME);
+        if ($ret == -1)
+            $oConn = null;
+        return $oConn;
+    }
 
     /**
      * Open connection to the database.

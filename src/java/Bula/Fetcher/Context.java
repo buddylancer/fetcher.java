@@ -16,6 +16,10 @@ import Bula.Objects.THashtable;
 
 import Bula.Fetcher.Controller.Engine;
 
+import Bula.Model.Connection;
+
+
+
 /**
  * Class for request context.
  */
@@ -32,9 +36,22 @@ public class Context extends Config {
         this.$Request = new TRequest($request);
         this.$Response = new TResponse($response);
         this.$Request.$response = this.$Response;
+
+        this.$Connection = Connection.createConnection();
+
         this.initialize();
     }
 
+    /** Public desctructor */
+    public void close() {
+        if (this.$Connection != null) {
+            this.$Connection.close();
+            this.$Connection = null;
+        }
+    }
+
+    /** Current DB connection */
+    public Connection $Connection = null;
     /** Current request */
     public TRequest $Request = null;
     /** Current response */
